@@ -1,0 +1,138 @@
+.role-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 180px;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.role-panel__search {
+  width: 100%;
+  padding: 6px 10px;
+  box-sizing: border-box;
+}
+
+.role-panel__sort {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.role-panel__filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.role-panel__filters button {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.role-panel__filter-all {
+  font-size: 12px;
+}
+
+.role-panel__filter-icon {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+}
+
+.role-panel__filters button.active {
+  background: #333;
+  color: #fff;
+  border-color: #333;
+}
+
+.role-panel__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.role-panel__item {
+  padding: 0;
+}
+
+.role-panel__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 4px 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+.role-panel__row:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.role-panel__icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.role-panel__empty {
+  padding: 8px;
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .role-panel {
+    width: 100%;
+  }
+
+  .role-panel__search,
+  .role-panel__sort {
+    padding: 12px 14px;
+    font-size: 16px;
+  }
+
+  .role-panel__filters {
+    gap: 8px;
+  }
+
+  .role-panel__filters button {
+    border-radius: 12px;
+  }
+
+  .role-panel__row {
+    padding: 10px 8px;
+  }
+
+  .role-panel__icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .role-panel__name {
+    font-size: 16px;
+  }
+}

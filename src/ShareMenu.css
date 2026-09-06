@@ -1,0 +1,48 @@
+.share-menu {
+  position: relative;
+}
+
+.share-menu__dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  min-width: 160px;
+}
+
+.share-menu__group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.share-menu__group + .share-menu__group {
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+}
+
+.share-menu__group-label {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.share-menu__dropdown button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.share-menu__dropdown button:hover {
+  background: rgba(0, 0, 0, 0.05);
+}

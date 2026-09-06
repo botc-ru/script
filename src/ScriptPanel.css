@@ -1,0 +1,234 @@
+.script-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+.script-panel__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.script-panel__header--static {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding-left: 16px;
+  border-left: 4px solid transparent;
+}
+
+.script-panel__header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.script-panel__color {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.script-panel__name {
+  width: 100%;
+  padding: 4px 0;
+  border: none;
+  border-bottom: 1px solid transparent;
+  background: none;
+  font-size: 28px;
+  font-weight: 700;
+  font-family: inherit;
+  color: inherit;
+  box-sizing: border-box;
+}
+
+.script-panel__author {
+  width: 100%;
+  padding: 2px 0;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-family: inherit;
+  color: inherit;
+  opacity: 0.7;
+  box-sizing: border-box;
+}
+
+.script-panel__author::placeholder {
+  color: #999;
+}
+
+.script-panel__author--static {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.script-panel__name::placeholder {
+  color: #999;
+  font-weight: 400;
+}
+
+.script-panel__name:hover,
+.script-panel__name:focus {
+  border-bottom-color: #ccc;
+  outline: none;
+}
+
+.script-panel__name--static {
+  margin: 0;
+}
+
+.script-panel__title {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  color: inherit;
+}
+
+.script-panel__title:hover {
+  text-decoration: underline;
+}
+
+.script-panel__title--static {
+  cursor: default;
+}
+
+.script-panel__title--static:hover {
+  text-decoration: none;
+}
+
+.script-panel__divider {
+  width: 100%;
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 0;
+}
+
+.script-panel__grid {
+  columns: 2;
+  column-gap: 8px;
+}
+
+.script-panel__grid--single {
+  columns: 1;
+}
+
+.role-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 8px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  cursor: grab;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  break-inside: avoid;
+}
+
+.role-card:active {
+  cursor: grabbing;
+}
+
+.role-card:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+div.role-card {
+  cursor: default;
+}
+
+.role-card__icon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.role-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.role-card__name {
+  font-weight: 600;
+}
+
+.role-card__ability {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.jinx-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 8px;
+  break-inside: avoid;
+}
+
+.jinx-row__icons {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.jinx-row__icons img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.jinx-row__text {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .script-panel__grid {
+    columns: 1;
+  }
+
+  .script-panel__name {
+    font-size: 22px;
+  }
+
+  .script-panel__title {
+    font-size: 18px;
+    padding: 6px 0;
+  }
+
+  .role-card {
+    padding: 10px 6px;
+  }
+
+  .role-card__icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .role-card__name {
+    font-size: 16px;
+  }
+}
