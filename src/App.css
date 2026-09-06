@@ -25,12 +25,6 @@
   box-sizing: border-box;
 }
 
-.print-preview {
-  flex: 1;
-  min-width: 0;
-  border: none;
-}
-
 @media (max-width: 768px) {
   .app {
     padding: 8px;

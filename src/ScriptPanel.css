@@ -169,8 +169,26 @@ div.role-card {
   min-width: 0;
 }
 
+.role-card__name-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .role-card__name {
   font-weight: 600;
+}
+
+.role-card__jinx-icons {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.role-card__jinx-icons img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
 }
 
 .role-card__ability {

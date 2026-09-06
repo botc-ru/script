@@ -55,11 +55,16 @@ const styles = StyleSheet.create({
     opacity: 0.1,
   },
   notFirstNight: {
-    position: 'absolute',
-    right: mm(8),
-    top: mm(12),
+    textAlign: 'right',
+    marginBottom: mm(1),
     fontFamily: 'Roboto-Condensed',
     fontWeight: 300,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    marginBottom: mm(3.5),
   },
   boldWrap: {
     position: 'relative',
@@ -69,16 +74,13 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0.35,
   },
-  title: {
-    marginBottom: mm(3.5),
-  },
+  title: {},
   titleSmall: {
     textAlign: 'center',
     marginBottom: mm(2),
   },
   author: {
     opacity: 0.7,
-    marginBottom: mm(3),
   },
   section: {
     flexShrink: 0,
@@ -137,6 +139,22 @@ const styles = StyleSheet.create({
   },
   roleAbilityStacked: {
     marginTop: mm(1),
+  },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  roleJinxIcons: {
+    flexDirection: 'row',
+    gap: mm(0.5),
+    marginLeft: mm(1),
+    marginTop: mm(-1.5),
+    marginBottom: mm(-1.5),
+  },
+  roleJinxIcon: {
+    width: mm(7),
+    height: mm(7),
+    objectFit: 'contain',
   },
   roleCompact: {
     flexDirection: 'row',
@@ -200,6 +218,13 @@ export function ScriptPdfDocument({ script, roles, allRoles, settings }: ScriptP
   const fabledRoles = roles.filter((role) => role.team === 'fabled')
   const travellerRoles = roles.filter((role) => role.team === 'traveller')
   const jinxes = getActiveJinxes(roles, allRoles)
+  const scriptRoleIds = new Set(roles.map((role) => role.id))
+  const jinxPartnersByRole: Record<string, Role[]> = {}
+  for (const role of roles) {
+    jinxPartnersByRole[role.id] = (role.jinxes ?? [])
+      .filter((jinx) => scriptRoleIds.has(jinx.id))
+      .map((jinx) => allRoles[jinx.id])
+  }
   const firstNightOrder = getNightOrder(roles, 'first')
   const otherNightOrder = getNightOrder(roles, 'other')
   const hasNightOrder =
@@ -212,9 +237,11 @@ export function ScriptPdfDocument({ script, roles, allRoles, settings }: ScriptP
           {settings.background && <Image src={paperImage} style={styles.background} />}
           <View style={styles.content}>
             {settings.logo && <Image src={logoImage} style={styles.watermark} />}
+            <View style={styles.titleRow}>
+              <Bold style={[styles.title, { fontSize: px(32) * fontScale, color }]}>{title}</Bold>
+              {author && <Text style={[styles.author, { fontSize: fs(3.5) }]}>{author}</Text>}
+            </View>
             <Text style={[styles.notFirstNight, { fontSize: fs(3.2) }]}>* Не в первую ночь</Text>
-            <Bold style={[styles.title, { fontSize: px(32) * fontScale, color }]}>{title}</Bold>
-            {author && <Text style={[styles.author, { fontSize: fs(3.5) }]}>{author}</Text>}
 
             <View style={styles.contentBody}>
               {PAGE1_TEAMS.map((team) => (
@@ -225,6 +252,7 @@ export function ScriptPdfDocument({ script, roles, allRoles, settings }: ScriptP
                   columns={settings.columns}
                   stretch={stretch}
                   fontScale={fontScale}
+                  jinxPartnersByRole={jinxPartnersByRole}
                 />
               ))}
             </View>
@@ -245,6 +273,7 @@ export function ScriptPdfDocument({ script, roles, allRoles, settings }: ScriptP
                 columns={2}
                 stretch={false}
                 fontScale={fontScale}
+                jinxPartnersByRole={jinxPartnersByRole}
               />
               <RoleTypeSection
                 title={TEAM_LABELS.fabled}
@@ -252,6 +281,7 @@ export function ScriptPdfDocument({ script, roles, allRoles, settings }: ScriptP
                 columns={2}
                 stretch={false}
                 fontScale={fontScale}
+                jinxPartnersByRole={jinxPartnersByRole}
               />
               {jinxes.length > 0 && (
                 <JinxSection jinxes={jinxes} columns={2} fontScale={fontScale} />
@@ -262,6 +292,7 @@ export function ScriptPdfDocument({ script, roles, allRoles, settings }: ScriptP
                 columns={2}
                 stretch={false}
                 fontScale={fontScale}
+                jinxPartnersByRole={jinxPartnersByRole}
               />
             </View>
 
@@ -319,18 +350,32 @@ function SectionTitle({ title, fontScale }: { title: string; fontScale: number }
   )
 }
 
+function RoleJinxIcons({ roles }: { roles: Role[] }) {
+  if (roles.length === 0) return null
+
+  return (
+    <View style={styles.roleJinxIcons}>
+      {roles.map((role) => (
+        <Image key={role.id} src={role.image} style={styles.roleJinxIcon} />
+      ))}
+    </View>
+  )
+}
+
 function RoleTypeSection({
   title,
   roles,
   columns,
   stretch,
   fontScale,
+  jinxPartnersByRole = {},
 }: {
   title: string
   roles: Role[]
   columns: 1 | 2
   stretch: boolean
   fontScale: number
+  jinxPartnersByRole?: Record<string, Role[]>
 }) {
   if (roles.length === 0) return null
 
@@ -353,11 +398,13 @@ function RoleTypeSection({
                 fontSize: mm(3.5) * fontScale,
                 color: TEAM_PRINT_COLOR[role.team],
               }
+              const jinxPartners = jinxPartnersByRole[role.id] ?? []
               return compact ? (
                 <View key={role.id} style={styles.roleCompact} wrap={false}>
                   <Image src={role.image} style={styles.roleIconCompact} />
-                  <View style={styles.roleNameCompact}>
+                  <View style={[styles.roleNameCompact, styles.nameRow]}>
                     <Bold style={nameStyle}>{role.name}</Bold>
+                    <RoleJinxIcons roles={jinxPartners} />
                   </View>
                   <Text style={[...abilityStyle, styles.roleAbilityCompact]}>{role.ability}</Text>
                 </View>
@@ -365,7 +412,10 @@ function RoleTypeSection({
                 <View key={role.id} style={styles.role} wrap={false}>
                   <Image src={role.image} style={styles.roleIcon} />
                   <View style={styles.roleText}>
-                    <Bold style={nameStyle}>{role.name}</Bold>
+                    <View style={styles.nameRow}>
+                      <Bold style={nameStyle}>{role.name}</Bold>
+                      <RoleJinxIcons roles={jinxPartners} />
+                    </View>
                     <Text style={[...abilityStyle, styles.roleAbilityStacked]}>{role.ability}</Text>
                   </View>
                 </View>

@@ -44,11 +44,21 @@ export function ScriptPanel({
   }
 
   function renderRoleCard(role: Role) {
+    const jinxPartners = jinxPartnersByRole[role.id] ?? []
     const content = (
       <>
         <img src={role.image} alt="" className="role-card__icon" />
         <div className="role-card__text">
-          <div className="role-card__name">{role.name}</div>
+          <div className="role-card__name-row">
+            <div className="role-card__name">{role.name}</div>
+            {jinxPartners.length > 0 && (
+              <div className="role-card__jinx-icons">
+                {jinxPartners.map((partner) => (
+                  <img key={partner.id} src={partner.image} alt="" title={partner.name} />
+                ))}
+              </div>
+            )}
+          </div>
           <div className="role-card__ability">{role.ability}</div>
         </div>
       </>
@@ -96,6 +106,13 @@ export function ScriptPanel({
 
   const fabledRoles = roles.filter((role) => role.team === 'fabled' && role.id !== DJINN_ID)
   const jinxes = getActiveJinxes(roles, allRoles)
+  const scriptRoleIds = new Set(roles.map((role) => role.id))
+  const jinxPartnersByRole: Record<string, Role[]> = {}
+  for (const role of roles) {
+    jinxPartnersByRole[role.id] = (role.jinxes ?? [])
+      .filter((jinx) => scriptRoleIds.has(jinx.id))
+      .map((jinx) => allRoles[jinx.id])
+  }
   const djinn = allRoles[DJINN_ID]
   const showFabledSection = fabledRoles.length > 0 || jinxes.length > 0
   const travellerRoles = roles.filter((role) => role.team === 'traveller')

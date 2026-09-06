@@ -1,10 +1,13 @@
-import { PDFViewer } from '@react-pdf/renderer'
+import { lazy, Suspense, useEffect, useMemo } from 'react'
+import { usePDF } from '@react-pdf/renderer'
 import { PrintSettingsPanel } from './PrintSettingsPanel'
 import { ScriptPdfDocument } from './pdf/ScriptPdfDocument'
 import type { PrintSettings } from './print'
 import type { ScriptMeta } from './scriptModel'
 import type { Role, RolesById } from './types'
 import './App.css'
+
+const PdfPreview = lazy(() => import('./PdfPreview').then((m) => ({ default: m.PdfPreview })))
 
 interface PrintScreenProps {
   scriptRoles: Role[]
@@ -21,12 +24,25 @@ export function PrintScreen({
   settings,
   onSettingsChange,
 }: PrintScreenProps) {
+  const document = useMemo(
+    () => (
+      <ScriptPdfDocument script={script} roles={scriptRoles} allRoles={allRoles} settings={settings} />
+    ),
+    [script, scriptRoles, allRoles, settings],
+  )
+  const [instance, updateInstance] = usePDF()
+  useEffect(() => {
+    updateInstance(document)
+  }, [document, updateInstance])
+
   return (
     <div className="app">
       <PrintSettingsPanel settings={settings} onChange={onSettingsChange} />
-      <PDFViewer className="print-preview" style={{ width: '100%', height: '100%' }} showToolbar>
-        <ScriptPdfDocument script={script} roles={scriptRoles} allRoles={allRoles} settings={settings} />
-      </PDFViewer>
+      {instance.blob && (
+        <Suspense fallback={<p>Загрузка просмотрщика...</p>}>
+          <PdfPreview blob={instance.blob} />
+        </Suspense>
+      )}
     </div>
   )
 }

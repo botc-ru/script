@@ -33,6 +33,8 @@ export function EditScreen({
   onRemove,
   onReorder,
 }: EditScreenProps) {
+  const scriptRoleIds = new Set(scriptRoles.map((role) => role.id))
+
   return (
     <div className={`app${showRolePanel ? ' app--role-panel-open' : ''}`}>
       {showRolePanel && (
@@ -41,6 +43,8 @@ export function EditScreen({
           loading={loading}
           error={error}
           onSelect={onSelectRole}
+          selectedRoleIds={scriptRoleIds}
+          onDeselect={onRemove}
           teamFilter={teamFilter}
           onTeamFilterChange={onTeamFilterChange}
         />

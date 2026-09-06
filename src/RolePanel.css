@@ -93,6 +93,14 @@
   background: rgba(0, 0, 0, 0.05);
 }
 
+.role-panel__row--selected {
+  background: rgba(51, 102, 204, 0.15);
+}
+
+.role-panel__row--selected:hover {
+  background: rgba(51, 102, 204, 0.25);
+}
+
 .role-panel__icon {
   width: 28px;
   height: 28px;
@@ -123,8 +131,12 @@
     border-radius: 12px;
   }
 
+  .role-panel__list {
+    gap: 0;
+  }
+
   .role-panel__row {
-    padding: 10px 8px;
+    padding: 6px 8px;
   }
 
   .role-panel__icon {

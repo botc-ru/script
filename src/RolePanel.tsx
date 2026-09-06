@@ -12,6 +12,8 @@ interface RolePanelProps {
   loading: boolean
   error: string | null
   onSelect: (role: Role) => void
+  selectedRoleIds?: Set<string>
+  onDeselect?: (roleId: string) => void
   teamFilter: TeamFilter
   onTeamFilterChange: (team: TeamFilter) => void
 }
@@ -21,6 +23,8 @@ export function RolePanel({
   loading,
   error,
   onSelect,
+  selectedRoleIds,
+  onDeselect,
   teamFilter,
   onTeamFilterChange,
 }: RolePanelProps) {
@@ -39,7 +43,8 @@ export function RolePanel({
       }
       return (
         role.name.toLowerCase().includes(query) ||
-        role.ability.toLowerCase().includes(query)
+        role.ability.toLowerCase().includes(query) ||
+        role.id.toLowerCase().includes(query)
       )
     })
 
@@ -99,14 +104,21 @@ export function RolePanel({
         )}
         {!loading &&
           !error &&
-          visibleRoles.map((role) => (
-            <li key={role.id} className={`role-panel__item role-panel__item--${role.team}`}>
-              <button type="button" className="role-panel__row" onClick={() => onSelect(role)}>
-                <img src={role.image} alt="" className="role-panel__icon" />
-                <span className="role-panel__name">{role.name}</span>
-              </button>
-            </li>
-          ))}
+          visibleRoles.map((role) => {
+            const isSelected = selectedRoleIds?.has(role.id) ?? false
+            return (
+              <li key={role.id} className={`role-panel__item role-panel__item--${role.team}`}>
+                <button
+                  type="button"
+                  className={`role-panel__row${isSelected ? ' role-panel__row--selected' : ''}`}
+                  onClick={() => (isSelected ? onDeselect?.(role.id) : onSelect(role))}
+                >
+                  <img src={role.image} alt="" className="role-panel__icon" />
+                  <span className="role-panel__name">{role.name}</span>
+                </button>
+              </li>
+            )
+          })}
         {!loading && !error && visibleRoles.length === 0 && (
           <li className="role-panel__empty">Ничего не найдено</li>
         )}
