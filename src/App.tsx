@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRoles } from './useRoles'
 import { Toolbar } from './Toolbar'
 import { ReadOnlyScreen } from './ReadOnlyScreen'
@@ -41,7 +41,10 @@ function App() {
     setScript((current) => ({ ...current, ...patch }))
   }
 
-  const scriptRoles = script.roleIds.filter((id) => roles[id]).map((id) => roles[id])
+  const scriptRoles = useMemo(
+    () => script.roleIds.filter((id) => roles[id]).map((id) => roles[id]),
+    [script.roleIds, roles],
+  )
 
   function addToScript(role: Role) {
     if (script.roleIds.includes(role.id)) return
