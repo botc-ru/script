@@ -2,8 +2,6 @@ import { useMemo, useRef, useState } from 'react'
 import type { Role, RolesById } from './types'
 import './QuickAddRole.css'
 
-const MAX_RESULTS = 10
-
 interface QuickAddRoleProps {
   roles: RolesById
   onSelect: (role: Role) => void
@@ -28,7 +26,6 @@ export function QuickAddRole({ roles, onSelect, onDeselect, selectedRoleIds }: Q
           role.id.toLowerCase().includes(trimmed),
       )
       .sort((a, b) => a.name.localeCompare(b.name, 'ru'))
-      .slice(0, MAX_RESULTS)
   }, [roles, query])
 
   function handleSelect(role: Role) {
@@ -52,7 +49,7 @@ export function QuickAddRole({ roles, onSelect, onDeselect, selectedRoleIds }: Q
       <input
         type="search"
         className="quick-add-role__input"
-        placeholder="Поиск по имени, способности"
+        placeholder="Поиск"
         value={query}
         onChange={(event) => {
           setQuery(event.target.value)
@@ -65,25 +62,27 @@ export function QuickAddRole({ roles, onSelect, onDeselect, selectedRoleIds }: Q
       />
 
       {isOpen && query.trim() !== '' && (
-        <ul className="quick-add-role__list">
-          {results.length === 0 && <li className="quick-add-role__empty">Ничего не найдено</li>}
-          {results.map((role) => {
-            const isSelected = selectedRoleIds.has(role.id)
-            return (
-              <li key={role.id}>
-                <button
-                  type="button"
-                  className={`quick-add-role__row${isSelected ? ' quick-add-role__row--selected' : ''}`}
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={() => handleSelect(role)}
-                >
-                  <img src={role.image} alt="" className="quick-add-role__icon" />
-                  <span className="quick-add-role__name">{role.name}</span>
-                </button>
-              </li>
-            )
-          })}
-        </ul>
+        <div className="quick-add-role__panel">
+          <ul className="quick-add-role__list">
+            {results.length === 0 && <li className="quick-add-role__empty">Ничего не найдено</li>}
+            {results.map((role) => {
+              const isSelected = selectedRoleIds.has(role.id)
+              return (
+                <li key={role.id}>
+                  <button
+                    type="button"
+                    className={`quick-add-role__row${isSelected ? ' quick-add-role__row--selected' : ''}`}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => handleSelect(role)}
+                  >
+                    <img src={role.image} alt="" className="quick-add-role__icon" />
+                    <span className="quick-add-role__name">{role.name}</span>
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
       )}
     </div>
   )

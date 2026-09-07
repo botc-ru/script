@@ -7,26 +7,41 @@
   width: 100%;
   padding: 6px 10px 6px 32px;
   box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 999px;
+  background-color: rgba(0, 0, 0, 0.04);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23776644' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: 10px center;
   background-size: 14px 14px;
+  font-size: 15px;
 }
 
-.quick-add-role__list {
+.quick-add-role__input:focus {
+  outline: none;
+  border-color: #776644;
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.quick-add-role__panel {
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
   right: 0;
   z-index: 10;
-  list-style: none;
-  margin: 0;
-  padding: 4px;
-  background: #fff;
+  padding: 8px;
+  background-color: #f4f0e6;
+  background-image: url('./assets/images/paper.jpg');
+  background-size: cover;
+  background-position: center;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.quick-add-role__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   max-height: 320px;
   overflow-y: auto;
 }
@@ -47,14 +62,18 @@
 
 .quick-add-role__row:hover {
   background: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
 }
 
 .quick-add-role__row--selected {
-  background: rgba(51, 102, 204, 0.15);
+  background: #eae7dc;
+  border: 1px solid rgba(119, 102, 68, 0.53);
+  border-radius: 6px;
+  padding: 3px 7px;
 }
 
 .quick-add-role__row--selected:hover {
-  background: rgba(51, 102, 204, 0.25);
+  background: #e2ded0;
 }
 
 .quick-add-role__icon {

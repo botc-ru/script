@@ -39,7 +39,7 @@ export function Toolbar({
   selectedRoleIds,
 }: ToolbarProps) {
   return (
-    <div className="toolbar">
+    <div className={`toolbar${mode === 'view' ? ' toolbar--view' : ''}`}>
       <nav className="toolbar__tabs">
         {isEditRoute ? (
           TABS.map((tab) => (

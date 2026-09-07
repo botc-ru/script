@@ -20,19 +20,40 @@ export function PrintSettingsPanel({ settings, onChange, onDownloadPdf }: PrintS
     onChange({ ...settings, ...patch })
   }
 
-  function toggleGroup(label: string, value: boolean, onToggle: (value: boolean) => void) {
+  function settingRow<T extends string | number | boolean>(
+    label: string,
+    options: { value: T; label: string }[],
+    value: T,
+    onChange: (value: T) => void,
+  ) {
     return (
-      <div className="print-settings__group">
+      <div className="print-settings__row">
         <span className="print-settings__label">{label}</span>
-        <div className="print-settings__buttons">
-          <button type="button" className={value ? 'active' : ''} onClick={() => onToggle(true)}>
-            Вкл
-          </button>
-          <button type="button" className={!value ? 'active' : ''} onClick={() => onToggle(false)}>
-            Выкл
-          </button>
+        <div className="print-settings__segmented">
+          {options.map((option) => (
+            <button
+              key={String(option.value)}
+              type="button"
+              className={option.value === value ? 'active' : ''}
+              onClick={() => onChange(option.value)}
+            >
+              {option.label}
+            </button>
+          ))}
         </div>
       </div>
+    )
+  }
+
+  function toggleGroup(label: string, value: boolean, onToggle: (value: boolean) => void) {
+    return settingRow(
+      label,
+      [
+        { value: true, label: 'Вкл' },
+        { value: false, label: 'Выкл' },
+      ],
+      value,
+      onToggle,
     )
   }
 
@@ -59,40 +80,19 @@ export function PrintSettingsPanel({ settings, onChange, onDownloadPdf }: PrintS
           Скачать PDF
         </button>
 
-        <div className="print-settings__group">
-          <span className="print-settings__label">Размер шрифта</span>
-          <div className="print-settings__buttons">
-            {FONT_SCALES.map((scale) => (
-              <button
-                key={scale.value}
-                type="button"
-                className={settings.fontScale === scale.value ? 'active' : ''}
-                onClick={() => set({ fontScale: scale.value })}
-              >
-                {scale.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        {settingRow('Шрифт', FONT_SCALES, settings.fontScale, (fontScale) =>
+          set({ fontScale }),
+        )}
 
         {toggleGroup('Фон', settings.background, (background) => set({ background }))}
         {toggleGroup('Логотип', settings.logo, (logo) => set({ logo }))}
 
-        <div className="print-settings__group">
-          <span className="print-settings__label">Число игроков</span>
-          <div className="print-settings__buttons">
-            {PLAYERS_COUNTS.map((count) => (
-              <button
-                key={count}
-                type="button"
-                className={settings.playersCount === count ? 'active' : ''}
-                onClick={() => set({ playersCount: count })}
-              >
-                {count}
-              </button>
-            ))}
-          </div>
-        </div>
+        {settingRow(
+          '# Игроков',
+          PLAYERS_COUNTS.map((count) => ({ value: count, label: count })),
+          settings.playersCount,
+          (playersCount) => set({ playersCount }),
+        )}
       </div>
 
       <div className="print-settings__section">
@@ -109,21 +109,12 @@ export function PrintSettingsPanel({ settings, onChange, onDownloadPdf }: PrintS
           <div className="print-settings__subgroup">
             {toggleGroup('Растянуть', settings.stretch, (stretch) => set({ stretch }))}
 
-            <div className="print-settings__group">
-              <span className="print-settings__label">Колонки</span>
-              <div className="print-settings__buttons">
-                {([1, 2] as const).map((columns) => (
-                  <button
-                    key={columns}
-                    type="button"
-                    className={settings.columns === columns ? 'active' : ''}
-                    onClick={() => set({ columns })}
-                  >
-                    {columns}
-                  </button>
-                ))}
-              </div>
-            </div>
+            {settingRow(
+              'Колонки',
+              ([1, 2] as const).map((columns) => ({ value: columns, label: String(columns) })),
+              settings.columns,
+              (columns) => set({ columns }),
+            )}
           </div>
         )}
       </div>
@@ -141,7 +132,7 @@ export function PrintSettingsPanel({ settings, onChange, onDownloadPdf }: PrintS
         {settings.storytellerSheet && (
           <div className="print-settings__subgroup">
             {toggleGroup('Странники', settings.travellers, (travellers) => set({ travellers }))}
-            {toggleGroup('Таблица кол-ва игроков', settings.playersTable, (playersTable) =>
+            {toggleGroup('Таблица', settings.playersTable, (playersTable) =>
               set({ playersTable }),
             )}
             {toggleGroup('Порядок ночи', settings.nightOrderColumns, (nightOrderColumns) =>

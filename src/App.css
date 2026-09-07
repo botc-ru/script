@@ -4,34 +4,92 @@
   height: 100%;
 }
 
-.page-body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-}
-
-.page-body[hidden] {
-  display: none;
-}
-
 .app {
   display: flex;
-  gap: 24px;
-  padding: 16px;
+  gap: 0;
+  padding: 0;
   align-items: stretch;
   flex: 1;
   min-height: 0;
   box-sizing: border-box;
+  transition: gap 0.25s ease;
+}
+
+
+/* Общий контейнер для содержимого боковой панели (роли или настройки печати) —
+   один и тот же блок анимирует своё открытие/закрытие независимо от того,
+   какой контент внутри него сейчас показан. */
+.side-panel {
+  width: 180px;
+  flex-shrink: 0;
+  height: 100%;
+  overflow: hidden;
+  opacity: 1;
+  transition:
+    width 0.25s ease,
+    opacity 0.2s ease;
+}
+
+.side-panel--collapsed {
+  width: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.main-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+.main-panel__preview {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+.main-panel__slot--hidden {
+  display: none;
+}
+
+@media (min-width: 769px) {
+  .side-panel {
+    padding-top: 16px;
+    padding-left: 16px;
+  }
+
+  .script-panel-container {
+    box-sizing: border-box;
+    padding: 16px;
+  }
+
+  .pdf-preview {
+    box-sizing: border-box;
+  }
 }
 
 @media (max-width: 768px) {
   .app {
-    padding: 8px;
+    padding: 0;
     gap: 0;
   }
 
-  .app--role-panel-open .script-panel {
+  .app--sidebar-open:not(.app--print) .main-panel {
+    display: none;
+  }
+
+  .side-panel {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px 16px 0;
+    transition: none;
+  }
+
+  .side-panel--collapsed {
     display: none;
   }
 
@@ -40,19 +98,20 @@
     gap: 12px;
   }
 
-  .app--print > .pdf-preview,
-  .app--print > .print-settings {
+  .app--print > .main-panel,
+  .app--print > .side-panel {
     width: 100%;
     height: calc(50% - 6px);
     flex: none;
     min-height: 0;
+    padding: 0;
   }
 
-  .app--print > .pdf-preview {
+  .app--print > .main-panel {
     order: 1;
   }
 
-  .app--print > .print-settings {
+  .app--print > .side-panel {
     order: 2;
     overflow-y: auto;
   }

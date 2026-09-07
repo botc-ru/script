@@ -1,12 +1,13 @@
-import { useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { useRoles } from './useRoles'
 import { Toolbar } from './Toolbar'
 import { ReadOnlyScreen } from './ReadOnlyScreen'
-import { EditScreen } from './EditScreen'
-import { PrintScreen } from './PrintScreen'
+import { RolePanel, type TeamFilter } from './RolePanel'
+import { ScriptPanel } from './ScriptPanel'
+import { PrintSettingsPanel } from './PrintSettingsPanel'
+import { usePrintPdf } from './usePrintPdf'
 import { usePath } from './usePath'
 import { EDIT_PATH, isEditPath } from './routes'
-import type { TeamFilter } from './RolePanel'
 import type { Mode } from './mode'
 import { DEFAULT_PRINT_SETTINGS, type PrintSettings } from './print'
 import { compareByAso } from './aso'
@@ -18,14 +19,21 @@ import type { ScriptData } from './scriptModel'
 import type { Role, RolesById } from './types'
 import './App.css'
 
+const PdfPreview = lazy(() => import('./PdfPreview').then((m) => ({ default: m.PdfPreview })))
+
 const savedScript = readScriptFromLink() ?? loadScript()
+
+const MAX_CONTENT_WIDTH = 760
+const ROLE_PANEL_WIDTH = 180
 
 function App() {
   const { roles, loading, error } = useRoles()
   const [path, navigate] = usePath()
   const isEditRoute = isEditPath(path)
   const [script, setScript] = useState<ScriptData>(savedScript)
-  const [mode, setMode] = useState<Mode>('edit')
+  const [mode, setMode] = useState<Mode>(() =>
+    window.innerWidth > MAX_CONTENT_WIDTH + ROLE_PANEL_WIDTH ? 'edit' : 'view',
+  )
   const [teamFilter, setTeamFilter] = useState<TeamFilter>('all')
   const [printSettings, setPrintSettings] = useState<PrintSettings>(DEFAULT_PRINT_SETTINGS)
 
@@ -36,6 +44,21 @@ function App() {
   useEffect(() => {
     saveScript(script)
   }, [script])
+
+  // Реагируем только на реальное изменение размера окна, а не на смену mode —
+  // иначе ручное переключение вкладки пользователем тут же откатывалось бы назад.
+  useEffect(() => {
+    function handleResize() {
+      const isWide = window.innerWidth > MAX_CONTENT_WIDTH + ROLE_PANEL_WIDTH + 16 * 3
+      setMode((current) => {
+        if (current === 'view' && isWide) return 'edit'
+        if (current === 'edit' && !isWide) return 'view'
+        return current
+      })
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   function updateScript(patch: Partial<ScriptData>) {
     setScript((current) => ({ ...current, ...patch }))
@@ -93,8 +116,23 @@ function App() {
     })
   }
 
+  // Рендерим PDF всегда, независимо от активной вкладки — чтобы открытие
+  // «Макета» было мгновенным, а сама панель настроек могла анимированно
+  // сворачиваться/разворачиваться, не дожидаясь генерации PDF.
+  const printBlob = usePrintPdf({
+    script,
+    scriptRoles,
+    allRoles: roles,
+    rolesLoading: loading,
+    settings: printSettings,
+    active: mode === 'print',
+  })
+
+  const isPrintMode = mode === 'print'
+  const sidebarOpen = mode !== 'view'
+
   return (
-    <div className="page">
+    <div className="page" style={{ '--max-content-width': `${MAX_CONTENT_WIDTH}px` } as CSSProperties}>
       <Toolbar
         isEditRoute={isEditRoute}
         mode={mode}
@@ -113,36 +151,54 @@ function App() {
       {!isEditRoute && <ReadOnlyScreen scriptRoles={scriptRoles} allRoles={roles} script={script} />}
 
       {isEditRoute && (
-        <div hidden={mode === 'print'} className="page-body">
-          <EditScreen
-            roles={selectableRoles}
-            loading={loading}
-            error={error}
-            scriptRoles={scriptRoles}
-            showRolePanel={mode === 'edit'}
-            teamFilter={teamFilter}
-            onTeamFilterChange={setTeamFilter}
-            onSelectRole={addToScript}
-            script={script}
-            onScriptChange={updateScript}
-            onRemove={removeFromScript}
-            onReorder={reorderScript}
-          />
-        </div>
-      )}
+        <div
+          className={`app${sidebarOpen ? ' app--sidebar-open' : ''}${isPrintMode ? ' app--print' : ''}`}
+        >
+          <div className={`side-panel${sidebarOpen ? '' : ' side-panel--collapsed'}`}>
+            {isPrintMode ? (
+              <PrintSettingsPanel
+                settings={printSettings}
+                onChange={setPrintSettings}
+                onDownloadPdf={handleDownloadPdf}
+              />
+            ) : (
+              <RolePanel
+                roles={selectableRoles}
+                loading={loading}
+                error={error}
+                onSelect={addToScript}
+                selectedRoleIds={scriptRoleIds}
+                onDeselect={removeFromScript}
+                teamFilter={teamFilter}
+                onTeamFilterChange={setTeamFilter}
+              />
+            )}
+          </div>
 
-      {isEditRoute && (
-        <div hidden={mode !== 'print'} className="page-body">
-          <PrintScreen
-            scriptRoles={scriptRoles}
-            allRoles={roles}
-            rolesLoading={loading}
-            script={script}
-            settings={printSettings}
-            active={mode === 'print'}
-            onSettingsChange={setPrintSettings}
-            onDownloadPdf={handleDownloadPdf}
-          />
+          <div className="main-panel">
+            <div className={`script-panel-container${isPrintMode ? ' main-panel__slot--hidden' : ''}`}>
+              <ScriptPanel
+                roles={scriptRoles}
+                allRoles={roles}
+                script={script}
+                onScriptChange={updateScript}
+                onRemove={removeFromScript}
+                onSelectTeam={setTeamFilter}
+                onReorder={reorderScript}
+              />
+            </div>
+
+            {/* Держим просмотрщик смонтированным постоянно (не только в режиме
+                «Макет»), чтобы переключение вкладок не пересоздавало canvas
+                заново и не вызывало «моргание». */}
+            <div className={`main-panel__preview${isPrintMode ? '' : ' main-panel__slot--hidden'}`}>
+              {printBlob && (
+                <Suspense fallback={<p>Загрузка просмотрщика...</p>}>
+                  <PdfPreview blob={printBlob} />
+                </Suspense>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>

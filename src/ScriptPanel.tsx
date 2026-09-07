@@ -3,6 +3,7 @@ import type { Role, RolesById, Team } from './types'
 import type { ScriptMeta } from './scriptModel'
 import { TEAM_LABELS } from './teams'
 import { getActiveJinxes } from './jinx'
+import { TEAM_PRINT_COLOR } from './printData'
 import './ScriptPanel.css'
 
 const SCRIPT_TEAMS: Team[] = ['townsfolk', 'outsider', 'minion', 'demon']
@@ -50,7 +51,12 @@ export function ScriptPanel({
         <img src={role.image} alt="" className="role-card__icon" />
         <div className="role-card__text">
           <div className="role-card__name-row">
-            <div className="role-card__name">{role.name}</div>
+            <div
+              className="role-card__name"
+              style={{ color: role.team ? TEAM_PRINT_COLOR[role.team] : undefined }}
+            >
+              {role.name}
+            </div>
             {jinxPartners.length > 0 && (
               <div className="role-card__jinx-icons">
                 {jinxPartners.map((partner) => (
@@ -172,10 +178,9 @@ export function ScriptPanel({
         )
       })}
 
-      <hr className="script-panel__divider" />
-
       {showFabledSection && (
         <section className="script-panel__section">
+          {renderTitle(`${TEAM_LABELS.fabled} (${fabledRoles.length})`, 'fabled')}
           <div className="script-panel__grid script-panel__grid--single">
             {jinxes.length > 0 && (
               <>

@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react'
-import type { Role, RolesById, Team } from './types'
-import { getTeamIconUrl, TEAM_LABELS, TEAMS } from './teams'
+import type { Role, RolesById } from './types'
+import { TeamFilters, type TeamFilter } from './TeamFilters'
 import { compareByAso } from './aso'
 import './RolePanel.css'
 
-export type TeamFilter = 'all' | Team
+export type { TeamFilter }
 type SortBy = 'name' | 'aso'
 
 interface RolePanelProps {
@@ -58,44 +58,25 @@ export function RolePanel({
 
   return (
     <div className="role-panel">
-      <div className="role-panel__filters">
+      <TeamFilters value={teamFilter} onChange={onTeamFilterChange} />
+
+      <div className="role-panel__search-row">
+        <input
+          type="search"
+          className="role-panel__search"
+          placeholder="Поиск"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+        />
+
         <button
           type="button"
-          className={`role-panel__filter-all${teamFilter === 'all' ? ' active' : ''}`}
-          title="Все"
-          onClick={() => onTeamFilterChange('all')}
+          className="role-panel__sort"
+          onClick={() => setSortBy((current) => (current === 'name' ? 'aso' : 'name'))}
         >
-          Все
+          {sortBy === 'name' ? 'Имя' : 'Порядок'}
         </button>
-        {TEAMS.map((team) => (
-          <button
-            key={team}
-            type="button"
-            className={teamFilter === team ? 'active' : ''}
-            title={TEAM_LABELS[team]}
-            aria-label={TEAM_LABELS[team]}
-            onClick={() => onTeamFilterChange(team)}
-          >
-            <img src={getTeamIconUrl(team)} alt="" className="role-panel__filter-icon" />
-          </button>
-        ))}
       </div>
-
-      <button
-        type="button"
-        className="role-panel__sort"
-        onClick={() => setSortBy((current) => (current === 'name' ? 'aso' : 'name'))}
-      >
-        {sortBy === 'name' ? 'По имени' : 'По порядку'}
-      </button>
-
-      <input
-        type="search"
-        className="role-panel__search"
-        placeholder="Поиск по имени, способности"
-        value={search}
-        onChange={(event) => setSearch(event.target.value)}
-      />
 
       <ul className="role-panel__list">
         {loading && <li className="role-panel__empty">Загрузка ролей...</li>}

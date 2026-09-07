@@ -1,3 +1,26 @@
+@font-face {
+  font-family: 'Petersburg';
+  src: url('./assets/fonts/petersburgcyrillic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto-Condensed';
+  src: url('./assets/fonts/robotocondensed-light.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'Roboto-Condensed';
+  src: url('./assets/fonts/robotocondensed.ttf') format('truetype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Roboto-Condensed';
+  src: url('./assets/fonts/robotocondensed-bold.ttf') format('truetype');
+  font-weight: 700;
+}
+
 :root {
   color-scheme: light dark;
   font-family: system-ui, sans-serif;
@@ -16,4 +39,17 @@ body {
 
 body {
   margin: 0;
+  position: relative;
+  background: #b9ae94;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url('./assets/images/paper.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.55;
 }

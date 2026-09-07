@@ -1,35 +1,27 @@
-import { lazy, Suspense, useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { usePDF } from '@react-pdf/renderer'
-import { PrintSettingsPanel } from './PrintSettingsPanel'
 import { ScriptPdfDocument } from './pdf/ScriptPdfDocument'
 import type { PrintSettings } from './print'
 import type { ScriptMeta } from './scriptModel'
 import type { Role, RolesById } from './types'
-import './App.css'
 
-const PdfPreview = lazy(() => import('./PdfPreview').then((m) => ({ default: m.PdfPreview })))
-
-interface PrintScreenProps {
+interface UsePrintPdfOptions {
+  script: ScriptMeta
   scriptRoles: Role[]
   allRoles: RolesById
   rolesLoading: boolean
-  script: ScriptMeta
   settings: PrintSettings
   active: boolean
-  onSettingsChange: (settings: PrintSettings) => void
-  onDownloadPdf: () => void
 }
 
-export function PrintScreen({
+export function usePrintPdf({
+  script,
   scriptRoles,
   allRoles,
   rolesLoading,
-  script,
   settings,
   active,
-  onSettingsChange,
-  onDownloadPdf,
-}: PrintScreenProps) {
+}: UsePrintPdfOptions) {
   const document = useMemo(
     () => (
       <ScriptPdfDocument script={script} roles={scriptRoles} allRoles={allRoles} settings={settings} />
@@ -62,14 +54,5 @@ export function PrintScreen({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings, active])
 
-  return (
-    <div className="app app--print">
-      <PrintSettingsPanel settings={settings} onChange={onSettingsChange} onDownloadPdf={onDownloadPdf} />
-      {instance.blob && (
-        <Suspense fallback={<p>Загрузка просмотрщика...</p>}>
-          <PdfPreview blob={instance.blob} />
-        </Suspense>
-      )}
-    </div>
-  )
+  return instance.blob
 }

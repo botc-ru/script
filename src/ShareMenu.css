@@ -10,10 +10,13 @@
   flex-direction: column;
   gap: 8px;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid rgba(119, 102, 68, 0.4);
   border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #f4f0e6;
+  background-image: url('./assets/images/paper.jpg');
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 10;
   min-width: 160px;
 }
@@ -26,12 +29,14 @@
 
 .share-menu__group + .share-menu__group {
   padding-top: 8px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid rgba(119, 102, 68, 0.25);
 }
 
 .share-menu__group-label {
+  font-family: 'Petersburg', serif;
+  text-transform: uppercase;
   font-size: 12px;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .share-menu__dropdown button {
@@ -39,10 +44,30 @@
   border: none;
   border-radius: 6px;
   background: none;
+  color: inherit;
+  font: inherit;
+  font-family: 'Roboto-Condensed', sans-serif;
   text-align: left;
   cursor: pointer;
 }
 
 .share-menu__dropdown button:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.06);
+}
+
+@media (max-width: 768px) {
+  .share-menu__dropdown {
+    min-width: 200px;
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .share-menu__group-label {
+    font-size: 14px;
+  }
+
+  .share-menu__dropdown button {
+    padding: 10px 12px;
+    font-size: 16px;
+  }
 }

@@ -1,36 +1,59 @@
 .toolbar {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
   gap: 8px;
-  padding: 8px 16px;
-  border-bottom: 1px solid #ccc;
+  height: 48px;
+  padding: 0 16px;
+  background: none;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+  z-index: 1;
 }
 
 .toolbar__tabs {
   display: flex;
+  align-items: stretch;
   gap: 4px;
 }
 
-.toolbar button {
-  padding: 6px 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+.toolbar > *:not(.toolbar__tabs):not(.share-menu) {
+  align-self: center;
+}
+
+.toolbar > .share-menu {
+  align-self: stretch;
+  display: flex;
+}
+
+.toolbar__tabs button,
+.toolbar > .share-menu > button {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 2px 14px 0;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
   background: none;
   color: inherit;
   cursor: pointer;
   box-sizing: border-box;
+  font-family: 'Petersburg', serif;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 15px;
 }
 
-.toolbar button:hover {
-  background: rgba(0, 0, 0, 0.05);
+.toolbar__tabs button:hover,
+.toolbar > .share-menu > button:hover {
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .toolbar .quick-add-role__row {
   padding: 4px 8px;
   border: none;
   border-radius: 0;
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
 
 .toolbar .quick-add-role__row:hover {
@@ -38,17 +61,17 @@
 }
 
 .toolbar .quick-add-role__row--selected {
-  background: rgba(51, 102, 204, 0.15);
+  border: 1px solid rgba(119, 102, 68, 0.53);
+  border-radius: 6px;
+  padding: 3px 7px;
 }
 
 .toolbar .quick-add-role__row--selected:hover {
-  background: rgba(51, 102, 204, 0.25);
+  background: #e2ded0;
 }
 
 .toolbar__tabs button.active {
-  background: #333;
-  color: #fff;
-  border-color: #333;
+  border-bottom-color: currentColor;
 }
 
 @media print {
@@ -60,11 +83,21 @@
 @media (max-width: 768px) {
   .toolbar {
     flex-wrap: wrap;
-    padding: 10px 12px;
+    align-content: flex-start;
+    gap: 0;
+    min-height: 60px;
+    padding: 0 12px;
   }
 
-  .toolbar button {
-    padding: 10px 16px;
+  .toolbar--view {
+    min-height: 120px;
+  }
+
+  .toolbar__tabs button,
+  .toolbar > .share-menu > button {
+    height: 100%;
+    min-height: 60px;
+    padding: 0 16px;
     font-size: 16px;
   }
 
@@ -84,5 +117,7 @@
     display: block;
     order: 3;
     width: 100%;
+    align-self: flex-start;
+    padding: 0 0 12px;
   }
 }

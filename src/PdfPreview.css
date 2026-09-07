@@ -2,15 +2,19 @@
   flex: 1;
   min-width: 0;
   overflow-y: auto;
-  background: #fff;
+  background: none;
 }
 
 .pdf-preview__pages {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
+  gap: 16px;
+  width: 100%;
+  max-width: var(--max-content-width, 760px);
+  margin: 0 auto;
+  padding: 16px;
+  box-sizing: border-box;
 }
 
 .pdf-preview__page {
@@ -22,4 +26,11 @@
 .pdf-preview__error {
   padding: 16px;
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  .pdf-preview__pages {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
