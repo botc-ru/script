@@ -10,13 +10,17 @@ interface PdfPreviewProps {
 }
 
 export function PdfPreview({ blob }: PdfPreviewProps) {
+  const scrollRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
     const container = containerRef.current
-    if (!container) return
+    const scrollEl = scrollRef.current
+    if (!container || !scrollEl) return
+
+    const savedScrollTop = scrollEl.scrollTop
 
     container.innerHTML = ''
     setError(null)
@@ -25,10 +29,11 @@ export function PdfPreview({ blob }: PdfPreviewProps) {
       .arrayBuffer()
       .then((buffer) => getDocument({ data: buffer }).promise)
       .then(async (pdf) => {
+        const scale = 2 * (window.devicePixelRatio || 1)
+
         for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
           if (cancelled) return
           const page = await pdf.getPage(pageNumber)
-          const scale = 3 * (window.devicePixelRatio || 1)
           const viewport = page.getViewport({ scale })
           const canvas = document.createElement('canvas')
           canvas.className = 'pdf-preview__page'
@@ -38,6 +43,7 @@ export function PdfPreview({ blob }: PdfPreviewProps) {
           if (!context) continue
           container.appendChild(canvas)
           await page.render({ canvas, canvasContext: context, viewport }).promise
+          scrollEl.scrollTop = savedScrollTop
         }
       })
       .catch(() => {
@@ -50,7 +56,7 @@ export function PdfPreview({ blob }: PdfPreviewProps) {
   }, [blob])
 
   return (
-    <div className="pdf-preview">
+    <div className="pdf-preview" ref={scrollRef}>
       {error && <p className="pdf-preview__error">{error}</p>}
       <div className="pdf-preview__pages" ref={containerRef} />
     </div>

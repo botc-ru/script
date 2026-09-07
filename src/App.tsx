@@ -15,7 +15,7 @@ import { buildScriptLink, readScriptFromLink } from './scriptLink'
 import { downloadScriptJson, copyScriptJson } from './scriptExport'
 import { downloadScriptPdf } from './pdf/pdfExport'
 import type { ScriptData } from './scriptModel'
-import type { Role } from './types'
+import type { Role, RolesById } from './types'
 import './App.css'
 
 const savedScript = readScriptFromLink() ?? loadScript()
@@ -41,10 +41,16 @@ function App() {
     setScript((current) => ({ ...current, ...patch }))
   }
 
+  const selectableRoles = useMemo<RolesById>(
+    () => Object.fromEntries(Object.entries(roles).filter(([, role]) => role.team)),
+    [roles],
+  )
+
   const scriptRoles = useMemo(
     () => script.roleIds.filter((id) => roles[id]).map((id) => roles[id]),
     [script.roleIds, roles],
   )
+  const scriptRoleIds = useMemo(() => new Set(script.roleIds), [script.roleIds])
 
   function addToScript(role: Role) {
     if (script.roleIds.includes(role.id)) return
@@ -98,6 +104,10 @@ function App() {
         onDownloadJson={() => downloadScriptJson(script)}
         onCopyLink={handleCopyLink}
         onDownloadPdf={handleDownloadPdf}
+        roles={selectableRoles}
+        onSelectRole={addToScript}
+        onDeselectRole={removeFromScript}
+        selectedRoleIds={scriptRoleIds}
       />
 
       {!isEditRoute && <ReadOnlyScreen scriptRoles={scriptRoles} allRoles={roles} script={script} />}
@@ -105,7 +115,7 @@ function App() {
       {isEditRoute && (
         <div hidden={mode === 'print'} className="page-body">
           <EditScreen
-            roles={roles}
+            roles={selectableRoles}
             loading={loading}
             error={error}
             scriptRoles={scriptRoles}
@@ -126,9 +136,12 @@ function App() {
           <PrintScreen
             scriptRoles={scriptRoles}
             allRoles={roles}
+            rolesLoading={loading}
             script={script}
             settings={printSettings}
+            active={mode === 'print'}
             onSettingsChange={setPrintSettings}
+            onDownloadPdf={handleDownloadPdf}
           />
         </div>
       )}

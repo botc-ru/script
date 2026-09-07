@@ -30,6 +30,26 @@
   cursor: pointer;
 }
 
+.print-settings__download {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 0;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+}
+
+.print-settings__download:hover {
+  background: #000;
+  border-color: #000;
+}
+
 .print-settings__group {
   display: flex;
   flex-direction: column;
@@ -73,5 +93,30 @@
 @media print {
   .print-settings {
     display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .print-settings__section-title {
+    font-size: 16px;
+  }
+
+  .print-settings__label {
+    font-size: 15px;
+  }
+
+  .print-settings__buttons button {
+    padding: 10px 0;
+    font-size: 16px;
+  }
+
+  .print-settings__download {
+    padding: 12px 0;
+    font-size: 16px;
+  }
+
+  .print-settings__section-title--toggle input {
+    width: 20px;
+    height: 20px;
   }
 }

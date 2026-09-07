@@ -15,7 +15,7 @@ export interface Jinx {
 export interface Role {
   id: string
   name: string
-  team: Team
+  team?: Team
   ability: string
   image: string
   flavor?: string
@@ -24,6 +24,7 @@ export interface Role {
   otherNight?: number
   otherNightReminder?: string
   jinxes?: Jinx[]
+  modifications?: string
 }
 
 export type RolesById = Record<string, Role>

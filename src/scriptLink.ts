@@ -1,16 +1,23 @@
 import { DEFAULT_SCRIPT_DATA, type ScriptData } from './scriptModel'
 import { ROOT_PATH } from './routes'
 
-export function buildScriptLink(script: ScriptData): string {
-  const params = new URLSearchParams()
-  if (script.name) params.set('title', script.name)
-  if (script.author) params.set('author', script.author)
-  if (script.color) params.set('color', script.color)
-  if (script.roleIds.length > 0) params.set('roles', script.roleIds.join(','))
+function encodeQueryValue(value: string): string {
+  // encodeURIComponent escapes everything unsafe (including reserved
+  // characters like "#" that would otherwise break the URL); commas are
+  // safe inside a query value, so we unescape them back for readability.
+  return encodeURIComponent(value).replace(/%2C/g, ',')
+}
 
+export function buildScriptLink(script: ScriptData): string {
+  const params: [string, string][] = []
+  if (script.name) params.push(['title', script.name])
+  if (script.author) params.push(['author', script.author])
+  if (script.color) params.push(['color', script.color])
+  if (script.roleIds.length > 0) params.push(['roles', script.roleIds.join(',')])
+
+  const query = params.map(([key, value]) => `${key}=${encodeQueryValue(value)}`).join('&')
   const url = new URL(ROOT_PATH, window.location.origin)
-  url.search = params.toString()
-  return url.toString()
+  return query ? `${url.toString()}?${query}` : url.toString()
 }
 
 export function readScriptFromLink(): ScriptData | null {

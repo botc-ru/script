@@ -3,6 +3,8 @@
   flex-direction: column;
   gap: 20px;
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .script-panel__header {
@@ -194,6 +196,10 @@ div.role-card {
 .role-card__ability {
   font-size: 13px;
   opacity: 0.8;
+}
+
+.role-card__modifications {
+  font-weight: 700;
 }
 
 .jinx-row {

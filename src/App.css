@@ -34,4 +34,26 @@
   .app--role-panel-open .script-panel {
     display: none;
   }
+
+  .app--print {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .app--print > .pdf-preview,
+  .app--print > .print-settings {
+    width: 100%;
+    height: calc(50% - 6px);
+    flex: none;
+    min-height: 0;
+  }
+
+  .app--print > .pdf-preview {
+    order: 1;
+  }
+
+  .app--print > .print-settings {
+    order: 2;
+    overflow-y: auto;
+  }
 }

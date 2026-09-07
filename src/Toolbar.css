@@ -26,6 +26,25 @@
   background: rgba(0, 0, 0, 0.05);
 }
 
+.toolbar .quick-add-role__row {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 0;
+  box-sizing: content-box;
+}
+
+.toolbar .quick-add-role__row:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.toolbar .quick-add-role__row--selected {
+  background: rgba(51, 102, 204, 0.15);
+}
+
+.toolbar .quick-add-role__row--selected:hover {
+  background: rgba(51, 102, 204, 0.25);
+}
+
 .toolbar__tabs button.active {
   background: #333;
   color: #fff;
@@ -47,5 +66,23 @@
   .toolbar button {
     padding: 10px 16px;
     font-size: 16px;
+  }
+
+  .toolbar__tabs {
+    order: 1;
+  }
+
+  .toolbar .share-menu {
+    order: 2;
+  }
+
+  .toolbar__quick-add {
+    display: none;
+  }
+
+  .toolbar__quick-add--show-mobile {
+    display: block;
+    order: 3;
+    width: 100%;
   }
 }

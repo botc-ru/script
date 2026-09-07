@@ -55,7 +55,7 @@ function abilityGroupIndex(ability: string): number {
 }
 
 export function compareByAso(a: Role, b: Role): number {
-  const team = TEAM_ORDER[a.team] - TEAM_ORDER[b.team]
+  const team = (a.team ? TEAM_ORDER[a.team] : 0) - (b.team ? TEAM_ORDER[b.team] : 0)
   if (team !== 0) return team
 
   const group = abilityGroupIndex(a.ability) - abilityGroupIndex(b.ability)

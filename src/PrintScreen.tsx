@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef } from 'react'
 import { usePDF } from '@react-pdf/renderer'
 import { PrintSettingsPanel } from './PrintSettingsPanel'
 import { ScriptPdfDocument } from './pdf/ScriptPdfDocument'
@@ -12,17 +12,23 @@ const PdfPreview = lazy(() => import('./PdfPreview').then((m) => ({ default: m.P
 interface PrintScreenProps {
   scriptRoles: Role[]
   allRoles: RolesById
+  rolesLoading: boolean
   script: ScriptMeta
   settings: PrintSettings
+  active: boolean
   onSettingsChange: (settings: PrintSettings) => void
+  onDownloadPdf: () => void
 }
 
 export function PrintScreen({
   scriptRoles,
   allRoles,
+  rolesLoading,
   script,
   settings,
+  active,
   onSettingsChange,
+  onDownloadPdf,
 }: PrintScreenProps) {
   const document = useMemo(
     () => (
@@ -31,13 +37,34 @@ export function PrintScreen({
     [script, scriptRoles, allRoles, settings],
   )
   const [instance, updateInstance] = usePDF()
+
+  // Настоящий первый рендер — как только роли подгрузятся с сервера (до этого
+  // scriptRoles пуст, даже если в сценарии что-то выбрано). Рендерим сразу при
+  // монтировании, а не по явному действию пользователя, чтобы открытие вкладки
+  // «Макет» в первый раз было мгновенным.
+  const hasInitialRenderRef = useRef(false)
   useEffect(() => {
+    if (rolesLoading || hasInitialRenderRef.current) return
+    hasInitialRenderRef.current = true
     updateInstance(document)
-  }, [document, updateInstance])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rolesLoading])
+
+  // Дальше перерендер только по явному открытию вкладки «Макет» или изменению
+  // настроек печати — правки на вкладках «Просмотр»/«Роли» не должны его вызывать.
+  const isSettingsEffectFirstRun = useRef(true)
+  useEffect(() => {
+    if (isSettingsEffectFirstRun.current) {
+      isSettingsEffectFirstRun.current = false
+      return
+    }
+    if (active) updateInstance(document)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings, active])
 
   return (
-    <div className="app">
-      <PrintSettingsPanel settings={settings} onChange={onSettingsChange} />
+    <div className="app app--print">
+      <PrintSettingsPanel settings={settings} onChange={onSettingsChange} onDownloadPdf={onDownloadPdf} />
       {instance.blob && (
         <Suspense fallback={<p>Загрузка просмотрщика...</p>}>
           <PdfPreview blob={instance.blob} />

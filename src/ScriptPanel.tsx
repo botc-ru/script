@@ -59,7 +59,12 @@ export function ScriptPanel({
               </div>
             )}
           </div>
-          <div className="role-card__ability">{role.ability}</div>
+          <div className="role-card__ability">
+            {role.ability}
+            {role.modifications && (
+              <span className="role-card__modifications"> [{role.modifications}]</span>
+            )}
+          </div>
         </div>
       </>
     )

@@ -92,7 +92,7 @@ export function RolePanel({
       <input
         type="search"
         className="role-panel__search"
-        placeholder="Поиск по названию или способности..."
+        placeholder="Поиск по имени, способности"
         value={search}
         onChange={(event) => setSearch(event.target.value)}
       />

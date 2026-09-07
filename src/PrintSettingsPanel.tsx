@@ -1,4 +1,4 @@
-import type { FontScale, PrintSettings } from './print'
+import type { FontScale, PlayersCount, PrintSettings } from './print'
 import './PrintSettingsPanel.css'
 
 const FONT_SCALES: { value: FontScale; label: string }[] = [
@@ -7,12 +7,15 @@ const FONT_SCALES: { value: FontScale; label: string }[] = [
   { value: 1.15, label: 'L' },
 ]
 
+const PLAYERS_COUNTS: PlayersCount[] = ['5-6', '7+']
+
 interface PrintSettingsPanelProps {
   settings: PrintSettings
   onChange: (settings: PrintSettings) => void
+  onDownloadPdf: () => void
 }
 
-export function PrintSettingsPanel({ settings, onChange }: PrintSettingsPanelProps) {
+export function PrintSettingsPanel({ settings, onChange, onDownloadPdf }: PrintSettingsPanelProps) {
   function set(patch: Partial<PrintSettings>) {
     onChange({ ...settings, ...patch })
   }
@@ -38,6 +41,24 @@ export function PrintSettingsPanel({ settings, onChange }: PrintSettingsPanelPro
       <div className="print-settings__section">
         <span className="print-settings__section-title">Документ</span>
 
+        <button type="button" className="print-settings__download" onClick={onDownloadPdf}>
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M12 3v12" />
+            <path d="M7 10l5 5 5-5" />
+            <path d="M5 21h14" />
+          </svg>
+          Скачать PDF
+        </button>
+
         <div className="print-settings__group">
           <span className="print-settings__label">Размер шрифта</span>
           <div className="print-settings__buttons">
@@ -56,6 +77,22 @@ export function PrintSettingsPanel({ settings, onChange }: PrintSettingsPanelPro
 
         {toggleGroup('Фон', settings.background, (background) => set({ background }))}
         {toggleGroup('Логотип', settings.logo, (logo) => set({ logo }))}
+
+        <div className="print-settings__group">
+          <span className="print-settings__label">Число игроков</span>
+          <div className="print-settings__buttons">
+            {PLAYERS_COUNTS.map((count) => (
+              <button
+                key={count}
+                type="button"
+                className={settings.playersCount === count ? 'active' : ''}
+                onClick={() => set({ playersCount: count })}
+              >
+                {count}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="print-settings__section">
@@ -65,7 +102,7 @@ export function PrintSettingsPanel({ settings, onChange }: PrintSettingsPanelPro
             checked={settings.playerSheet}
             onChange={(event) => set({ playerSheet: event.target.checked })}
           />
-          Лист игрока
+          Список ролей
         </label>
 
         {settings.playerSheet && (
@@ -98,8 +135,20 @@ export function PrintSettingsPanel({ settings, onChange }: PrintSettingsPanelPro
             checked={settings.storytellerSheet}
             onChange={(event) => set({ storytellerSheet: event.target.checked })}
           />
-          Лист рассказчика
+          NPC и Странники
         </label>
+
+        {settings.storytellerSheet && (
+          <div className="print-settings__subgroup">
+            {toggleGroup('Странники', settings.travellers, (travellers) => set({ travellers }))}
+            {toggleGroup('Таблица кол-ва игроков', settings.playersTable, (playersTable) =>
+              set({ playersTable }),
+            )}
+            {toggleGroup('Порядок ночи', settings.nightOrderColumns, (nightOrderColumns) =>
+              set({ nightOrderColumns }),
+            )}
+          </div>
+        )}
       </div>
 
       <div className="print-settings__section">
