@@ -10,7 +10,7 @@
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 999px;
   background-color: rgba(0, 0, 0, 0.04);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23776644' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+  background-image: var(--icon-search);
   background-repeat: no-repeat;
   background-position: 10px center;
   background-size: 14px 14px;
@@ -19,7 +19,7 @@
 
 .quick-add-role__input:focus {
   outline: none;
-  border-color: #776644;
+  border-color: var(--accent);
   background-color: rgba(0, 0, 0, 0.02);
 }
 
@@ -31,7 +31,7 @@
   z-index: 10;
   padding: 8px;
   background-color: #f4f0e6;
-  background-image: url('./assets/images/paper.jpg');
+  background-image: var(--paper-texture);
   background-size: cover;
   background-position: center;
   border-radius: 8px;
@@ -66,8 +66,8 @@
 }
 
 .quick-add-role__row--selected {
-  background: #eae7dc;
-  border: 1px solid rgba(119, 102, 68, 0.53);
+  background: var(--accent-soft-bg);
+  border: 1px solid var(--accent-border);
   border-radius: 6px;
   padding: 3px 7px;
 }

@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from 'react'
 import type { Role, RolesById } from './types'
+import { searchRoles } from './roleSearch'
 import './QuickAddRole.css'
 
 interface QuickAddRoleProps {
@@ -15,17 +16,8 @@ export function QuickAddRole({ roles, onSelect, onDeselect, selectedRoleIds }: Q
   const containerRef = useRef<HTMLDivElement>(null)
 
   const results = useMemo(() => {
-    const trimmed = query.trim().toLowerCase()
-    if (trimmed === '') return []
-
-    return Object.values(roles)
-      .filter(
-        (role) =>
-          role.name.toLowerCase().includes(trimmed) ||
-          role.ability.toLowerCase().includes(trimmed) ||
-          role.id.toLowerCase().includes(trimmed),
-      )
-      .sort((a, b) => a.name.localeCompare(b.name, 'ru'))
+    if (query.trim() === '') return []
+    return searchRoles(Object.values(roles), query).sort((a, b) => a.name.localeCompare(b.name, 'ru'))
   }, [roles, query])
 
   function handleSelect(role: Role) {

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import type { Role, RolesById } from './types'
 import { TeamFilters, type TeamFilter } from './TeamFilters'
 import { compareByAso } from './aso'
+import { searchRoles } from './roleSearch'
 import './RolePanel.css'
 
 export type { TeamFilter }
@@ -32,28 +33,13 @@ export function RolePanel({
   const [search, setSearch] = useState('')
 
   const visibleRoles = useMemo(() => {
-    const query = search.trim().toLowerCase()
+    const byTeam = Object.values(roles).filter(
+      (role) => teamFilter === 'all' || role.team === teamFilter,
+    )
 
-    const filtered = Object.values(roles).filter((role) => {
-      if (teamFilter !== 'all' && role.team !== teamFilter) {
-        return false
-      }
-      if (query === '') {
-        return true
-      }
-      return (
-        role.name.toLowerCase().includes(query) ||
-        role.ability.toLowerCase().includes(query) ||
-        role.id.toLowerCase().includes(query)
-      )
-    })
-
-    return filtered.sort((a, b) => {
-      if (sortBy === 'aso') {
-        return compareByAso(a, b)
-      }
-      return a.name.localeCompare(b.name, 'ru')
-    })
+    return searchRoles(byTeam, search).sort((a, b) =>
+      sortBy === 'aso' ? compareByAso(a, b) : a.name.localeCompare(b.name, 'ru'),
+    )
   }, [roles, teamFilter, sortBy, search])
 
   return (

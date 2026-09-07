@@ -38,7 +38,7 @@
   color: inherit;
   cursor: pointer;
   box-sizing: border-box;
-  font-family: 'Petersburg', serif;
+  font-family: var(--font-display);
   text-transform: uppercase;
   letter-spacing: 0.02em;
   font-size: 15px;
@@ -61,7 +61,7 @@
 }
 
 .toolbar .quick-add-role__row--selected {
-  border: 1px solid rgba(119, 102, 68, 0.53);
+  border: 1px solid var(--accent-border);
   border-radius: 6px;
   padding: 3px 7px;
 }

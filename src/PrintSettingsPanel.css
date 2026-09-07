@@ -14,7 +14,7 @@
   flex-direction: column;
   gap: 8px;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(119, 102, 68, 0.35);
+  border-bottom: 1px solid var(--accent-divider);
 }
 
 .print-settings__section:last-child {
@@ -23,7 +23,6 @@
 
 .print-settings__section-title {
   font-weight: 700;
-  font-size: 13px;
 }
 
 .print-settings__section-title--toggle {
@@ -41,15 +40,15 @@
   width: 16px;
   height: 16px;
   margin: 0;
-  border: 1px solid rgba(119, 102, 68, 0.6);
+  border: 1px solid var(--accent-checkbox-border);
   border-radius: 4px;
   background: none;
   cursor: pointer;
 }
 
 .print-settings__section-title--toggle input:checked {
-  background: #776644;
-  border-color: #776644;
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 .print-settings__section-title--toggle input:checked::after {
@@ -72,13 +71,12 @@
   height: 34px;
   box-sizing: border-box;
   padding: 0;
-  border: 1px solid #776644;
+  border: 1px solid var(--accent);
   border-radius: 6px;
-  background: #776644;
+  background: var(--accent);
   color: #fff;
   cursor: pointer;
   font: inherit;
-  font-size: 12px;
 }
 
 .print-settings__download:hover {
@@ -86,14 +84,9 @@
   border-color: #5c4e34;
 }
 
-.print-settings__label {
-  font-size: 13px;
-  opacity: 0.7;
-}
-
 .print-settings__row {
   display: grid;
-  grid-template-columns: 2fr 3fr;
+  grid-template-columns: 3fr 4fr;
   align-items: center;
   gap: 8px;
 }
@@ -103,7 +96,7 @@
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  border: 1px solid rgba(119, 102, 68, 0.53);
+  border: 1px solid var(--accent-border);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -117,11 +110,10 @@
   height: 34px;
   padding: 0;
   border: none;
-  border-right: 1px solid rgba(119, 102, 68, 0.53);
+  border-right: 1px solid var(--accent-border);
   background: none;
   color: inherit;
   font: inherit;
-  font-size: 12px;
   cursor: pointer;
   opacity: 0.6;
 }
@@ -135,7 +127,7 @@
 }
 
 .print-settings__segmented button.active {
-  background: #eae7dc;
+  background: var(--accent-soft-bg);
   opacity: 1;
 }
 
@@ -157,24 +149,14 @@
     padding-right: 16px;
   }
 
-  .print-settings__section-title {
-    font-size: 16px;
-  }
-
-  .print-settings__label {
-    font-size: 17px;
-  }
-
   .print-settings__segmented button {
     height: 44px;
     padding: 0;
-    font-size: 16px;
   }
 
   .print-settings__download {
     height: 44px;
     padding: 0;
-    font-size: 16px;
   }
 
   .print-settings__section-title--toggle input {

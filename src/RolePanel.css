@@ -16,7 +16,7 @@
 }
 
 .role-panel__search-row:focus-within {
-  border-color: #776644;
+  border-color: var(--accent);
 }
 
 .role-panel__search {
@@ -25,10 +25,11 @@
   padding: 6px 8px 6px 28px;
   box-sizing: border-box;
   border: none;
-  background: transparent
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23776644' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E")
-    no-repeat 10px center / 14px 14px;
-  font-size: 15px;
+  background-color: transparent;
+  background-image: var(--icon-search);
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  background-size: 14px 14px;
 }
 
 .role-panel__search:focus {
@@ -45,7 +46,6 @@
   background: none;
   cursor: pointer;
   box-sizing: border-box;
-  font-size: 15px;
 }
 
 .role-panel__filters {
@@ -65,14 +65,9 @@
   border-radius: 8px;
   background: none;
   cursor: pointer;
-  font-size: 15px;
   line-height: 1;
   opacity: 0.3;
   filter: brightness(0);
-}
-
-.role-panel__filter-all {
-  font-size: 12px;
 }
 
 .role-panel__filter-icon {
@@ -87,10 +82,10 @@
 }
 
 .role-panel__filters button.active {
-  background: #EAE7DC;
+  background: var(--accent-soft-bg);
   opacity: 1;
   filter: brightness(100%);
-  border:#77664488  1px solid;
+  border: 1px solid var(--accent-border);
 }
 
 .role-panel__list {
@@ -129,8 +124,8 @@
 }
 
 .role-panel__row--selected {
-  background: #eae7dc;
-  border: 1px solid rgba(119, 102, 68, 0.53);
+  background: var(--accent-soft-bg);
+  border: 1px solid var(--accent-border);
   border-radius: 6px;
   padding: 3px 7px;
 }
@@ -154,7 +149,6 @@
   .role-panel__search,
   .role-panel__sort {
     padding: 12px 14px;
-    font-size: 16px;
   }
 
   .role-panel__search {
@@ -183,7 +177,4 @@
     height: 36px;
   }
 
-  .role-panel__name {
-    font-size: 16px;
-  }
 }

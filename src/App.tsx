@@ -103,6 +103,11 @@ function App() {
     setMode((current) => (current === clickedMode ? 'view' : clickedMode))
   }
 
+  function handleSelectTeamFromScript(team: TeamFilter) {
+    setTeamFilter(team)
+    setMode('edit')
+  }
+
   function handleDownloadPdf() {
     downloadScriptPdf({ script, roles: scriptRoles, allRoles: roles, settings: printSettings }).catch(() => {
       window.alert('Не удалось создать PDF')
@@ -183,7 +188,7 @@ function App() {
                 script={script}
                 onScriptChange={updateScript}
                 onRemove={removeFromScript}
-                onSelectTeam={setTeamFilter}
+                onSelectTeam={handleSelectTeamFromScript}
                 onReorder={reorderScript}
               />
             </div>

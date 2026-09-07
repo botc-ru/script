@@ -22,8 +22,23 @@
 }
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   font-family: system-ui, sans-serif;
+
+  /* Общие для всего приложения "дизайн-токены" темы пергамента — чтобы не
+     дублировать одни и те же шрифты/цвета/текстуры в каждом CSS-файле. */
+  --font-display: 'Petersburg', serif;
+  --font-body: 'Roboto-Condensed', sans-serif;
+  --paper-texture: url('./assets/images/paper.jpg');
+  --icon-search: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23776644' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+
+  --accent: #776644;
+  --accent-soft-bg: #eae7dc;
+  --accent-border: rgba(119, 102, 68, 0.53);
+  --accent-divider: rgba(119, 102, 68, 0.35);
+  --accent-checkbox-border: rgba(119, 102, 68, 0.6);
+  --accent-dropdown-border: rgba(119, 102, 68, 0.4);
+  --accent-dropdown-divider: rgba(119, 102, 68, 0.25);
 }
 
 html,
@@ -48,7 +63,7 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background-image: url('./assets/images/paper.jpg');
+  background-image: var(--paper-texture);
   background-size: cover;
   background-position: center;
   opacity: 0.55;

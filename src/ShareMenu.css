@@ -10,10 +10,10 @@
   flex-direction: column;
   gap: 8px;
   padding: 10px;
-  border: 1px solid rgba(119, 102, 68, 0.4);
+  border: 1px solid var(--accent-dropdown-border);
   border-radius: 8px;
   background-color: #f4f0e6;
-  background-image: url('./assets/images/paper.jpg');
+  background-image: var(--paper-texture);
   background-size: cover;
   background-position: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -29,11 +29,11 @@
 
 .share-menu__group + .share-menu__group {
   padding-top: 8px;
-  border-top: 1px solid rgba(119, 102, 68, 0.25);
+  border-top: 1px solid var(--accent-dropdown-divider);
 }
 
 .share-menu__group-label {
-  font-family: 'Petersburg', serif;
+  font-family: var(--font-display);
   text-transform: uppercase;
   font-size: 12px;
   opacity: 0.7;
@@ -46,7 +46,7 @@
   background: none;
   color: inherit;
   font: inherit;
-  font-family: 'Roboto-Condensed', sans-serif;
+  font-family: var(--font-body);
   text-align: left;
   cursor: pointer;
 }

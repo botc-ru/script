@@ -28,6 +28,7 @@
   transition:
     width 0.25s ease,
     opacity 0.2s ease;
+  font-size: 14px;
 }
 
 .side-panel--collapsed {
@@ -87,6 +88,7 @@
     box-sizing: border-box;
     padding: 16px 16px 0;
     transition: none;
+    font-size: 18px;
   }
 
   .side-panel--collapsed {
