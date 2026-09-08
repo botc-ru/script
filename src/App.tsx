@@ -29,6 +29,18 @@ const openedFromLink = linkScript !== null
 const MAX_CONTENT_WIDTH = 760
 const ROLE_PANEL_WIDTH = 180
 
+function copyScriptJsonWhenFocused(script: ScriptData): Promise<void> {
+  if (document.hasFocus()) return copyScriptJson(script)
+
+  return new Promise((resolve, reject) => {
+    function onFocus() {
+      window.removeEventListener('focus', onFocus)
+      copyScriptJson(script).then(resolve, reject)
+    }
+    window.addEventListener('focus', onFocus)
+  })
+}
+
 function replaceUrlQuery(query: string) {
   window.history.replaceState(
     null,
@@ -157,7 +169,7 @@ function App() {
     if (action === 'pdf') {
       handleDownloadPdf()
     } else {
-      copyScriptJson(script)
+      copyScriptJsonWhenFocused(script)
         .then(() => showToast('JSON скопирован в буфер обмена'))
         .catch(() => {})
     }
