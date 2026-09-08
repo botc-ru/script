@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
   notFirstNight: {
     textAlign: 'right',
-    marginBottom: mm(1),
+    marginBottom: mm(-1),
     fontFamily: 'Roboto-Condensed',
     fontWeight: 300,
   },
@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
   },
   author: {
     opacity: 0.7,
+    marginBottom: mm(5),
   },
   section: {
     flexShrink: 0,
