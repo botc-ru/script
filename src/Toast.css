@@ -1,7 +1,7 @@
 .toast {
   position: fixed;
   left: 50%;
-  top: calc(24px + env(safe-area-inset-top));
+  top: 24px;
   transform: translateX(-50%);
   z-index: 100;
   padding: 14px 24px;
@@ -39,7 +39,7 @@
 
 @media (max-width: 768px) {
   .toast {
-    top: calc(16px + env(safe-area-inset-top));
+    top: 16px;
     font-size: 17px;
     padding: 14px 20px;
   }

@@ -19,7 +19,7 @@
 .side-panel {
   width: 180px;
   flex-shrink: 0;
-  height: 100%;
+  box-sizing: border-box;
   overflow: hidden;
   opacity: 1;
   transition:
@@ -32,7 +32,7 @@
   width: 0;
   opacity: 0;
   pointer-events: none;
-  padding-left: 0;
+  margin-left: 0;
 }
 
 .main-panel {
@@ -57,8 +57,8 @@
 
 @media (min-width: 769px) {
   .side-panel {
-    padding-top: 16px;
-    padding-left: 16px;
+    margin-top: 16px;
+    margin-left: 16px;
   }
 }
 
@@ -74,7 +74,6 @@
 
   .side-panel {
     width: 100%;
-    box-sizing: border-box;
     padding: 16px 16px 0;
     transition: none;
     font-size: 18px;
