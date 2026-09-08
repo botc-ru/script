@@ -173,19 +173,18 @@ const styles = StyleSheet.create({
   },
   roleJinxIcons: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: mm(0.5),
     marginLeft: mm(1),
-    marginTop: mm(-1.5),
-    marginBottom: mm(-1.5),
+    marginTop: mm(-0.5),
+    marginBottom: mm(-0.5),
   },
   roleJinxIconsCompact: {
     marginTop: 0,
     marginBottom: 0,
   },
   roleJinxIcon: {
-    width: mm(7),
-    height: mm(7),
+    width: mm(5),
+    height: mm(5),
     flexShrink: 0,
     objectFit: 'contain',
   },
