@@ -5,6 +5,7 @@ import { ReadOnlyScreen } from './ReadOnlyScreen'
 import { RolePanel, type TeamFilter } from './RolePanel'
 import { ScriptPanel } from './ScriptPanel'
 import { PrintSettingsPanel } from './PrintSettingsPanel'
+import { Toast } from './Toast'
 import { usePrintPdf } from './usePrintPdf'
 import { usePath } from './usePath'
 import { EDIT_PATH, isEditPath } from './routes'
@@ -12,7 +13,7 @@ import type { Mode } from './mode'
 import { DEFAULT_PRINT_SETTINGS, type PrintSettings } from './print'
 import { compareByAso } from './aso'
 import { loadScript, saveScript } from './scriptStorage'
-import { buildScriptLink, readScriptFromLink } from './scriptLink'
+import { buildScriptLink, buildScriptQuery, readScriptFromLink } from './scriptLink'
 import { downloadScriptJson, copyScriptJson } from './scriptExport'
 import { downloadScriptPdf } from './pdf/pdfExport'
 import type { ScriptData } from './scriptModel'
@@ -21,7 +22,13 @@ import './App.css'
 
 const PdfPreview = lazy(() => import('./PdfPreview').then((m) => ({ default: m.PdfPreview })))
 
-const savedScript = readScriptFromLink() ?? loadScript()
+const linkScript = readScriptFromLink()
+const savedScript = linkScript ?? loadScript()
+// Страница была открыта по ссылке с параметрами сценария (title/roles/...) —
+// значит URL должен оставаться источником истины и дальше, синхронизируясь
+// с каждым изменением, иначе обновление страницы откатит правки, сделанные
+// после перехода по ссылке.
+const openedFromLink = linkScript !== null
 
 const MAX_CONTENT_WIDTH = 760
 const ROLE_PANEL_WIDTH = 180
@@ -36,6 +43,15 @@ function App() {
   )
   const [teamFilter, setTeamFilter] = useState<TeamFilter>('all')
   const [printSettings, setPrintSettings] = useState<PrintSettings>(DEFAULT_PRINT_SETTINGS)
+  const [toast, setToast] = useState<{ message: string; key: number } | null>(null)
+
+  function showToast(message: string) {
+    const key = Date.now()
+    setToast({ message, key })
+    window.setTimeout(() => {
+      setToast((current) => (current?.key === key ? null : current))
+    }, 2500)
+  }
 
   useEffect(() => {
     document.title = script.name || 'Редактор сценариев'
@@ -43,6 +59,16 @@ function App() {
 
   useEffect(() => {
     saveScript(script)
+  }, [script])
+
+  useEffect(() => {
+    if (!openedFromLink) return
+    const query = buildScriptQuery(script)
+    window.history.replaceState(
+      null,
+      '',
+      window.location.pathname + (query ? `?${query}` : '') + window.location.hash,
+    )
   }, [script])
 
   // Реагируем только на реальное изменение размера окна, а не на смену mode —
@@ -116,10 +142,41 @@ function App() {
 
   function handleCopyLink() {
     const link = buildScriptLink(script)
-    navigator.clipboard.writeText(link).catch(() => {
-      window.prompt('Скопируйте ссылку:', link)
-    })
+    navigator.clipboard
+      .writeText(link)
+      .then(() => showToast('Ссылка скопирована в буфер обмена'))
+      .catch(() => {
+        window.prompt('Скопируйте ссылку:', link)
+      })
   }
+
+  // Быстрые ссылки вида ?action=pdf / ?action=json — сразу скачивают PDF или
+  // копируют JSON сценария при открытии страницы. Ждём загрузки ролей (иначе
+  // PDF/JSON будут пустыми) и один раз убираем параметр из URL, чтобы действие
+  // не повторялось при обновлении страницы.
+  useEffect(() => {
+    if (loading) return
+    const params = new URLSearchParams(window.location.search)
+    const action = params.get('action')
+    if (action !== 'pdf' && action !== 'json') return
+
+    if (action === 'pdf') {
+      handleDownloadPdf()
+    } else {
+      copyScriptJson(script)
+        .then(() => showToast('JSON скопирован в буфер обмена'))
+        .catch(() => {})
+    }
+
+    params.delete('action')
+    const query = params.toString()
+    window.history.replaceState(
+      null,
+      '',
+      window.location.pathname + (query ? `?${query}` : '') + window.location.hash,
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading])
 
   // Рендерим PDF всегда, независимо от активной вкладки — чтобы открытие
   // «Макета» было мгновенным, а сама панель настроек могла анимированно
@@ -143,7 +200,11 @@ function App() {
         mode={mode}
         onTabClick={handleTabClick}
         onEditClick={() => navigate(EDIT_PATH)}
-        onCopyJson={() => copyScriptJson(script).catch(() => {})}
+        onCopyJson={() =>
+          copyScriptJson(script)
+            .then(() => showToast('JSON скопирован в буфер обмена'))
+            .catch(() => {})
+        }
         onDownloadJson={() => downloadScriptJson(script)}
         onCopyLink={handleCopyLink}
         onDownloadPdf={handleDownloadPdf}
@@ -206,6 +267,8 @@ function App() {
           </div>
         </div>
       )}
+
+      {toast && <Toast key={toast.key} message={toast.message} />}
     </div>
   )
 }

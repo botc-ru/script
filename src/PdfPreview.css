@@ -11,14 +11,12 @@
   align-items: center;
   gap: 16px;
   width: 100%;
-  max-width: var(--max-content-width, 760px);
-  margin: 0 auto;
-  padding: 16px;
   box-sizing: border-box;
+  padding: 16px 0 calc(16px + env(safe-area-inset-bottom));
 }
 
 .pdf-preview__page {
-  max-width: 100%;
+  max-width: min(100%, var(--max-content-width, 760px));
   height: auto;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
@@ -28,9 +26,11 @@
   text-align: center;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 769px) {
+  /* Без горизонтального отступа страница упиралась бы прямо в боковую панель
+     (gap между ними убран намеренно) и в край экрана. */
   .pdf-preview__pages {
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }

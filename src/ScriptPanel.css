@@ -3,7 +3,7 @@
   min-height: 0;
   height: 100%;
   overflow-y: auto;
-  padding: 16px 0;
+  padding: 16px 0 calc(16px + env(safe-area-inset-bottom));
   box-sizing: border-box;
 }
 
@@ -141,12 +141,20 @@
 }
 
 .script-panel__grid {
-  columns: 2;
-  column-gap: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .script-panel__grid--single {
-  columns: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.script-panel__column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .role-card {
@@ -174,8 +182,9 @@
   background: rgba(0, 0, 0, 0.05);
 }
 
-div.role-card {
-  cursor: default;
+a.role-card {
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .role-card__icon {
@@ -255,9 +264,18 @@ div.role-card {
   opacity: 0.8;
 }
 
+@media (min-width: 769px) {
+  /* Без горизонтального отступа лист упирался бы прямо в боковую панель
+     (gap между ними убран намеренно) и в край экрана. */
+  .script-panel-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
 @media (max-width: 768px) {
   .script-panel__grid {
-    columns: 1;
+    flex-direction: column;
   }
 
   .script-panel__name {

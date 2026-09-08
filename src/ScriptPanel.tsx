@@ -3,7 +3,7 @@ import type { Role, RolesById, Team } from './types'
 import type { ScriptMeta } from './scriptModel'
 import { TEAM_LABELS } from './teams'
 import { getActiveJinxes } from './jinx'
-import { TEAM_PRINT_COLOR } from './printData'
+import { TEAM_PRINT_COLOR, splitIntoColumns } from './printData'
 import './ScriptPanel.css'
 
 const SCRIPT_TEAMS: Team[] = ['townsfolk', 'outsider', 'minion', 'demon']
@@ -77,9 +77,15 @@ export function ScriptPanel({
 
     if (!interactive) {
       return (
-        <div key={role.id} className="role-card">
+        <a
+          key={role.id}
+          className="role-card"
+          href={`https://wiki.bloodontheclocktower.com/${role.id}`}
+          target="_blank"
+          rel="noreferrer"
+        >
           {content}
-        </div>
+        </a>
       )
     }
 
@@ -97,6 +103,14 @@ export function ScriptPanel({
         {content}
       </button>
     )
+  }
+
+  function renderColumns(items: Role[]) {
+    return splitIntoColumns(items, 2).map((column, index) => (
+      <div key={index} className="script-panel__column">
+        {column.map(renderRoleCard)}
+      </div>
+    ))
   }
 
   function renderTitle(text: string, team?: Team) {
@@ -173,7 +187,7 @@ export function ScriptPanel({
         return (
           <section key={team} className="script-panel__section">
             {renderTitle(`${TEAM_LABELS[team]} (${teamRoles.length})`, team)}
-            <div className="script-panel__grid">{teamRoles.map(renderRoleCard)}</div>
+            <div className="script-panel__grid">{renderColumns(teamRoles)}</div>
           </section>
         )
       })}
@@ -212,7 +226,7 @@ export function ScriptPanel({
       {travellerRoles.length > 0 && (
         <section className="script-panel__section">
           {renderTitle(`Рекомендуемые странники (${travellerRoles.length})`, 'traveller')}
-          <div className="script-panel__grid">{travellerRoles.map(renderRoleCard)}</div>
+          <div className="script-panel__grid">{renderColumns(travellerRoles)}</div>
         </section>
       )}
     </div>

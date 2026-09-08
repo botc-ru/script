@@ -4,7 +4,7 @@
   align-items: stretch;
   gap: 8px;
   height: 48px;
-  padding: 0 16px;
+  padding: env(safe-area-inset-top) 16px 0;
   background: none;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
   z-index: 1;
@@ -49,6 +49,13 @@
   background: rgba(0, 0, 0, 0.06);
 }
 
+.toolbar > .share-menu > .share-menu__trigger {
+  justify-content: center;
+  padding: 0 14px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
 .toolbar .quick-add-role__row {
   padding: 4px 8px;
   border: none;
@@ -74,6 +81,31 @@
   border-bottom-color: currentColor;
 }
 
+@media (min-width: 769px) {
+  /* Роли/Макет слева и Поделиться справа разной ширины — грид с двумя
+     одинаковыми крайними колонками держит поле поиска строго по центру
+     тулбара независимо от того, что там за пределами. */
+  .toolbar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  .toolbar__tabs {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .toolbar__quick-add {
+    grid-column: 2;
+    justify-self: center;
+  }
+
+  .toolbar > .share-menu {
+    grid-column: 3;
+    justify-self: end;
+  }
+}
+
 @media print {
   .toolbar {
     display: none;
@@ -82,15 +114,9 @@
 
 @media (max-width: 768px) {
   .toolbar {
-    flex-wrap: wrap;
-    align-content: flex-start;
-    gap: 0;
+    gap: 8px;
     min-height: 60px;
-    padding: 0 12px;
-  }
-
-  .toolbar--view {
-    min-height: 120px;
+    padding: env(safe-area-inset-top) 0 0;
   }
 
   .toolbar__tabs button,
@@ -101,23 +127,51 @@
     font-size: 16px;
   }
 
-  .toolbar__tabs {
-    order: 1;
-  }
-
-  .toolbar .share-menu {
-    order: 2;
-  }
-
   .toolbar__quick-add {
     display: none;
   }
 
   .toolbar__quick-add--show-mobile {
     display: block;
-    order: 3;
-    width: 100%;
-    align-self: flex-start;
-    padding: 0 0 12px;
+    flex: 1;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  /* Пока фокус в поле поиска — прячем остальные элементы тулбара и отдаём
+     ему всю ширину строки, чтобы на мобилке было больше места для ввода.
+     Схлопываем шириной/прозрачностью (а не display:none), чтобы это было
+     анимировано. */
+  .toolbar__tabs,
+  .toolbar > .share-menu {
+    flex-shrink: 0;
+    overflow: hidden;
+    opacity: 1;
+    max-width: 200px;
+    transition:
+      max-width 0.25s ease,
+      opacity 0.2s ease,
+      margin 0.25s ease;
+  }
+
+  .toolbar:has(.quick-add-role__input:focus) .toolbar__tabs,
+  .toolbar:has(.quick-add-role__input:focus) > .share-menu {
+    max-width: 0;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .toolbar__quick-add--show-mobile {
+    transition: padding 0.2s ease;
+  }
+
+  .toolbar:has(.quick-add-role__input:focus) .toolbar__quick-add--show-mobile {
+    padding: 0 6px;
+  }
+
+  .toolbar > .share-menu > .share-menu__trigger {
+    aspect-ratio: 1;
+    padding: 0;
   }
 }

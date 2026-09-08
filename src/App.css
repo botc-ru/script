@@ -31,10 +31,11 @@
   font-size: 14px;
 }
 
-.side-panel--collapsed {
+.side-panel.side-panel--collapsed {
   width: 0;
   opacity: 0;
   pointer-events: none;
+  padding-left: 0;
 }
 
 .main-panel {
@@ -61,15 +62,6 @@
   .side-panel {
     padding-top: 16px;
     padding-left: 16px;
-  }
-
-  .script-panel-container {
-    box-sizing: border-box;
-    padding: 16px;
-  }
-
-  .pdf-preview {
-    box-sizing: border-box;
   }
 }
 

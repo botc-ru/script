@@ -39,7 +39,7 @@ export function Toolbar({
   selectedRoleIds,
 }: ToolbarProps) {
   return (
-    <div className={`toolbar${mode === 'view' ? ' toolbar--view' : ''}`}>
+    <div className="toolbar">
       <nav className="toolbar__tabs">
         {isEditRoute ? (
           TABS.map((tab) => (
@@ -60,9 +60,7 @@ export function Toolbar({
       </nav>
 
       {isEditRoute && (
-        <div
-          className={`toolbar__quick-add${mode === 'view' ? ' toolbar__quick-add--show-mobile' : ''}`}
-        >
+        <div className={`toolbar__quick-add${mode === 'view' ? ' toolbar__quick-add--show-mobile' : ''}`}>
           <QuickAddRole
             roles={roles}
             onSelect={onSelectRole}

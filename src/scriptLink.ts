@@ -8,14 +8,18 @@ function encodeQueryValue(value: string): string {
   return encodeURIComponent(value).replace(/%2C/g, ',')
 }
 
-export function buildScriptLink(script: ScriptData): string {
+export function buildScriptQuery(script: ScriptData): string {
   const params: [string, string][] = []
   if (script.name) params.push(['title', script.name])
   if (script.author) params.push(['author', script.author])
   if (script.color) params.push(['color', script.color])
   if (script.roleIds.length > 0) params.push(['roles', script.roleIds.join(',')])
 
-  const query = params.map(([key, value]) => `${key}=${encodeQueryValue(value)}`).join('&')
+  return params.map(([key, value]) => `${key}=${encodeQueryValue(value)}`).join('&')
+}
+
+export function buildScriptLink(script: ScriptData): string {
+  const query = buildScriptQuery(script)
   const url = new URL(ROOT_PATH, window.location.origin)
   return query ? `${url.toString()}?${query}` : url.toString()
 }

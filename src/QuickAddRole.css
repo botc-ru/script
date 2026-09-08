@@ -5,7 +5,8 @@
 
 .quick-add-role__input {
   width: 100%;
-  padding: 6px 10px 6px 32px;
+  height: 32px;
+  padding: 0 10px 0 32px;
   box-sizing: border-box;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 999px;
@@ -94,7 +95,17 @@
   }
 
   .quick-add-role__input {
-    padding: 12px 14px 12px 36px;
+    height: 44px;
+    padding: 0 14px 0 36px;
     font-size: 16px;
+  }
+
+  .quick-add-role__panel {
+    position: fixed;
+    top: calc(60px + env(safe-area-inset-top) + 4px);
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    border-radius: 0;
   }
 }

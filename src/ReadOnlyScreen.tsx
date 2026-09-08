@@ -12,7 +12,11 @@ interface ReadOnlyScreenProps {
 export function ReadOnlyScreen({ scriptRoles, allRoles, script }: ReadOnlyScreenProps) {
   return (
     <div className="app">
-      <ScriptPanel roles={scriptRoles} allRoles={allRoles} script={script} interactive={false} />
+      <div className="main-panel">
+        <div className="script-panel-container">
+          <ScriptPanel roles={scriptRoles} allRoles={allRoles} script={script} interactive={false} />
+        </div>
+      </div>
     </div>
   )
 }

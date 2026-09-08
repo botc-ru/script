@@ -52,6 +52,13 @@ body {
   overflow-x: hidden;
 }
 
+/* Кнопка очистки у type="search" резервирует место справа даже в пустом
+   поле — прячем её только пока поле пустое (виден плейсхолдер); как только
+   что-то введено, нативный крестик снова доступен. */
+input[type='search']:placeholder-shown::-webkit-search-cancel-button {
+  display: none;
+}
+
 body {
   margin: 0;
   position: relative;

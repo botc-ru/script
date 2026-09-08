@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { CopyIcon, DownloadIcon, ShareIcon } from './icons'
 import './ShareMenu.css'
 
 interface ShareMenuProps {
@@ -32,34 +33,56 @@ export function ShareMenu({ onCopyJson, onDownloadJson, onCopyLink, onDownloadPd
 
   return (
     <div className="share-menu" ref={ref}>
-      <button type="button" onClick={() => setOpen((value) => !value)}>
-        Поделиться
+      <button
+        type="button"
+        className="share-menu__trigger"
+        aria-label="Поделиться"
+        title="Поделиться"
+        onClick={() => setOpen((value) => !value)}
+      >
+        <ShareIcon size={18} />
       </button>
 
       {open && (
         <div className="share-menu__dropdown">
-          <div className="share-menu__group">
-            <span className="share-menu__group-label">JSON</span>
-            <button type="button" onClick={() => select(onCopyJson)}>
-              Копировать
-            </button>
-            <button type="button" onClick={() => select(onDownloadJson)}>
-              Скачать
-            </button>
+          <div className="share-menu__row">
+            <span className="share-menu__row-label">JSON</span>
+            <div className="share-menu__segmented">
+              <button type="button" aria-label="Копировать" title="Копировать" onClick={() => select(onCopyJson)}>
+                <CopyIcon size={18} />
+              </button>
+              <button
+                type="button"
+                aria-label="Скачать"
+                title="Скачать"
+                onClick={() => select(onDownloadJson)}
+              >
+                <DownloadIcon size={18} />
+              </button>
+            </div>
           </div>
 
-          <div className="share-menu__group">
-            <span className="share-menu__group-label">Ссылка</span>
-            <button type="button" onClick={() => select(onCopyLink)}>
-              Копировать
-            </button>
+          <div className="share-menu__row">
+            <span className="share-menu__row-label">Ссылка</span>
+            <div className="share-menu__segmented">
+              <button type="button" aria-label="Копировать" title="Копировать" onClick={() => select(onCopyLink)}>
+                <CopyIcon size={18} />
+              </button>
+            </div>
           </div>
 
-          <div className="share-menu__group">
-            <span className="share-menu__group-label">PDF</span>
-            <button type="button" onClick={() => select(onDownloadPdf)}>
-              Скачать
-            </button>
+          <div className="share-menu__row">
+            <span className="share-menu__row-label">PDF</span>
+            <div className="share-menu__segmented">
+              <button
+                type="button"
+                aria-label="Скачать"
+                title="Скачать"
+                onClick={() => select(onDownloadPdf)}
+              >
+                <DownloadIcon size={18} />
+              </button>
+            </div>
           </div>
         </div>
       )}

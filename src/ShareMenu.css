@@ -2,13 +2,28 @@
   position: relative;
 }
 
+.share-menu__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.share-menu__trigger:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
 .share-menu__dropdown {
   position: absolute;
   top: calc(100% + 4px);
   right: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   padding: 10px;
   border: 1px solid var(--accent-dropdown-border);
   border-radius: 8px;
@@ -18,56 +33,70 @@
   background-position: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 10;
-  min-width: 160px;
+  min-width: 180px;
 }
 
-.share-menu__group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.share-menu__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 8px;
 }
 
-.share-menu__group + .share-menu__group {
-  padding-top: 8px;
-  border-top: 1px solid var(--accent-dropdown-divider);
-}
-
-.share-menu__group-label {
+.share-menu__row-label {
   font-family: var(--font-display);
   text-transform: uppercase;
   font-size: 12px;
   opacity: 0.7;
 }
 
-.share-menu__dropdown button {
-  padding: 6px 10px;
-  border: none;
+.share-menu__segmented {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--accent-border);
   border-radius: 6px;
-  background: none;
-  color: inherit;
-  font: inherit;
-  font-family: var(--font-body);
-  text-align: left;
-  cursor: pointer;
+  overflow: hidden;
 }
 
-.share-menu__dropdown button:hover {
-  background: rgba(0, 0, 0, 0.06);
+.share-menu__segmented button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  box-sizing: border-box;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-right: 1px solid var(--accent-border);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.share-menu__segmented button:last-child {
+  border-right: none;
+}
+
+.share-menu__segmented button:hover {
+  opacity: 1;
+  background: var(--accent-soft-bg);
 }
 
 @media (max-width: 768px) {
   .share-menu__dropdown {
-    min-width: 200px;
+    min-width: 220px;
     padding: 14px;
-    gap: 10px;
+    gap: 12px;
   }
 
-  .share-menu__group-label {
+  .share-menu__row-label {
     font-size: 14px;
   }
 
-  .share-menu__dropdown button {
-    padding: 10px 12px;
-    font-size: 16px;
+  .share-menu__segmented button {
+    height: 40px;
   }
 }
