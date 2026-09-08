@@ -30,14 +30,16 @@ const MAX_CONTENT_WIDTH = 760
 const ROLE_PANEL_WIDTH = 180
 
 function copyScriptJsonWhenFocused(script: ScriptData): Promise<void> {
-  if (document.hasFocus()) return copyScriptJson(script)
+  return copyScriptJson(script).catch((error) => {
+    if (document.hasFocus()) throw error
 
-  return new Promise((resolve, reject) => {
-    function onFocus() {
-      window.removeEventListener('focus', onFocus)
-      copyScriptJson(script).then(resolve, reject)
-    }
-    window.addEventListener('focus', onFocus)
+    return new Promise<void>((resolve, reject) => {
+      function onFocus() {
+        window.removeEventListener('focus', onFocus)
+        copyScriptJson(script).then(resolve, reject)
+      }
+      window.addEventListener('focus', onFocus)
+    })
   })
 }
 

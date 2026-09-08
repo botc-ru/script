@@ -2,7 +2,12 @@ import { DEFAULT_SCRIPT_DATA, type ScriptData } from './scriptModel'
 import { ROOT_PATH } from './routes'
 
 function encodeQueryValue(value: string): string {
-  return value.replace(/%/g, '%25').replace(/&/g, '%26').replace(/#/g, '%23').replace(/\+/g, '%2B')
+  return value
+    .replace(/%/g, '%25')
+    .replace(/&/g, '%26')
+    .replace(/#/g, '%23')
+    .replace(/\+/g, '%2B')
+    .replace(/ /g, '%20')
 }
 
 export function buildScriptQuery(script: ScriptData): string {
