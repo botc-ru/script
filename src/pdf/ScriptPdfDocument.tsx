@@ -546,8 +546,6 @@ export function ScriptPdfDocument({ script, roles, allRoles, settings }: ScriptP
   )
 }
 
-// Petersburg не имеет отдельного жирного начертания, поэтому имитируем
-// bold, накладывая копию текста со сдвигом в долю пункта.
 function Bold({ style, children }: { style: Style | Style[]; children: string }) {
   return (
     <View style={styles.boldWrap}>

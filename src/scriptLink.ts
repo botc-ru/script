@@ -2,10 +2,7 @@ import { DEFAULT_SCRIPT_DATA, type ScriptData } from './scriptModel'
 import { ROOT_PATH } from './routes'
 
 function encodeQueryValue(value: string): string {
-  // encodeURIComponent escapes everything unsafe (including reserved
-  // characters like "#" that would otherwise break the URL); commas are
-  // safe inside a query value, so we unescape them back for readability.
-  return encodeURIComponent(value).replace(/%2C/g, ',')
+  return value.replace(/%/g, '%25').replace(/&/g, '%26').replace(/#/g, '%23').replace(/\+/g, '%2B')
 }
 
 export function buildScriptQuery(script: ScriptData): string {

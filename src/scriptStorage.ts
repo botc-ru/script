@@ -21,7 +21,5 @@ export function loadScript(): ScriptData {
 export function saveScript(script: ScriptData) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(script))
-  } catch {
-    // localStorage может быть недоступен (приватный режим, квота) — тихо игнорируем
-  }
+  } catch {}
 }

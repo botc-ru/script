@@ -30,10 +30,6 @@ export function usePrintPdf({
   )
   const [instance, updateInstance] = usePDF()
 
-  // Настоящий первый рендер — как только роли подгрузятся с сервера (до этого
-  // scriptRoles пуст, даже если в сценарии что-то выбрано). Рендерим сразу при
-  // монтировании, а не по явному действию пользователя, чтобы открытие вкладки
-  // «Макет» в первый раз было мгновенным.
   const hasInitialRenderRef = useRef(false)
   useEffect(() => {
     if (rolesLoading || hasInitialRenderRef.current) return
@@ -42,8 +38,6 @@ export function usePrintPdf({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rolesLoading])
 
-  // Дальше перерендер только по явному открытию вкладки «Макет» или изменению
-  // настроек печати — правки на вкладках «Просмотр»/«Роли» не должны его вызывать.
   const isSettingsEffectFirstRun = useRef(true)
   useEffect(() => {
     if (isSettingsEffectFirstRun.current) {

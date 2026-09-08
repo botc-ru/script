@@ -24,14 +24,18 @@ const PdfPreview = lazy(() => import('./PdfPreview').then((m) => ({ default: m.P
 
 const linkScript = readScriptFromLink()
 const savedScript = linkScript ?? loadScript()
-// Страница была открыта по ссылке с параметрами сценария (title/roles/...) —
-// значит URL должен оставаться источником истины и дальше, синхронизируясь
-// с каждым изменением, иначе обновление страницы откатит правки, сделанные
-// после перехода по ссылке.
 const openedFromLink = linkScript !== null
 
 const MAX_CONTENT_WIDTH = 760
 const ROLE_PANEL_WIDTH = 180
+
+function replaceUrlQuery(query: string) {
+  window.history.replaceState(
+    null,
+    '',
+    window.location.pathname + (query ? `?${query}` : '') + window.location.hash,
+  )
+}
 
 function App() {
   const { roles, loading, error } = useRoles()
@@ -63,16 +67,11 @@ function App() {
 
   useEffect(() => {
     if (!openedFromLink) return
+    const action = new URLSearchParams(window.location.search).get('action')
     const query = buildScriptQuery(script)
-    window.history.replaceState(
-      null,
-      '',
-      window.location.pathname + (query ? `?${query}` : '') + window.location.hash,
-    )
+    replaceUrlQuery(action ? `action=${action}${query ? '&' : ''}${query}` : query)
   }, [script])
 
-  // Реагируем только на реальное изменение размера окна, а не на смену mode —
-  // иначе ручное переключение вкладки пользователем тут же откатывалось бы назад.
   useEffect(() => {
     function handleResize() {
       const isWide = window.innerWidth > MAX_CONTENT_WIDTH + ROLE_PANEL_WIDTH + 16 * 3
@@ -150,14 +149,9 @@ function App() {
       })
   }
 
-  // Быстрые ссылки вида ?action=pdf / ?action=json — сразу скачивают PDF или
-  // копируют JSON сценария при открытии страницы. Ждём загрузки ролей (иначе
-  // PDF/JSON будут пустыми) и один раз убираем параметр из URL, чтобы действие
-  // не повторялось при обновлении страницы.
   useEffect(() => {
     if (loading) return
-    const params = new URLSearchParams(window.location.search)
-    const action = params.get('action')
+    const action = new URLSearchParams(window.location.search).get('action')
     if (action !== 'pdf' && action !== 'json') return
 
     if (action === 'pdf') {
@@ -168,19 +162,10 @@ function App() {
         .catch(() => {})
     }
 
-    params.delete('action')
-    const query = params.toString()
-    window.history.replaceState(
-      null,
-      '',
-      window.location.pathname + (query ? `?${query}` : '') + window.location.hash,
-    )
+    replaceUrlQuery(openedFromLink ? buildScriptQuery(script) : '')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading])
 
-  // Рендерим PDF всегда, независимо от активной вкладки — чтобы открытие
-  // «Макета» было мгновенным, а сама панель настроек могла анимированно
-  // сворачиваться/разворачиваться, не дожидаясь генерации PDF.
   const printBlob = usePrintPdf({
     script,
     scriptRoles,
@@ -254,9 +239,6 @@ function App() {
               />
             </div>
 
-            {/* Держим просмотрщик смонтированным постоянно (не только в режиме
-                «Макет»), чтобы переключение вкладок не пересоздавало canvas
-                заново и не вызывало «моргание». */}
             <div className={`main-panel__preview${isPrintMode ? '' : ' main-panel__slot--hidden'}`}>
               {printBlob && (
                 <Suspense fallback={<p>Загрузка просмотрщика...</p>}>
