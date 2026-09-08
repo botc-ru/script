@@ -46,6 +46,14 @@ body,
   height: 100lvh;
 }
 
+@supports (-webkit-touch-callout: none) {
+  html,
+  body,
+  #root {
+    height: -webkit-fill-available;
+  }
+}
+
 html,
 body {
   overflow-x: hidden;
