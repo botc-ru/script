@@ -1,5 +1,6 @@
 import { ShareMenu } from './ShareMenu'
 import { QuickAddRole } from './QuickAddRole'
+import { RedoIcon, UndoIcon } from './icons'
 import type { Mode } from './mode'
 import type { Role, RolesById } from './types'
 import './Toolbar.css'
@@ -18,6 +19,10 @@ interface ToolbarProps {
   onDownloadJson: () => void
   onCopyLink: () => void
   onDownloadPdf: () => void
+  canUndo: boolean
+  canRedo: boolean
+  onUndo: () => void
+  onRedo: () => void
   roles: RolesById
   onSelectRole: (role: Role) => void
   onDeselectRole: (roleId: string) => void
@@ -33,6 +38,10 @@ export function Toolbar({
   onDownloadJson,
   onCopyLink,
   onDownloadPdf,
+  canUndo,
+  canRedo,
+  onUndo,
+  onRedo,
   roles,
   onSelectRole,
   onDeselectRole,
@@ -59,8 +68,23 @@ export function Toolbar({
         )}
       </nav>
 
+      {isEditRoute && (canUndo || canRedo) && (
+        <div className="toolbar__history">
+          {canUndo && (
+            <button type="button" aria-label="Отменить" title="Отменить" onClick={onUndo}>
+              <UndoIcon size={18} />
+            </button>
+          )}
+          {canRedo && (
+            <button type="button" aria-label="Повторить" title="Повторить" onClick={onRedo}>
+              <RedoIcon size={18} />
+            </button>
+          )}
+        </div>
+      )}
+
       {isEditRoute && (
-        <div className={`toolbar__quick-add${mode === 'view' ? ' toolbar__quick-add--show-mobile' : ''}`}>
+        <div className="toolbar__quick-add">
           <QuickAddRole
             roles={roles}
             onSelect={onSelectRole}

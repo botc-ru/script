@@ -384,6 +384,7 @@ export function ScriptPdfDocument({ script, roles, allRoles, settings }: ScriptP
 
   const fabledRoles = roles.filter((role) => role.team === 'fabled' && role.id !== DJINN_ID)
   const travellerRoles = roles.filter((role) => role.team === 'traveller')
+  const loricRoles = roles.filter((role) => role.team === 'loric')
   const jinxes = getActiveJinxes(roles, allRoles)
   const djinn = allRoles[DJINN_ID]
   const showFabledSection = jinxes.length > 0 || fabledRoles.length > 0
@@ -487,6 +488,26 @@ export function ScriptPdfDocument({ script, roles, allRoles, settings }: ScriptP
                       />
                       <View style={styles.singleColumnList}>
                         {travellerRoles.map((role) => (
+                          <RoleCard
+                            key={role.id}
+                            role={role}
+                            fontScale={fontScale}
+                            jinxPartners={jinxPartnersByRole[role.id]}
+                          />
+                        ))}
+                      </View>
+                    </View>
+                  )}
+
+                  {loricRoles.length > 0 && (
+                    <View style={styles.section}>
+                      <SectionTitle
+                        title={TEAM_LABELS.loric}
+                        fontScale={fontScale}
+                        style={styles.travellersSectionTitle}
+                      />
+                      <View style={styles.singleColumnList}>
+                        {loricRoles.map((role) => (
                           <RoleCard
                             key={role.id}
                             role={role}

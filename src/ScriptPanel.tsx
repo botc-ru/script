@@ -141,6 +141,7 @@ export function ScriptPanel({
   const djinn = allRoles[DJINN_ID]
   const showFabledSection = fabledRoles.length > 0 || jinxes.length > 0
   const travellerRoles = roles.filter((role) => role.team === 'traveller')
+  const loricRoles = roles.filter((role) => role.team === 'loric')
 
   return (
     <div className="script-panel">
@@ -227,6 +228,13 @@ export function ScriptPanel({
         <section className="script-panel__section">
           {renderTitle(`Рекомендуемые странники (${travellerRoles.length})`, 'traveller')}
           <div className="script-panel__grid">{renderColumns(travellerRoles)}</div>
+        </section>
+      )}
+
+      {loricRoles.length > 0 && (
+        <section className="script-panel__section">
+          {renderTitle(`${TEAM_LABELS.loric} (${loricRoles.length})`, 'loric')}
+          <div className="script-panel__grid">{renderColumns(loricRoles)}</div>
         </section>
       )}
     </div>

@@ -7,6 +7,7 @@ export const TEAM_PRINT_COLOR: Partial<Record<Team, string>> = {
   demon: '#aa2211',
   traveller: '#550044',
   fabled: '#776644',
+  loric: '#227744',
 }
 
 const PLAYER_COUNTS = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]

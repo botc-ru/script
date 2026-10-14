@@ -92,6 +92,12 @@
 @media (max-width: 768px) {
   .quick-add-role {
     width: 100%;
+    max-width: 44px;
+    transition: max-width 0.2s ease;
+  }
+
+  .quick-add-role:focus-within {
+    max-width: 100%;
   }
 
   .quick-add-role__input {

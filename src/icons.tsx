@@ -38,3 +38,21 @@ export function DownloadIcon({ size = 14 }: IconProps) {
     </svg>
   )
 }
+
+export function UndoIcon({ size = 16 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" {...commonProps}>
+      <path d="M9 7 4 12l5 5" />
+      <path d="M4 12h11a5 5 0 0 1 0 10h-1" />
+    </svg>
+  )
+}
+
+export function RedoIcon({ size = 16 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" {...commonProps}>
+      <path d="m15 7 5 5-5 5" />
+      <path d="M20 12H9a5 5 0 0 0 0 10h1" />
+    </svg>
+  )
+}

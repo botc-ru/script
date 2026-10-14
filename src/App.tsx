@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState, type CSSProperties } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { useRoles } from './useRoles'
 import { Toolbar } from './Toolbar'
 import { ReadOnlyScreen } from './ReadOnlyScreen'
@@ -28,6 +28,7 @@ const openedFromLink = linkScript !== null
 
 const MAX_CONTENT_WIDTH = 760
 const ROLE_PANEL_WIDTH = 180
+const HISTORY_LIMIT = 50
 
 function replaceUrlQuery(query: string) {
   window.history.replaceState(
@@ -48,6 +49,8 @@ function App() {
   const [teamFilter, setTeamFilter] = useState<TeamFilter>('all')
   const [printSettings, setPrintSettings] = useState<PrintSettings>(DEFAULT_PRINT_SETTINGS)
   const [toast, setToast] = useState<{ message: string; key: number } | null>(null)
+  const historyRef = useRef<{ past: ScriptData[]; future: ScriptData[] }>({ past: [], future: [] })
+  const [historyCounts, setHistoryCounts] = useState({ past: 0, future: 0 })
 
   function showToast(message: string) {
     const key = Date.now()
@@ -86,7 +89,35 @@ function App() {
   }, [])
 
   function updateScript(patch: Partial<ScriptData>) {
-    setScript((current) => ({ ...current, ...patch }))
+    setScript((current) => {
+      const history = historyRef.current
+      history.past = [...history.past.slice(-HISTORY_LIMIT + 1), current]
+      history.future = []
+      setHistoryCounts({ past: history.past.length, future: history.future.length })
+      return { ...current, ...patch }
+    })
+  }
+
+  function undo() {
+    const history = historyRef.current
+    const previous = history.past.pop()
+    if (!previous) return
+    setScript((current) => {
+      history.future.push(current)
+      return previous
+    })
+    setHistoryCounts({ past: history.past.length, future: history.future.length })
+  }
+
+  function redo() {
+    const history = historyRef.current
+    const next = history.future.pop()
+    if (!next) return
+    setScript((current) => {
+      history.past.push(current)
+      return next
+    })
+    setHistoryCounts({ past: history.past.length, future: history.future.length })
   }
 
   const selectableRoles = useMemo<RolesById>(
@@ -193,6 +224,10 @@ function App() {
         onDownloadJson={() => downloadScriptJson(script)}
         onCopyLink={handleCopyLink}
         onDownloadPdf={handleDownloadPdf}
+        canUndo={historyCounts.past > 0}
+        canRedo={historyCounts.future > 0}
+        onUndo={undo}
+        onRedo={redo}
         roles={selectableRoles}
         onSelectRole={addToScript}
         onDeselectRole={removeFromScript}
