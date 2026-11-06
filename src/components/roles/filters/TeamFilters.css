@@ -43,7 +43,7 @@
 @media (max-width: 768px) {
   .team-filters {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     gap: 0;
     width: 100%;
   }
