@@ -1,0 +1,40 @@
+import { Image, Page, StyleSheet, View } from '@react-pdf/renderer'
+import { use } from 'react'
+
+import paperImage from '../../assets/images/paper.jpg'
+import { PdfSettingsContext } from '../PdfSettingsContext'
+import { mm } from '../units'
+import type { SheetPageProps } from './SheetPageProps'
+
+const styles = StyleSheet.create({
+  page: {
+    position: 'relative',
+    fontFamily: 'Petersburg',
+  },
+  background: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: mm(210),
+    height: mm(297),
+    objectFit: 'cover',
+  },
+  content: {
+    position: 'relative',
+    flex: 1,
+    padding: mm(8),
+    paddingBottom: mm(6),
+  },
+})
+
+/** Страница A4 с бумажным фоном, если он включён, и отступами. */
+export function SheetPage({ style = {}, children }: SheetPageProps) {
+  const { background } = use(PdfSettingsContext)
+
+  return (
+    <Page size="A4" style={styles.page}>
+      {background && <Image src={paperImage} style={styles.background} />}
+      <View style={[styles.content, style]}>{children}</View>
+    </Page>
+  )
+}

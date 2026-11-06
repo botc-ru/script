@@ -12,6 +12,7 @@ export interface FloatingToolbarProps {
   script: ScriptData
   onImport: (script: ScriptData) => void
   onNotify: (message: string) => void
+  onDownloadPdf?: () => void
   onToggleRole: (roleId: string) => void
   canUndo: boolean
   canRedo: boolean

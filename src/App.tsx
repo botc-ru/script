@@ -6,6 +6,7 @@ import { Toast } from './components/toast/Toast'
 import { FloatingToolbar } from './components/toolbar/FloatingToolbar'
 import { useRoles } from './contexts/roles/useRoles'
 import { useHideOnScroll } from './hooks/useHideOnScroll'
+import { usePrintSettings } from './hooks/usePrintSettings'
 import { useScript } from './hooks/useScript'
 import { useToast } from './hooks/useToast'
 import type { AppScreen } from './types/AppScreen'
@@ -13,6 +14,9 @@ import type { ScriptData } from './types/ScriptData'
 import type { ScriptMode } from './types/ScriptMode'
 import type { Team } from './types/Team'
 import type { TeamFilter } from './types/TeamFilter'
+import { downloadBlob } from './utils/downloadBlob'
+import { hasPdfPages } from './utils/hasPdfPages'
+import { loadScriptPdf } from './utils/loadScriptPdf'
 import { resolveRoleIds } from './utils/resolveRoleIds'
 import { toggleRole } from './utils/toggleRole'
 
@@ -32,6 +36,7 @@ export function App() {
   const script = useScript()
   const { message, showToast } = useToast()
   const isControlsHidden = useHideOnScroll()
+  const [printSettings] = usePrintSettings()
   const [mode, setMode] = useState<ScriptMode>('view')
   const [screen, setScreen] = useState<AppScreen>('script')
   const [rolesTeam, setRolesTeam] = useState<TeamFilter>('all')
@@ -65,6 +70,17 @@ export function App() {
     showToast('Сценарий загружен')
   }
 
+  function downloadPdf() {
+    if (roles.status !== 'ready') return
+
+    showToast('Создаём PDF...')
+    loadScriptPdf({ script: script.value, roles: roles.roles, settings: printSettings })
+      .then((blob) => downloadBlob(`${script.value.name || 'script'}.pdf`, blob))
+      .catch(() => showToast('Не удалось создать PDF'))
+  }
+
+  const canDownloadPdf = roles.status === 'ready' && hasPdfPages(printSettings)
+
   const className = [
     'app',
     screen === 'roles' && 'app--roles-open',
@@ -82,6 +98,7 @@ export function App() {
         script={script.value}
         onImport={importScript}
         onNotify={showToast}
+        onDownloadPdf={canDownloadPdf ? downloadPdf : undefined}
         onToggleRole={toggleScriptRole}
         canUndo={script.canUndo}
         canRedo={script.canRedo}

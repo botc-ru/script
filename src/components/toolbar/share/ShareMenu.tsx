@@ -12,12 +12,12 @@ import type { ShareMenuProps } from './ShareMenuProps'
 
 /**
  * Меню «Поделиться». Импорт заменяет текущий сценарий: из буфера обмена (ссылка или JSON)
- * и из файла JSON. Экспорт: копирование и скачивание JSON, копирование ссылки.
- * Скачивание PDF пока неактивно.
+ * и из файла JSON. Экспорт: копирование и скачивание JSON, копирование ссылки, скачивание PDF.
+ * Без `onDownloadPdf` скачивание PDF неактивно.
  *
  * Результат действия передаётся в `onNotify`.
  */
-export function ShareMenu({ script, onImport, onNotify }: ShareMenuProps) {
+export function ShareMenu({ script, onImport, onNotify, onDownloadPdf }: ShareMenuProps) {
   const fileInput = useRef<HTMLInputElement>(null)
 
   function importText(text: string) {
@@ -79,7 +79,12 @@ export function ShareMenu({ script, onImport, onNotify }: ShareMenuProps) {
           label: 'Копировать ссылку',
           onClick: () => copy(buildScriptLink(script), 'Ссылка скопирована'),
         },
-        { icon: FileDown, label: 'Скачать PDF', disabled: true },
+        {
+          icon: FileDown,
+          label: 'Скачать PDF',
+          disabled: !onDownloadPdf,
+          onClick: onDownloadPdf,
+        },
       ],
     },
   ]

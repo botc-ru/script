@@ -45,6 +45,7 @@ export function FloatingToolbar({
   script,
   onImport,
   onNotify,
+  onDownloadPdf,
   onToggleRole,
   canUndo,
   canRedo,
@@ -140,7 +141,14 @@ export function FloatingToolbar({
         )}
         {isSearchVisible
           ? <ToolbarButton icon={X} label="Закрыть поиск" onClick={() => setSearch('closing')} />
-          : <ShareMenu script={script} onImport={onImport} onNotify={onNotify} />}
+          : (
+              <ShareMenu
+                script={script}
+                onImport={onImport}
+                onNotify={onNotify}
+                onDownloadPdf={onDownloadPdf}
+              />
+            )}
       </div>
     </div>
   )

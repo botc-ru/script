@@ -9,10 +9,17 @@ import { ShareMenu } from './ShareMenu'
 
 const SCRIPT: ScriptData = { ...DEFAULT_SCRIPT, name: 'Буря', roleIds: ['a'] }
 
-function renderMenu() {
+function renderMenu(onDownloadPdf?: () => void) {
   const onImport = vi.fn()
   const onNotify = vi.fn()
-  render(<ShareMenu script={SCRIPT} onImport={onImport} onNotify={onNotify} />)
+  render(
+    <ShareMenu
+      script={SCRIPT}
+      onImport={onImport}
+      onNotify={onNotify}
+      onDownloadPdf={onDownloadPdf}
+    />,
+  )
   return { onImport, onNotify }
 }
 
@@ -26,7 +33,7 @@ describe('ShareMenu', () => {
     vi.restoreAllMocks()
   })
 
-  it('разделяет импорт и экспорт, PDF пока неактивен', async () => {
+  it('разделяет импорт и экспорт, без обработчика PDF неактивен', async () => {
     renderMenu()
 
     await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
@@ -35,6 +42,15 @@ describe('ShareMenu', () => {
     expect(screen.getByText('Экспорт')).toBeDefined()
     expect(screen.getByRole<HTMLButtonElement>('button', { name: 'Скачать PDF' }).disabled)
       .toBe(true)
+  })
+
+  it('скачивает PDF', async () => {
+    const onDownloadPdf = vi.fn()
+    renderMenu(onDownloadPdf)
+
+    await choose('Скачать PDF')
+
+    expect(onDownloadPdf).toHaveBeenCalledOnce()
   })
 
   it('импортирует ссылку из буфера обмена', async () => {

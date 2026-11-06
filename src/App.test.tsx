@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -7,6 +7,13 @@ import { RolesProvider } from './contexts/roles/RolesProvider'
 import { finishAnimation } from './test/finishAnimation'
 import { stubClipboard } from './test/stubClipboard'
 import type { RolesById } from './types/RolesById'
+import { DEFAULT_PRINT_SETTINGS } from './utils/defaultPrintSettings'
+import { downloadBlob } from './utils/downloadBlob'
+import { loadScriptPdf } from './utils/loadScriptPdf'
+import { savePrintSettings } from './utils/printSettingsStorage'
+
+vi.mock('./utils/loadScriptPdf')
+vi.mock('./utils/downloadBlob')
 
 const ROLES: RolesById = {
   princess: { id: 'princess', name: 'Принцесса', ability: '', image: '', team: 'townsfolk' },
@@ -95,6 +102,44 @@ describe('App', () => {
     await userEvent.click(rolesButton)
 
     expect(screen.getByRole('button', { name: 'Все', pressed: true })).toBeDefined()
+  })
+
+  it('скачивает PDF с названием сценария', async () => {
+    window.history.replaceState(null, '', '/script/?title=Буря&roles=princess')
+    const blob = new Blob(['pdf'])
+    vi.mocked(loadScriptPdf).mockResolvedValue(blob)
+    await renderEditor()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Скачать PDF' }))
+
+    expect(screen.getByText('Создаём PDF...')).toBeDefined()
+    await waitFor(() => expect(downloadBlob).toHaveBeenCalledWith('Буря.pdf', blob))
+  })
+
+  it('сообщает об ошибке создания PDF', async () => {
+    vi.mocked(loadScriptPdf).mockRejectedValue(new Error('Нет шрифта'))
+    await renderEditor()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Скачать PDF' }))
+
+    expect(await screen.findByText('Не удалось создать PDF')).toBeDefined()
+  })
+
+  it('без включённых листов скачивание PDF неактивно', async () => {
+    savePrintSettings({
+      ...DEFAULT_PRINT_SETTINGS,
+      playerSheet: false,
+      storytellerSheet: false,
+      nightOrder: false,
+    })
+    await renderEditor()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
+
+    expect(screen.getByRole<HTMLButtonElement>('button', { name: 'Скачать PDF' }).disabled)
+      .toBe(true)
   })
 
   it('возврат в просмотр закрывает панель ролей', async () => {
