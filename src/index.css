@@ -1,42 +1,8 @@
-@font-face {
-  font-family: 'Petersburg';
-  src: url('./assets/fonts/petersburgcyrillic.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Roboto-Condensed';
-  src: url('./assets/fonts/robotocondensed-light.ttf') format('truetype');
-  font-weight: 300;
-}
-
-@font-face {
-  font-family: 'Roboto-Condensed';
-  src: url('./assets/fonts/robotocondensed.ttf') format('truetype');
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'Roboto-Condensed';
-  src: url('./assets/fonts/robotocondensed-bold.ttf') format('truetype');
-  font-weight: 700;
-}
+@import './styles/colors.css';
+@import './styles/fonts.css';
 
 :root {
-  color-scheme: light;
-  font-family: system-ui, sans-serif;
-
-  --font-display: 'Petersburg', serif;
-  --font-body: 'Roboto-Condensed', sans-serif;
-  --paper-texture: url('./assets/images/paper.jpg');
-  --icon-search: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23776644' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
-
-  --accent: #776644;
-  --accent-soft-bg: #eae7dc;
-  --accent-border: rgba(119, 102, 68, 0.53);
-  --accent-divider: rgba(119, 102, 68, 0.35);
-  --accent-checkbox-border: rgba(119, 102, 68, 0.6);
-  --accent-dropdown-border: rgba(119, 102, 68, 0.4);
-  --accent-dropdown-divider: rgba(119, 102, 68, 0.25);
+  --texture-paper: url('./assets/images/paper.jpg');
 }
 
 html,
@@ -45,15 +11,13 @@ body,
   height: 100%;
 }
 
-html,
-body {
-  overflow-x: hidden;
-}
-
 body {
   margin: 0;
   position: relative;
-  background: #b9ae94;
+  overflow-x: hidden;
+  color: var(--color-text);
+  background: var(--color-page);
+  font-family: var(--font-body);
 }
 
 body::before {
@@ -61,8 +25,14 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background-image: var(--paper-texture);
+  background-image: var(--texture-paper);
   background-size: cover;
   background-position: center;
   opacity: 0.55;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
 }

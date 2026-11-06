@@ -1,0 +1,26 @@
+:root {
+  color-scheme: light;
+
+  /* Страница */
+  --color-page: #b9ae94;
+  --color-surface: #f4f0e6;
+  --color-surface-muted: #e2ded0;
+
+  /* Текст */
+  --color-text: #333;
+  --color-text-muted: #999;
+
+  /* Акцент */
+  --color-accent: #776644;
+  --color-accent-dark: #5c4e34;
+  --color-accent-soft: #eae7dc;
+  --color-accent-border: rgba(119, 102, 68, 0.53);
+  --color-accent-divider: rgba(119, 102, 68, 0.35);
+
+  /* Команды */
+  --color-team-good: #0066bb;
+  --color-team-evil: #aa2211;
+  --color-team-traveller: #550044;
+  --color-team-fabled: #776644;
+  --color-team-loric: #227744;
+}
