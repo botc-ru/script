@@ -27,7 +27,7 @@ describe('LayoutSettings', () => {
     ['Лист рассказчика', { storytellerSheet: false }],
     ['Странники', { travellers: false }],
     ['Таблица', { playersTable: false }],
-    ['Ночь по бокам', { nightOrderColumns: false }],
+    ['Порядок ночи', { nightOrderColumns: false }],
     ['Подробная ночь', { nightOrder: false }],
   ])('переключатель %s меняет только свою настройку', async (name, patch) => {
     const onChange = renderSettings()

@@ -123,7 +123,7 @@ export function LayoutSettings({ settings, onChange, onDownloadPdf }: LayoutSett
                 onChange={(playersTable) => set({ playersTable })}
               />
               <SettingToggle
-                label="Ночь по бокам"
+                label="Порядок ночи"
                 value={settings.nightOrderColumns}
                 onChange={(nightOrderColumns) => set({ nightOrderColumns })}
               />
