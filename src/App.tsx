@@ -25,14 +25,12 @@ const SAMPLE_SCRIPT: ScriptData = {
  * Корневой компонент приложения.
  *
  * Пока показывает пример сценария и временный переключатель режима.
+ * Сценарий отрисовывается сразу, не дожидаясь загрузки ролей.
  */
 export function App() {
   const roles = useRoles()
   const [script, setScript] = useState(SAMPLE_SCRIPT)
   const [mode, setMode] = useState<ScriptMode>('view')
-
-  if (roles.status === 'loading') return <p>Загрузка ролей...</p>
-  if (roles.status === 'error') return <p>Не удалось загрузить роли</p>
 
   return (
     <>
@@ -41,7 +39,7 @@ export function App() {
       </button>
       <Script
         script={script}
-        roles={roles.roles}
+        roles={roles}
         mode={mode}
         onChange={(patch) => setScript((current) => ({ ...current, ...patch }))}
       />
