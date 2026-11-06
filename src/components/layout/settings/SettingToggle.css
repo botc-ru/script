@@ -2,6 +2,7 @@
   display: flex;
   flex-shrink: 0;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
   height: 36px;
   padding: 0 12px;
@@ -51,7 +52,7 @@
 @media (max-width: 768px) {
   .setting-toggle {
     height: 40px;
-    padding: 0 14px 0 11px;
+    padding: 0 11px 0 14px;
     border-radius: 20px;
     background: var(--color-accent-soft);
     box-shadow: 0 1px 4px var(--color-shadow);
