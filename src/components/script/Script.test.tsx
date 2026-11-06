@@ -225,6 +225,29 @@ describe('Script', () => {
     expect(within(getSection(/^Горожане/)).getByText('Библиотекарь')).toBeDefined()
   })
 
+  it('показывает модификации роли в квадратных скобках', () => {
+    const baron = {
+      id: 'baron',
+      name: 'Барон',
+      ability: 'Изгоев больше',
+      image: '',
+      team: 'minion' as const,
+      modifications: '+2 Изгоя',
+    }
+
+    render(
+      <Script
+        script={createScript(['baron', 'imp'])}
+        roles={{ status: 'ready', roles: { ...TEST_ROLES, baron } }}
+        mode="view"
+      />,
+    )
+
+    expect(screen.getByText('[+2 Изгоя]').parentElement?.textContent)
+      .toBe('Изгоев больше [+2 Изгоя]')
+    expect(screen.getByText('Убивает ночью').textContent).toBe('Убивает ночью')
+  })
+
   it('в просмотре карточка ведёт на вики', () => {
     render(<Script script={createScript(['librarian'])} roles={READY_ROLES} mode="view" />)
 

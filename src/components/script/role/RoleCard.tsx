@@ -6,6 +6,7 @@ import './RoleCard.css'
 /**
  * Карточка роли в две колонки: слева иконка, справа название и под ним описание.
  * Название окрашено в цвет команды роли, справа от него иконки ролей из `jinxPartners`.
+ * Модификации роли идут после описания жирным шрифтом в квадратных скобках.
  *
  * Если передан `onRemove`, карточка становится кнопкой: клик удаляет роль, а саму карточку
  * можно перетащить на другую. Карточка, на которую бросили роль, вызывает `onDropRole`.
@@ -29,7 +30,12 @@ export function RoleCard({ role, jinxPartners = [], isLink, onRemove, onDropRole
             />
           ))}
         </span>
-        <span className="role-card__ability">{role.ability}</span>
+        <span className="role-card__ability">
+          {role.ability}
+          {role.modifications && (
+            <span className="role-card__modifications"> [{role.modifications}]</span>
+          )}
+        </span>
       </span>
     </>
   )

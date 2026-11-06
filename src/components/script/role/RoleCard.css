@@ -67,25 +67,17 @@ a.role-card {
   font-weight: 300;
 }
 
+.role-card__modifications {
+  font-weight: 700;
+}
+
 @media (max-width: 768px) {
   .role-card__icon {
     width: 44px;
     height: 44px;
   }
 
-  .role-card__title {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.role-card__jinx {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-}
-
-.role-card__name {
+  .role-card__name {
     font-size: 16px;
   }
 
