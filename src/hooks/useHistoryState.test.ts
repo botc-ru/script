@@ -5,7 +5,7 @@ import { useHistoryState } from './useHistoryState'
 
 describe('useHistoryState', () => {
   it('отменяет и повторяет изменения', () => {
-    const { result } = renderHook(() => useHistoryState(1))
+    const { result } = renderHook(() => useHistoryState(() => 1))
 
     act(() => result.current.update(() => 2))
     expect(result.current).toMatchObject({ value: 2, canUndo: true, canRedo: false })
@@ -18,7 +18,7 @@ describe('useHistoryState', () => {
   })
 
   it('новое значение очищает шаги для повтора', () => {
-    const { result } = renderHook(() => useHistoryState(1))
+    const { result } = renderHook(() => useHistoryState(() => 1))
 
     act(() => result.current.update(() => 2))
     act(() => result.current.undo())
@@ -28,7 +28,7 @@ describe('useHistoryState', () => {
   })
 
   it('хранит не больше 50 шагов', () => {
-    const { result } = renderHook(() => useHistoryState(0))
+    const { result } = renderHook(() => useHistoryState(() => 0))
 
     for (let step = 1; step <= 60; step++) {
       act(() => result.current.update(() => step))

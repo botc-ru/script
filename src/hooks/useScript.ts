@@ -1,0 +1,32 @@
+import { useEffect, useState } from 'react'
+
+import { DEFAULT_SCRIPT } from '../utils/defaultScript'
+import { buildScriptQuery, readScriptFromLink } from '../utils/scriptLink'
+import { loadScript, saveScript } from '../utils/scriptStorage'
+import { useHistoryState } from './useHistoryState'
+
+function getInitialScript() {
+  return readScriptFromLink(window.location.search) ?? loadScript() ?? DEFAULT_SCRIPT
+}
+
+/**
+ * Текущий сценарий с историей изменений.
+ *
+ * При открытии берётся из ссылки, иначе из localStorage, иначе пустой. Каждое изменение
+ * сохраняется в localStorage. Если сценарий открыт по ссылке, адрес обновляется вместе с ним:
+ * ссылка важнее localStorage, и без этого обновление страницы отменяло бы правки.
+ */
+export function useScript() {
+  const [isOpenedByLink] = useState(() => readScriptFromLink(window.location.search) !== null)
+  const script = useHistoryState(getInitialScript)
+
+  useEffect(() => {
+    saveScript(script.value)
+    if (!isOpenedByLink) return
+
+    const query = buildScriptQuery(script.value)
+    window.history.replaceState(null, '', `${window.location.pathname}?${query}`)
+  }, [script.value, isOpenedByLink])
+
+  return script
+}

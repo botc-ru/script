@@ -1,0 +1,33 @@
+.jinx-section__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0 6px;
+  list-style: none;
+}
+
+.jinx-section__item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.jinx-section__icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.jinx-section__reason {
+  margin-left: 4px;
+  font-size: 13px;
+  font-weight: 300;
+}
+
+@media (max-width: 768px) {
+  .jinx-section__reason {
+    font-size: 15px;
+  }
+}

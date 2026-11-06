@@ -21,8 +21,13 @@ button.role-card:active {
   cursor: grabbing;
 }
 
-button.role-card:hover {
+button.role-card:hover,
+a.role-card:hover {
   background: var(--color-hover);
+}
+
+a.role-card {
+  text-decoration: none;
 }
 
 .role-card--townsfolk,
@@ -60,6 +65,18 @@ button.role-card:hover {
   object-fit: contain;
 }
 
+.role-card__title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.role-card__jinx {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
 .role-card__name {
   font-family: var(--font-display);
   color: var(--role-color);
@@ -78,7 +95,19 @@ button.role-card:hover {
     height: 44px;
   }
 
-  .role-card__name {
+  .role-card__title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.role-card__jinx {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.role-card__name {
     font-size: 16px;
   }
 

@@ -23,6 +23,7 @@ async function renderEditor() {
 
 describe('App', () => {
   beforeEach(() => {
+    window.history.replaceState(null, '', '/script/?roles=princess,goon')
     vi.stubGlobal('fetch', vi.fn(() => Promise.resolve(Response.json(ROLES))))
   })
 
@@ -41,6 +42,18 @@ describe('App', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Повторить' }))
     expect(screen.queryByText('Принцесса')).toBeNull()
+  })
+
+  it('всегда открывается в режиме просмотра', async () => {
+    render(
+      <RolesProvider>
+        <App />
+      </RolesProvider>,
+    )
+    await screen.findByText('Принцесса')
+
+    expect(screen.getByRole('button', { name: 'Редактировать' })).toBeDefined()
+    expect(screen.getByRole('link', { name: /Принцесса/ })).toBeDefined()
   })
 
   it('не показывает отмену, пока сценарий не менялся', async () => {

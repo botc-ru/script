@@ -13,18 +13,24 @@ import { Script } from './Script'
 
 const READY_ROLES: RolesState = { status: 'ready', roles: TEST_ROLES }
 
-function createScript(roleIds: string[]): ScriptData {
-  return { name: 'Тест', author: 'Автор', color: '#000000', roleIds }
+function createScript(roleIds: string[], customOrder = false): ScriptData {
+  return { name: 'Тест', author: 'Автор', color: '#000000', roleIds, customOrder }
 }
 
 interface EditableScriptProps {
   roleIds: string[]
   mode: ScriptMode
   rolesState?: RolesState
+  customOrder?: boolean
 }
 
-function EditableScript({ roleIds, mode, rolesState = READY_ROLES }: EditableScriptProps) {
-  const [script, setScript] = useState(createScript(roleIds))
+function EditableScript({
+  roleIds,
+  mode,
+  rolesState = READY_ROLES,
+  customOrder = false,
+}: EditableScriptProps) {
+  const [script, setScript] = useState(createScript(roleIds, customOrder))
 
   return (
     <Script
@@ -38,6 +44,21 @@ function EditableScript({ roleIds, mode, rolesState = READY_ROLES }: EditableScr
 
 function LoadedScript({ roleIds }: { roleIds: string[] }) {
   return <Script script={createScript(roleIds)} roles={useRoles()} mode="view" />
+}
+
+function getRoleNames() {
+  return Array.from(document.querySelectorAll('.role-card__name'), (name) => name.textContent)
+}
+
+function dragRole(from: string, to: string) {
+  const data = new Map<string, string>()
+  const dataTransfer = {
+    setData: (type: string, value: string) => data.set(type, value),
+    getData: (type: string) => data.get(type) ?? '',
+  }
+
+  fireEvent.dragStart(screen.getByRole('button', { name: new RegExp(from) }), { dataTransfer })
+  fireEvent.drop(screen.getByRole('button', { name: new RegExp(to) }), { dataTransfer })
 }
 
 function getSection(name: RegExp) {
@@ -157,6 +178,107 @@ describe('Script', () => {
     expect(screen.queryByRole('textbox')).toBeNull()
     expect(screen.queryByTitle('Цвет сценария')).toBeNull()
     expect(screen.getByRole('heading', { level: 1, name: 'Тест' })).toBeDefined()
+  })
+
+  it('без customOrder сортирует роли автоматически', () => {
+    const script = createScript(['librarian', 'chef'])
+
+    render(<Script script={script} roles={READY_ROLES} mode="view" />)
+
+    expect(getRoleNames()).toEqual(['Повар', 'Библиотекарь'])
+  })
+
+  it('с customOrder показывает роли в порядке упоминания', () => {
+    const script = createScript(['librarian', 'chef'], true)
+
+    render(<Script script={script} roles={READY_ROLES} mode="view" />)
+
+    expect(getRoleNames()).toEqual(['Библиотекарь', 'Повар'])
+  })
+
+  it('перетаскивание закрепляет порядок и переставляет роли', () => {
+    render(<EditableScript roleIds={['librarian', 'chef']} mode="edit" customOrder />)
+
+    dragRole('Библиотекарь', 'Повар')
+
+    expect(getRoleNames()).toEqual(['Повар', 'Библиотекарь'])
+
+    dragRole('Библиотекарь', 'Повар')
+
+    expect(getRoleNames()).toEqual(['Библиотекарь', 'Повар'])
+  })
+
+  it('перетаскивание работает от показанного порядка при автосортировке', () => {
+    render(<EditableScript roleIds={['librarian', 'chef']} mode="edit" />)
+    const [first, second] = getRoleNames()
+
+    dragRole(first ?? '', second ?? '')
+
+    expect(getRoleNames()).toEqual([second, first])
+  })
+
+  it('не переносит роль в другую секцию', () => {
+    render(<EditableScript roleIds={['librarian', 'drunk']} mode="edit" />)
+
+    dragRole('Библиотекарь', 'Пьяница')
+
+    expect(within(getSection(/^Горожане/)).getByText('Библиотекарь')).toBeDefined()
+  })
+
+  it('в просмотре карточка ведёт на вики', () => {
+    render(<Script script={createScript(['librarian'])} roles={READY_ROLES} mode="view" />)
+
+    const link = screen.getByRole('link', { name: /Библиотекарь/ })
+
+    expect(link.getAttribute('href')).toBe('https://wiki.bloodontheclocktower.com/librarian')
+    expect(link.getAttribute('target')).toBe('_blank')
+  })
+
+  it('в редактировании ссылок на вики нет', () => {
+    render(<Script script={createScript(['librarian'])} roles={READY_ROLES} mode="edit" />)
+
+    expect(screen.queryByRole('link')).toBeNull()
+  })
+
+  it('без джинксов не показывает Джинна и Правила Джинна', () => {
+    render(<Script script={createScript(['goon'])} roles={READY_ROLES} mode="view" />)
+
+    expect(screen.queryByText('Джинн')).toBeNull()
+    expect(screen.queryByRole('heading', { name: /Правила Джинна/ })).toBeNull()
+    expect(screen.queryByAltText(/Джинкс/)).toBeNull()
+  })
+
+  it('при джинксе показывает иконки у обеих ролей, Джинна и его правила', () => {
+    const script = createScript(['goon', 'boffin', 'beggar'])
+
+    render(<Script script={script} roles={READY_ROLES} mode="view" />)
+
+    expect(within(getSection(/^Изгои/)).getByAltText('Джинкс: Умник')).toBeDefined()
+    expect(within(getSection(/^Приспешники/)).getByAltText('Джинкс: Громила')).toBeDefined()
+    expect(within(getSection(/^Сказочники/)).getByText('Джинн')).toBeDefined()
+    expect(within(getSection(/^Правила Джинна/)).getByText('Правило Умника и Громилы')).toBeDefined()
+
+    const titles = screen.getAllByRole('heading', { level: 2 }).map((title) => title.textContent)
+
+    expect(titles.slice(4)).toEqual(['Сказочники (1)', 'Правила Джинна (1)', 'Странники (1)'])
+  })
+
+  it('не дублирует Джинна и не даёт удалить его при джинксах', () => {
+    render(<EditableScript roleIds={['goon', 'boffin', 'djinn', 'ferryman']} mode="edit" />)
+
+    expect(screen.getAllByText('Джинн')).toHaveLength(1)
+    expect(screen.queryByRole('button', { name: /Джинн/ })).toBeNull()
+    expect(screen.queryByRole('link', { name: /Джинн/ })).toBeNull()
+    expect(within(getSection(/^Сказочники/)).getAllByRole('listitem')).toHaveLength(2)
+  })
+
+  it('убирает Джинна, когда джинксов больше нет', async () => {
+    render(<EditableScript roleIds={['goon', 'boffin']} mode="edit" />)
+
+    await userEvent.click(screen.getByRole('button', { name: /^Умник/ }))
+
+    expect(screen.queryByText('Джинн')).toBeNull()
+    expect(screen.queryByRole('heading', { name: /Правила Джинна/ })).toBeNull()
   })
 
   it('удаляет роль по клику в режиме редактирования', async () => {

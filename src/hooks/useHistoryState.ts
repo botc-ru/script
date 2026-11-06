@@ -13,8 +13,12 @@ interface History<T> {
  *
  * Новое значение очищает шаги для повтора.
  */
-export function useHistoryState<T>(initial: T) {
-  const [history, setHistory] = useState<History<T>>({ past: [], present: initial, future: [] })
+export function useHistoryState<T>(getInitial: () => T) {
+  const [history, setHistory] = useState<History<T>>(() => ({
+    past: [],
+    present: getInitial(),
+    future: [],
+  }))
 
   function update(getNext: (current: T) => T) {
     setHistory(({ past, present }) => ({
