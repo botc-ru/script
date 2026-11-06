@@ -74,21 +74,6 @@ describe('RolePanel', () => {
     expect(onToggleRole).toHaveBeenCalledWith('imp')
   })
 
-  it('прокручивает к началу при открытии и нажатии на поле, но не при вводе', async () => {
-    const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView')
-    renderPanel()
-    expect(scrollIntoView).toHaveBeenCalledTimes(1)
-
-    await userEvent.click(screen.getByRole('searchbox'))
-    expect(scrollIntoView).toHaveBeenCalledTimes(2)
-
-    await userEvent.keyboard('пов')
-    await userEvent.click(screen.getByRole('searchbox'))
-    expect(scrollIntoView).toHaveBeenCalledTimes(2)
-
-    scrollIntoView.mockRestore()
-  })
-
   it('показывает сообщения о загрузке и об ошибке', () => {
     renderPanel({ roles: { status: 'loading' } })
     expect(screen.getByText('Загрузка ролей...')).toBeDefined()
