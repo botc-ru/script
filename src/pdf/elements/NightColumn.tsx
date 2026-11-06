@@ -67,7 +67,7 @@ export function NightColumn({ title, entries, isRotated = false }: NightColumnPr
 
   const titleElement = (
     <View style={rotation}>
-      <Bold style={[styles.title, { fontSize: fontSize(4) }]}>{title}</Bold>
+      <Bold style={[styles.title, { fontSize: fontSize(3.5) }]}>{title}</Bold>
     </View>
   )
   const listElement = (

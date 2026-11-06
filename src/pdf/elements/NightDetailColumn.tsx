@@ -80,7 +80,7 @@ export function NightDetailColumn({
 
   const heading = (
     <View style={[isRotated ? styles.headingRotated : styles.heading, rotation]}>
-      <Bold style={[styles.title, { fontSize: fontSize(5) }]}>{title}</Bold>
+      <Bold style={[styles.title, { fontSize: fontSize(4.5) }]}>{title}</Bold>
     </View>
   )
   const footer = (
