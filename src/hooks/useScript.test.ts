@@ -48,6 +48,17 @@ describe('useScript', () => {
     expect(window.location.pathname).toBe('/script/')
   })
 
+  it('показывает название сценария в заголовке вкладки', () => {
+    const { result } = renderHook(() => useScript())
+    expect(document.title).toBe('Редактор сценариев')
+
+    act(() => result.current.update((script) => ({ ...script, name: 'Новый' })))
+    expect(document.title).toBe('Новый')
+
+    act(() => result.current.update((script) => ({ ...script, name: '' })))
+    expect(document.title).toBe('Редактор сценариев')
+  })
+
   it('не добавляет параметры в адрес без ссылки', () => {
     window.history.replaceState(null, '', '/script/')
     const { result } = renderHook(() => useScript())

@@ -5,12 +5,16 @@ import { buildScriptQuery, readScriptFromLink } from '../utils/scriptLink'
 import { loadScript, saveScript } from '../utils/scriptStorage'
 import { useHistoryState } from './useHistoryState'
 
+const APP_TITLE = 'Редактор сценариев'
+
 /**
  * Текущий сценарий с историей изменений.
  *
  * При открытии берётся из ссылки, иначе из localStorage, иначе пустой. Каждое изменение
  * сохраняется в localStorage. Если сценарий открыт по ссылке, адрес обновляется вместе с ним:
  * ссылка важнее localStorage, и без этого обновление страницы отменяло бы правки.
+ *
+ * Название сценария показывается в заголовке вкладки.
  */
 export function useScript() {
   const [linkScript] = useState(() => readScriptFromLink(window.location.search))
@@ -24,6 +28,10 @@ export function useScript() {
     const query = buildScriptQuery(script.value)
     window.history.replaceState(null, '', `${window.location.pathname}?${query}`)
   }, [script.value, isOpenedByLink])
+
+  useEffect(() => {
+    document.title = script.value.name || APP_TITLE
+  }, [script.value.name])
 
   return script
 }
