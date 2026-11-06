@@ -5,16 +5,8 @@
   --texture-paper: url('./assets/images/paper.jpg');
 }
 
-html,
-body,
-#root {
-  height: 100%;
-}
-
 body {
   margin: 0;
-  position: relative;
-  overflow-x: hidden;
   color: var(--color-text);
   background: var(--color-page);
   font-family: var(--font-body);

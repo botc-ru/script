@@ -3,17 +3,15 @@
 
   /* Страница */
   --color-page: #b9ae94;
-  --color-surface: #f4f0e6;
-  --color-surface-muted: #e2ded0;
+
+  --color-shadow: rgba(0, 0, 0, 0.3);
+  --color-hover: rgba(0, 0, 0, 0.05);
 
   /* Текст */
   --color-text: #333;
   --color-text-muted: #999;
 
   /* Акцент */
-  --color-accent: #776644;
-  --color-accent-dark: #5c4e34;
-  --color-accent-soft: #eae7dc;
   --color-accent-border: rgba(119, 102, 68, 0.53);
   --color-accent-divider: rgba(119, 102, 68, 0.35);
 

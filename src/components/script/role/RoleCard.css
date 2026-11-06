@@ -1,0 +1,88 @@
+.role-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+button.role-card {
+  cursor: grab;
+}
+
+button.role-card:active {
+  cursor: grabbing;
+}
+
+button.role-card:hover {
+  background: var(--color-hover);
+}
+
+.role-card--townsfolk,
+.role-card--outsider {
+  --role-color: var(--color-team-good);
+}
+
+.role-card--minion,
+.role-card--demon {
+  --role-color: var(--color-team-evil);
+}
+
+.role-card--loric {
+  --role-color: var(--color-team-loric);
+}
+
+.role-card--fabled {
+  --role-color: var(--color-team-fabled);
+}
+
+.role-card--traveller {
+  --role-color: var(--color-team-traveller);
+}
+
+.role-card__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.role-card__icon {
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.role-card__name {
+  font-family: var(--font-display);
+  color: var(--role-color);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.role-card__ability {
+  font-size: 13px;
+  font-weight: 300;
+}
+
+@media (max-width: 768px) {
+  .role-card__icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .role-card__name {
+    font-size: 16px;
+  }
+
+  .role-card__ability {
+    font-size: 15px;
+  }
+}

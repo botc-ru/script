@@ -1,0 +1,38 @@
+.script-section__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.script-section__title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.script-section__roles {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  columns: 2;
+  column-gap: 16px;
+}
+
+.script-section__role {
+  break-inside: avoid;
+}
+
+@media (max-width: 768px) {
+  .script-section__title {
+    font-size: 18px;
+  }
+
+  .script-section__roles {
+    columns: 1;
+  }
+}
