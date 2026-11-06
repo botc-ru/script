@@ -1,0 +1,10 @@
+import type { LucideIcon } from 'lucide-react'
+
+export interface ToolbarButtonProps {
+  icon: LucideIcon
+  label: string
+  /** Показывать подпись рядом с иконкой. На телефоне подпись всегда скрыта. */
+  showLabel?: boolean
+  disabled?: boolean
+  onClick?: () => void
+}

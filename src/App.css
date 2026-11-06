@@ -1,0 +1,10 @@
+.app {
+  padding-top: calc(var(--toolbar-button-size) + 16px);
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding-top: 0;
+    padding-bottom: calc(var(--toolbar-button-size) + 21px + env(safe-area-inset-bottom));
+  }
+}

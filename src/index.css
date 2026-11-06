@@ -12,17 +12,6 @@ body {
   font-family: var(--font-body);
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-image: var(--texture-paper);
-  background-size: cover;
-  background-position: center;
-  opacity: 0.55;
-}
-
 h1,
 h2,
 h3 {

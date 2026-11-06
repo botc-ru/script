@@ -1,0 +1,38 @@
+.toolbar-search {
+  box-sizing: border-box;
+  width: 280px;
+  height: var(--toolbar-button-size);
+  padding: 0 16px;
+  border: none;
+  border-radius: calc(var(--toolbar-button-size) / 2);
+  background: var(--color-accent-soft);
+  box-shadow: 0 1px 4px var(--color-shadow);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  /* При шрифте меньше 16px Safari на iOS приближает страницу при фокусе */
+  font-size: 16px;
+  animation: toolbar-search-open 0.2s ease-out;
+}
+
+@keyframes toolbar-search-open {
+  from {
+    width: var(--toolbar-button-size);
+  }
+}
+
+.toolbar-search:focus {
+  outline: 2px solid var(--color-accent-border);
+}
+
+@media (max-width: 768px) {
+  .toolbar-search {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toolbar-search {
+    animation: none;
+  }
+}

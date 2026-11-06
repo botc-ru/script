@@ -1,0 +1,65 @@
+:root {
+  --toolbar-button-size: 44px;
+}
+
+.floating-toolbar {
+  position: fixed;
+  top: 16px;
+  right: 32px;
+  left: 32px;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.floating-toolbar__modes,
+.floating-toolbar__actions,
+.floating-toolbar__history,
+.floating-toolbar__desktop {
+  display: flex;
+  gap: 8px;
+}
+
+.floating-toolbar__actions {
+  min-width: 0;
+}
+
+.floating-toolbar button,
+.floating-toolbar input {
+  pointer-events: auto;
+}
+
+.floating-toolbar__mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --toolbar-button-size: 48px;
+  }
+
+  .floating-toolbar {
+    top: auto;
+    /* 5px: тень кнопки целиком помещается в экран */
+    bottom: calc(5px + env(safe-area-inset-bottom));
+  }
+
+  .floating-toolbar__desktop {
+    display: none;
+  }
+
+  .floating-toolbar__mobile {
+    display: block;
+  }
+
+  .floating-toolbar--searching .floating-toolbar__secondary {
+    display: none;
+  }
+
+  .floating-toolbar--searching .floating-toolbar__actions {
+    flex: 1;
+    justify-content: flex-end;
+  }
+}

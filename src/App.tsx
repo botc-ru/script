@@ -1,9 +1,13 @@
 import { useState } from 'react'
 
 import { Script } from './components/script/Script'
+import { FloatingToolbar } from './components/toolbar/FloatingToolbar'
 import { useRoles } from './contexts/roles/useRoles'
+import { useHistoryState } from './hooks/useHistoryState'
 import type { ScriptData } from './types/ScriptData'
 import type { ScriptMode } from './types/ScriptMode'
+
+import './App.css'
 
 const SAMPLE_SCRIPT: ScriptData = {
   name: 'Пример',
@@ -22,27 +26,31 @@ const SAMPLE_SCRIPT: ScriptData = {
 }
 
 /**
- * Корневой компонент приложения.
+ * Корневой компонент приложения: сценарий и плавающие кнопки.
  *
- * Пока показывает пример сценария и временный переключатель режима.
- * Сценарий отрисовывается сразу, не дожидаясь загрузки ролей.
+ * Пока показывает пример сценария. Сценарий отрисовывается сразу, не дожидаясь загрузки ролей.
  */
 export function App() {
   const roles = useRoles()
-  const [script, setScript] = useState(SAMPLE_SCRIPT)
+  const script = useHistoryState(SAMPLE_SCRIPT)
   const [mode, setMode] = useState<ScriptMode>('view')
 
   return (
-    <>
-      <button type="button" onClick={() => setMode((current) => (current === 'view' ? 'edit' : 'view'))}>
-        {mode === 'view' ? 'Редактировать' : 'Просмотр'}
-      </button>
+    <div className="app">
+      <FloatingToolbar
+        mode={mode}
+        onModeChange={setMode}
+        canUndo={script.canUndo}
+        canRedo={script.canRedo}
+        onUndo={script.undo}
+        onRedo={script.redo}
+      />
       <Script
-        script={script}
+        script={script.value}
         roles={roles}
         mode={mode}
-        onChange={(patch) => setScript((current) => ({ ...current, ...patch }))}
+        onChange={(patch) => script.update((current) => ({ ...current, ...patch }))}
       />
-    </>
+    </div>
   )
 }
