@@ -19,6 +19,7 @@ import type { Team } from './types/Team'
 import type { TeamFilter } from './types/TeamFilter'
 import { copyText } from './utils/copyText'
 import { resolveRoleIds } from './utils/resolveRoleIds'
+import { runViewTransition } from './utils/runViewTransition'
 import { buildScriptJson } from './utils/scriptJson'
 import { toggleRole } from './utils/toggleRole'
 
@@ -31,7 +32,8 @@ import './App.css'
  * в режиме просмотра. На телефоне плавающие элементы скрываются при прокрутке вниз.
  *
  * Клик по заголовку секции открывает панель ролей с фильтром по этой команде.
- * При закрытии панели фильтр сбрасывается.
+ * При закрытии панели фильтр сбрасывается. Экраны сменяются с анимацией:
+ * `docs/screen-transitions.md`.
  *
  * Адрес с `?action=pdf` скачивает PDF, а с `?action=json` копирует JSON после загрузки ролей.
  */
@@ -47,8 +49,12 @@ export function App() {
   const pdf = useScriptPdf(script.value, roles, printSettings, screen === 'layout', showToast)
 
   function changeScreen(nextScreen: AppScreen) {
-    setScreen(nextScreen)
-    if (nextScreen !== 'roles') setRolesTeam('all')
+    if (nextScreen === screen) return
+
+    runViewTransition(() => {
+      setScreen(nextScreen)
+      if (nextScreen !== 'roles') setRolesTeam('all')
+    })
   }
 
   function changeMode(nextMode: ScriptMode) {
@@ -57,8 +63,10 @@ export function App() {
   }
 
   function openTeamRoles(team: Team) {
-    setRolesTeam(team)
-    setScreen('roles')
+    runViewTransition(() => {
+      setRolesTeam(team)
+      setScreen('roles')
+    })
   }
 
   function toggleScriptRole(roleId: string) {

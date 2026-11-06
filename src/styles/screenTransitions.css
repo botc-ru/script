@@ -1,0 +1,69 @@
+/* Переходы между экранами. Подробнее: docs/screen-transitions.md */
+.floating-toolbar {
+  view-transition-name: toolbar;
+}
+
+@media (min-width: 769px) {
+  .role-panel,
+  .layout-settings {
+    view-transition-name: side-panel;
+  }
+
+  .script,
+  .app--layout-open .layout-screen__preview {
+    view-transition-name: page;
+  }
+}
+
+::view-transition {
+  background: var(--color-page);
+  pointer-events: none;
+}
+
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: 0.2s;
+}
+
+/* Старый экран гаснет раньше, чем проявляется новый: иначе тексты просвечивают друг через друга */
+::view-transition-old(root),
+::view-transition-old(page) {
+  animation-duration: 0.1s;
+}
+
+::view-transition-new(root),
+::view-transition-new(page) {
+  animation-duration: 0.14s;
+  animation-delay: 0.06s;
+}
+
+::view-transition-new(side-panel):only-child {
+  animation: screen-side-panel-enter 0.2s ease-out;
+}
+
+::view-transition-old(side-panel):only-child {
+  animation: screen-side-panel-leave 0.2s ease-in forwards;
+}
+
+@keyframes screen-side-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+
+@keyframes screen-side-panel-leave {
+  to {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

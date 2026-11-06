@@ -1,6 +1,7 @@
 @import './styles/colors.css';
 @import './styles/fonts.css';
 @import './styles/pressable.css';
+@import './styles/screenTransitions.css';
 @import './styles/teams.css';
 
 :root {

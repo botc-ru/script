@@ -206,6 +206,21 @@ describe('App', () => {
     expect(screen.getByRole<HTMLButtonElement>('button', { name: 'PDF' }).disabled).toBe(true)
   })
 
+  it('меняет экран с анимацией, а смена режима на том же экране её не запускает', async () => {
+    const startViewTransition = vi.fn((update: () => void) => {
+      update()
+    })
+    Object.assign(document, { startViewTransition })
+    await renderEditor()
+    expect(startViewTransition).not.toHaveBeenCalled()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Макет' }))
+
+    expect(startViewTransition).toHaveBeenCalledOnce()
+    expect(screen.queryByText('Принцесса')).toBeNull()
+    Reflect.deleteProperty(document, 'startViewTransition')
+  })
+
   it('Макет показывает превью вместо сценария, возврат показывает сценарий', async () => {
     await renderEditor()
 
