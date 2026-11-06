@@ -217,6 +217,14 @@ describe('Script', () => {
     expect(getRoleNames()).toEqual([second, first])
   })
 
+  it('карточка разрешает бросить на неё роль', () => {
+    render(<EditableScript roleIds={['librarian', 'chef']} mode="edit" />)
+
+    const isDefaultAllowed = fireEvent.dragOver(screen.getByRole('button', { name: /Повар/ }))
+
+    expect(isDefaultAllowed).toBe(false)
+  })
+
   it('не переносит роль в другую секцию', () => {
     render(<EditableScript roleIds={['librarian', 'drunk']} mode="edit" />)
 

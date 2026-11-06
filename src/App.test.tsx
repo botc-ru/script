@@ -8,9 +8,11 @@ import { finishAnimation } from './test/finishAnimation'
 import { stubClipboard } from './test/stubClipboard'
 import type { RolesById } from './types/RolesById'
 import { DEFAULT_PRINT_SETTINGS } from './utils/defaultPrintSettings'
+import { DEFAULT_SCRIPT } from './utils/defaultScript'
 import { downloadBlob } from './utils/downloadBlob'
 import { loadScriptPdf } from './utils/loadScriptPdf'
 import { loadPrintSettings, savePrintSettings } from './utils/printSettingsStorage'
+import { saveScript } from './utils/scriptStorage'
 
 vi.mock('./components/layout/preview/PdfPreview', () => ({
   PdfPreview: () => <p>Превью PDF</p>,
@@ -263,6 +265,46 @@ describe('App', () => {
     expect(screen.getByRole('status').textContent).toBe('Сценарий загружен')
     expect(screen.getByRole('heading', { name: 'Изгои (1)' })).toBeDefined()
     expect(screen.queryByRole('button', { name: 'Отменить' })).toBeNull()
+  })
+
+  describe('порядок ролей из ссылки', () => {
+    const SORTED_ROLES: RolesById = {
+      late: { id: 'late', name: 'Поздний', ability: 'Каждый день', image: '', team: 'townsfolk' },
+      early: {
+        id: 'early',
+        name: 'Ранний',
+        ability: 'В первую ночь узнаёт',
+        image: '',
+        team: 'townsfolk',
+      },
+    }
+
+    async function getOpenedNames(url: string) {
+      window.history.replaceState(null, '', url)
+      vi.stubGlobal('fetch', vi.fn(() => Promise.resolve(Response.json(SORTED_ROLES))))
+      render(
+        <RolesProvider>
+          <App />
+        </RolesProvider>,
+      )
+      await screen.findByText('Ранний')
+      return Array.from(document.querySelectorAll('.role-card__name'), (name) => name.textContent)
+    }
+
+    it('без customOrder роли сортируются при открытии', async () => {
+      expect(await getOpenedNames('/script/?roles=late,early')).toEqual(['Ранний', 'Поздний'])
+    })
+
+    it('сортировка важнее порядка, сохранённого раньше', async () => {
+      saveScript({ ...DEFAULT_SCRIPT, roleIds: ['late'], customOrder: true })
+
+      expect(await getOpenedNames('/script/?roles=late,early')).toEqual(['Ранний', 'Поздний'])
+    })
+
+    it('с customOrder порядок из ссылки сохраняется', async () => {
+      expect(await getOpenedNames('/script/?roles=late,early&customOrder=true'))
+        .toEqual(['Поздний', 'Ранний'])
+    })
   })
 
   it('всегда открывается в режиме просмотра', async () => {

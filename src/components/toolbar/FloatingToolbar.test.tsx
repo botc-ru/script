@@ -236,6 +236,25 @@ describe('FloatingToolbar', () => {
     expect(onScreenChange).toHaveBeenLastCalledWith('layout')
   })
 
+  it('повторное нажатие на Макет возвращает к сценарию', async () => {
+    const onScreenChange = vi.fn()
+    renderToolbar({ screen: 'layout', onScreenChange })
+
+    await userEvent.click(screen.getByRole('button', { name: 'Макет', pressed: true }))
+
+    expect(onScreenChange).toHaveBeenCalledWith('script')
+  })
+
+  it('пункт меню Макет открывает экран', async () => {
+    const onScreenChange = vi.fn()
+    renderToolbar({ onScreenChange })
+
+    await userEvent.click(screen.getByRole('button', { name: 'Меню' }))
+    await userEvent.click(screen.getAllByRole('button', { name: 'Макет' })[1] ?? document.body)
+
+    expect(onScreenChange).toHaveBeenLastCalledWith('layout')
+  })
+
   it('в Макете нет отмены, повтора и поиска, Поделиться остаётся', () => {
     renderToolbar({ screen: 'layout', canUndo: true, canRedo: true })
 

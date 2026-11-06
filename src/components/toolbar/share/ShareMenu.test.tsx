@@ -134,6 +134,16 @@ describe('ShareMenu', () => {
     expect(onNotify).not.toHaveBeenCalled()
   })
 
+  it('сообщает, если файл не прочитался', async () => {
+    const { onNotify } = renderMenu()
+    const file = new File(['{'], 'script.json', { type: 'application/json' })
+    file.text = () => Promise.reject(new Error('Сбой'))
+
+    await userEvent.upload(screen.getByLabelText('Файл сценария'), file)
+
+    await waitFor(() => expect(onNotify).toHaveBeenCalledWith('Не удалось прочитать файл'))
+  })
+
   it('скачивает JSON с названием сценария', async () => {
     renderMenu()
     const createUrl = vi.fn(() => 'blob:script')
