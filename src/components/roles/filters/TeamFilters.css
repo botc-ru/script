@@ -53,6 +53,11 @@
   }
 
   .team-filters__button[aria-pressed='true'] {
-    background: var(--color-surface-hover);
+    background: var(--color-surface-active);
+  }
+
+  .team-filters__icon {
+    width: 85%;
+    height: 85%;
   }
 }

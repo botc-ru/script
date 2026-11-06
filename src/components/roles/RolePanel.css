@@ -75,6 +75,9 @@
     position: static;
     display: block;
     width: auto;
+
+    /* Короткая страница лишает Safari запаса для сдвига над клавиатурой, и панели съезжают */
+    min-height: 150lvh;
   }
 
   .role-panel__search {

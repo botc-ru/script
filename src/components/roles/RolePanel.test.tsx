@@ -74,6 +74,20 @@ describe('RolePanel', () => {
     expect(onToggleRole).toHaveBeenCalledWith('imp')
   })
 
+  it('возвращается к началу списка при смене поиска и фильтра', async () => {
+    const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView')
+    renderPanel()
+    expect(scrollIntoView).toHaveBeenCalledTimes(1)
+
+    await userEvent.type(screen.getByRole('searchbox'), 'п')
+    expect(scrollIntoView).toHaveBeenCalledTimes(2)
+
+    await userEvent.click(screen.getByRole('button', { name: 'Демоны' }))
+    expect(scrollIntoView).toHaveBeenCalledTimes(3)
+
+    scrollIntoView.mockRestore()
+  })
+
   it('показывает сообщения о загрузке и об ошибке', () => {
     renderPanel({ roles: { status: 'loading' } })
     expect(screen.getByText('Загрузка ролей...')).toBeDefined()
