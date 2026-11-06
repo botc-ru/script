@@ -35,7 +35,8 @@ export function App() {
   }
 
   function toggleScriptRole(roleId: string) {
-    script.update((current) => toggleRole(current, roleId))
+    if (roles.status !== 'ready') return
+    script.update((current) => toggleRole(current, roleId, roles.roles))
   }
 
   function importScript(imported: ScriptData) {

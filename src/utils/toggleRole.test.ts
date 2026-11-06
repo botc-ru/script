@@ -1,18 +1,31 @@
 import { describe, expect, it } from 'vitest'
 
+import { TEST_ROLES } from '../test/testRoles'
 import { DEFAULT_SCRIPT } from './defaultScript'
 import { toggleRole } from './toggleRole'
 
-describe('toggleRole', () => {
-  it('добавляет новую роль в конец', () => {
-    const script = { ...DEFAULT_SCRIPT, roleIds: ['a'] }
+function toggle(roleIds: string[], roleId: string) {
+  return toggleRole({ ...DEFAULT_SCRIPT, roleIds }, roleId, TEST_ROLES).roleIds
+}
 
-    expect(toggleRole(script, 'b').roleIds).toEqual(['a', 'b'])
+describe('toggleRole', () => {
+  it('удаляет существующую роль', () => {
+    expect(toggle(['chef', 'imp'], 'chef')).toEqual(['imp'])
   })
 
-  it('удаляет существующую роль', () => {
-    const script = { ...DEFAULT_SCRIPT, roleIds: ['a', 'b'] }
+  it('ставит новую роль перед ролью своей команды, которая идёт позже по SAO', () => {
+    expect(toggle(['imp', 'librarian', 'drunk'], 'chef')).toEqual(['imp', 'chef', 'librarian', 'drunk'])
+  })
 
-    expect(toggleRole(script, 'a').roleIds).toEqual(['b'])
+  it('ставит роль в конец, если в команде нет ролей позже неё', () => {
+    expect(toggle(['chef', 'imp'], 'librarian')).toEqual(['chef', 'imp', 'librarian'])
+  })
+
+  it('не смотрит на роли других команд', () => {
+    expect(toggle(['imp', 'drunk'], 'chef')).toEqual(['imp', 'drunk', 'chef'])
+  })
+
+  it('неизвестную роль ставит в конец', () => {
+    expect(toggle(['chef'], 'unknown')).toEqual(['chef', 'unknown'])
   })
 })
