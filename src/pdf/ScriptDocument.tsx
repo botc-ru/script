@@ -12,7 +12,7 @@ import { PlayerSheet } from './pages/PlayerSheet'
 import { StorytellerSheet } from './pages/StorytellerSheet'
 import { PdfSettingsContext } from './PdfSettingsContext'
 
-/** PDF сценария. Состав листов задают настройки, размеры шрифтов и фон они же через контекст. */
+/** PDF сценария. Настройки задают состав листов и доходят до элементов через контекст. */
 export function ScriptDocument({ script, roles, settings }: ScriptPdfData) {
   const title = getScriptTitle(script)
   const orderedRoles = getOrderedRoles(script, roles)

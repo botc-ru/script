@@ -7,6 +7,7 @@ import type { LayoutSettingsProps } from './LayoutSettingsProps'
 import type { SettingOption } from './SettingOption'
 import { SettingOptions } from './SettingOptions'
 import { SettingToggle } from './SettingToggle'
+import { SheetSettings } from './SheetSettings'
 
 import './LayoutSettings.css'
 
@@ -27,8 +28,7 @@ const COLUMNS: SettingOption<1 | 2>[] = [
 ]
 
 /**
- * Настройки макета: скачивание, общие настройки и группа на каждый лист.
- * Настройки листа видны, только пока лист включён.
+ * Настройки макета: скачивание, общие настройки и группа на каждый лист (`SheetSettings`).
  *
  * На ПК это столбец слева. На телефоне каждая настройка отдельная капсула в плавающей строке
  * над кнопками. Строка идёт от края до края экрана и листается, группы разделены линиями.
@@ -79,73 +79,57 @@ export function LayoutSettings({ settings, onChange, onDownloadPdf }: LayoutSett
           />
         </div>
 
-        <div className="layout-settings__group">
+        <SheetSettings
+          label="Список ролей"
+          value={settings.playerSheet}
+          onChange={(playerSheet) => set({ playerSheet })}
+        >
           <SettingToggle
-            label="Список ролей"
-            value={settings.playerSheet}
-            isSheet
-            onChange={(playerSheet) => set({ playerSheet })}
+            label="Растянуть"
+            value={settings.stretch}
+            onChange={(stretch) => set({ stretch })}
           />
-          {settings.playerSheet && (
-            <>
-              <SettingToggle
-                label="Растянуть"
-                value={settings.stretch}
-                onChange={(stretch) => set({ stretch })}
-              />
-              <SettingOptions
-                label="Колонки"
-                options={COLUMNS}
-                value={settings.columns}
-                onChange={(columns) => set({ columns })}
-              />
-            </>
-          )}
-        </div>
+          <SettingOptions
+            label="Колонки"
+            options={COLUMNS}
+            value={settings.columns}
+            onChange={(columns) => set({ columns })}
+          />
+        </SheetSettings>
 
-        <div className="layout-settings__group">
+        <SheetSettings
+          label="Лист рассказчика"
+          value={settings.storytellerSheet}
+          onChange={(storytellerSheet) => set({ storytellerSheet })}
+        >
           <SettingToggle
-            label="Лист рассказчика"
-            value={settings.storytellerSheet}
-            isSheet
-            onChange={(storytellerSheet) => set({ storytellerSheet })}
+            label="Странники"
+            value={settings.travellers}
+            onChange={(travellers) => set({ travellers })}
           />
-          {settings.storytellerSheet && (
-            <>
-              <SettingToggle
-                label="Странники"
-                value={settings.travellers}
-                onChange={(travellers) => set({ travellers })}
-              />
-              <SettingToggle
-                label="Таблица"
-                value={settings.playersTable}
-                onChange={(playersTable) => set({ playersTable })}
-              />
-              <SettingToggle
-                label="Порядок ночи"
-                value={settings.nightOrderColumns}
-                onChange={(nightOrderColumns) => set({ nightOrderColumns })}
-              />
-            </>
-          )}
-        </div>
+          <SettingToggle
+            label="Таблица"
+            value={settings.playersTable}
+            onChange={(playersTable) => set({ playersTable })}
+          />
+          <SettingToggle
+            label="Порядок ночи"
+            value={settings.nightOrderColumns}
+            onChange={(nightOrderColumns) => set({ nightOrderColumns })}
+          />
+        </SheetSettings>
 
-        <div className="layout-settings__group">
+        <SheetSettings
+          label="Подробная ночь"
+          value={settings.nightOrder}
+          onChange={(nightOrder) => set({ nightOrder })}
+        >
           <SettingToggle
-            label="Подробная ночь"
-            value={settings.nightOrder}
-            isSheet
-            onChange={(nightOrder) => set({ nightOrder })}
+            label="Подсказки"
+            value={settings.nightHints}
+            onChange={(nightHints) => set({ nightHints })}
           />
-          {settings.nightOrder && (
-            <SettingToggle
-              label="Подсказки"
-              value={settings.nightHints}
-              onChange={(nightHints) => set({ nightHints })}
-            />
-          )}
-        </div>
+        </SheetSettings>
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-import type { ModeAction } from '../ModeAction'
+import type { ModeAction } from '../modes/ModeAction'
 
 export interface MenuGroup {
   title?: string

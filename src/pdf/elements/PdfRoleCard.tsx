@@ -4,6 +4,7 @@ import { PDF_TEAM_COLORS, PDF_TEXT_COLOR } from '../pdfColors'
 import { mm } from '../units'
 import { useFontSize } from '../useFontSize'
 import { Bold } from './Bold'
+import { PdfJinxIcons } from './PdfJinxIcons'
 import type { PdfRoleCardProps } from './PdfRoleCardProps'
 import { PdfText } from './PdfText'
 
@@ -46,30 +47,6 @@ const styles = StyleSheet.create({
     width: mm(26),
     marginLeft: mm(1),
   },
-  jinxes: {
-    flexDirection: 'row',
-    gap: mm(0.5),
-    marginTop: mm(-0.5),
-    marginBottom: mm(-0.5),
-    marginLeft: mm(1),
-  },
-  jinxesCompact: {
-    flexDirection: 'row',
-    gap: mm(0.5),
-    marginLeft: mm(1),
-  },
-  jinx: {
-    width: mm(5),
-    height: mm(5),
-    flexShrink: 0,
-    objectFit: 'contain',
-  },
-  jinxCompact: {
-    width: mm(5.5),
-    height: mm(5.5),
-    flexShrink: 0,
-    objectFit: 'contain',
-  },
 })
 
 /**
@@ -86,17 +63,7 @@ export function PdfRoleCard({
   const fontSize = useFontSize()
   const color = isColored && role.team ? PDF_TEAM_COLORS[role.team] : PDF_TEXT_COLOR
   const name = <Bold style={{ fontSize: fontSize(3.5), color }}>{role.name}</Bold>
-  const jinxes = jinxPartners.length > 0 && (
-    <View style={isCompact ? styles.jinxesCompact : styles.jinxes}>
-      {jinxPartners.map((partner) => (
-        <Image
-          key={partner.id}
-          src={partner.image}
-          style={isCompact ? styles.jinxCompact : styles.jinx}
-        />
-      ))}
-    </View>
-  )
+  const jinxes = <PdfJinxIcons roles={jinxPartners} isCompact={isCompact} />
 
   if (isCompact) {
     return (

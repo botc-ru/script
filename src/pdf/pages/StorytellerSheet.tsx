@@ -3,12 +3,11 @@ import { use } from 'react'
 
 import type { Team } from '../../types/Team'
 import { TEAM_LABELS } from '../../types/TeamLabels'
-import { getJinxPartners } from '../../utils/getJinxPartners'
 import { Bold } from '../elements/Bold'
 import { NightColumn } from '../elements/NightColumn'
 import { PdfJinxRow } from '../elements/PdfJinxRow'
 import { PdfRoleCard } from '../elements/PdfRoleCard'
-import { PdfSectionTitle } from '../elements/PdfSectionTitle'
+import { PdfRoleList } from '../elements/PdfRoleList'
 import { PlayersTable } from '../elements/PlayersTable'
 import { PdfSettingsContext } from '../PdfSettingsContext'
 import { mm } from '../units'
@@ -43,13 +42,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: mm(4),
   },
-  section: {
-    flexShrink: 0,
-  },
-  sectionTitle: {
-    marginTop: mm(2),
-    marginBottom: mm(5),
-  },
   list: {
     flexDirection: 'column',
     gap: mm(2),
@@ -75,22 +67,6 @@ export function StorytellerSheet({
     return sections.find((section) => section.team === team)
   }
 
-  function renderTeamSection(team: Team) {
-    const section = getSection(team)
-    if (!section) return null
-
-    return (
-      <View style={styles.section}>
-        <PdfSectionTitle title={TEAM_LABELS[team]} style={styles.sectionTitle} />
-        <View style={styles.list}>
-          {section.roles.map((role) => (
-            <PdfRoleCard key={role.id} role={role} jinxPartners={getJinxPartners(role, jinxes)} />
-          ))}
-        </View>
-      </View>
-    )
-  }
-
   const fabled = getSection('fabled')
 
   return (
@@ -105,7 +81,11 @@ export function StorytellerSheet({
           {author && <Text style={[styles.author, { fontSize: fontSize(4.5) }]}>{author}</Text>}
 
           <View style={styles.body}>
-            {renderTeamSection('loric')}
+            <PdfRoleList
+              title={TEAM_LABELS.loric}
+              roles={getSection('loric')?.roles ?? []}
+              jinxes={jinxes}
+            />
             {fabled && (
               <View style={styles.list}>
                 {fabled.pinnedRoles.map((role) => (
@@ -119,7 +99,13 @@ export function StorytellerSheet({
                 ))}
               </View>
             )}
-            {travellers && renderTeamSection('traveller')}
+            {travellers && (
+              <PdfRoleList
+                title={TEAM_LABELS.traveller}
+                roles={getSection('traveller')?.roles ?? []}
+                jinxes={jinxes}
+              />
+            )}
           </View>
 
           {playersTable && <PlayersTable />}

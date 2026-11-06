@@ -23,7 +23,7 @@ interface Props {
 function renderPdf(initialProps: Props = {}) {
   return renderHook(
     ({ settings = DEFAULT_PRINT_SETTINGS, roles = READY, isActive = true }: Props) => (
-      useScriptPdf(DEFAULT_SCRIPT, roles, settings, isActive)
+      useScriptPdf(DEFAULT_SCRIPT, roles, settings, isActive, vi.fn())
     ),
     { initialProps },
   )

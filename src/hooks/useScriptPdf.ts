@@ -4,6 +4,8 @@ import type { RolesState } from '../contexts/roles/RolesState'
 import type { PrintSettings } from '../types/PrintSettings'
 import type { ScriptData } from '../types/ScriptData'
 import type { ScriptPdfData } from '../types/ScriptPdfData'
+import { downloadBlob } from '../utils/downloadBlob'
+import { getScriptTitle } from '../utils/getScriptTitle'
 import { hasPdfPages } from '../utils/hasPdfPages'
 import { loadScriptPdf } from '../utils/loadScriptPdf'
 
@@ -17,13 +19,18 @@ const GENERATE_DELAY = 200
  * Дальше обновляется, только пока `isActive`: правки вне Макета подхватываются при его открытии.
  *
  * Новый запуск отменяет предыдущий, а до его завершения остаётся прошлый результат:
- * превью не пропадает при правках. `isFresh` говорит, что `blob` соответствует текущим данным.
+ * превью не пропадает при правках.
+ *
+ * `download` скачивает готовый файл, если он соответствует текущим данным, иначе создаёт новый.
+ * Его нет, пока скачать нечего: роли не загружены или все листы выключены. Ход создания
+ * и ошибки передаются в `onNotify`.
  */
 export function useScriptPdf(
   script: ScriptData,
   roles: RolesState,
   settings: PrintSettings,
   isActive: boolean,
+  onNotify: (message: string) => void,
 ) {
   const [blob, setBlob] = useState<Blob | null>(null)
   const [source, setSource] = useState<ScriptPdfData | null>(null)
@@ -60,5 +67,27 @@ export function useScriptPdf(
     }
   }, [script, roles, settings, isActive, isFresh, hasBlob])
 
-  return { blob, isFresh, isError }
+  function download(ready: ScriptPdfData) {
+    const fileName = `${getScriptTitle(script)}.pdf`
+    if (blob && isFresh) {
+      downloadBlob(fileName, blob)
+      return
+    }
+
+    onNotify('Создаём PDF...')
+    loadScriptPdf(ready)
+      .then((nextBlob) => downloadBlob(fileName, nextBlob))
+      .catch(() => onNotify('Не удалось создать PDF'))
+  }
+
+  const canDownload = roles.status === 'ready' && hasPdfPages(settings)
+
+  return {
+    blob,
+    isFresh,
+    isError,
+    download: canDownload
+      ? () => download({ script, roles: roles.roles, settings })
+      : undefined,
+  }
 }

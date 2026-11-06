@@ -18,10 +18,6 @@ import type { ScriptMode } from './types/ScriptMode'
 import type { Team } from './types/Team'
 import type { TeamFilter } from './types/TeamFilter'
 import { copyText } from './utils/copyText'
-import { downloadBlob } from './utils/downloadBlob'
-import { getScriptTitle } from './utils/getScriptTitle'
-import { hasPdfPages } from './utils/hasPdfPages'
-import { loadScriptPdf } from './utils/loadScriptPdf'
 import { resolveRoleIds } from './utils/resolveRoleIds'
 import { buildScriptJson } from './utils/scriptJson'
 import { toggleRole } from './utils/toggleRole'
@@ -48,7 +44,7 @@ export function App() {
   const [mode, setMode] = useState<ScriptMode>('view')
   const [screen, setScreen] = useState<AppScreen>('script')
   const [rolesTeam, setRolesTeam] = useState<TeamFilter>('all')
-  const pdf = useScriptPdf(script.value, roles, printSettings, screen === 'layout')
+  const pdf = useScriptPdf(script.value, roles, printSettings, screen === 'layout', showToast)
 
   function changeScreen(nextScreen: AppScreen) {
     setScreen(nextScreen)
@@ -79,27 +75,8 @@ export function App() {
     showToast('Сценарий загружен')
   }
 
-  function downloadPdf() {
-    if (roles.status !== 'ready') return
-
-    const fileName = `${getScriptTitle(script.value)}.pdf`
-    if (pdf.blob && pdf.isFresh) {
-      downloadBlob(fileName, pdf.blob)
-      return
-    }
-
-    showToast('Создаём PDF...')
-    loadScriptPdf({ script: script.value, roles: roles.roles, settings: printSettings })
-      .then((blob) => downloadBlob(fileName, blob))
-      .catch(() => showToast('Не удалось создать PDF'))
-  }
-
-  const downloadAction = roles.status === 'ready' && hasPdfPages(printSettings)
-    ? downloadPdf
-    : undefined
-
   function runLinkAction(action: string) {
-    if (action === 'pdf') downloadAction?.()
+    if (action === 'pdf') pdf.download?.()
     if (action === 'json') {
       void copyText(buildScriptJson(script.value)).then((isCopied) => {
         if (isCopied) showToast('JSON скопирован')
@@ -127,7 +104,7 @@ export function App() {
         script={script.value}
         onImport={importScript}
         onNotify={showToast}
-        onDownloadPdf={downloadAction}
+        onDownloadPdf={pdf.download}
         onToggleRole={toggleScriptRole}
         canUndo={script.canUndo}
         canRedo={script.canRedo}
@@ -158,7 +135,7 @@ export function App() {
         onSettingsChange={setPrintSettings}
         blob={pdf.blob}
         isError={pdf.isError}
-        onDownloadPdf={downloadAction}
+        onDownloadPdf={pdf.download}
       />
       {message && <Toast message={message} />}
     </div>
