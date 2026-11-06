@@ -25,9 +25,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
   },
+  title: {
+    flex: 1,
+  },
   author: {
+    maxWidth: mm(60),
     marginBottom: mm(5),
+    marginLeft: mm(4),
     opacity: 0.7,
+    textAlign: 'right',
   },
   notFirstNight: {
     marginBottom: mm(-1),
@@ -51,7 +57,9 @@ export function PlayerSheet({ title, script, sections, jinxes }: PlayerSheetProp
     <SheetPage>
       {logo && <Image src={logoImage} style={styles.watermark} />}
       <View style={styles.header}>
-        <Bold style={{ fontSize: fontSize(8.47), color: script.color }}>{title}</Bold>
+        <View style={styles.title}>
+          <Bold style={{ fontSize: fontSize(8.47), color: script.color }}>{title}</Bold>
+        </View>
         {script.author && (
           <Text style={[styles.author, { fontSize: fontSize(3.5) }]}>{script.author}</Text>
         )}
