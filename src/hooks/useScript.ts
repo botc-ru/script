@@ -5,10 +5,6 @@ import { buildScriptQuery, readScriptFromLink } from '../utils/scriptLink'
 import { loadScript, saveScript } from '../utils/scriptStorage'
 import { useHistoryState } from './useHistoryState'
 
-function getInitialScript() {
-  return readScriptFromLink(window.location.search) ?? loadScript() ?? DEFAULT_SCRIPT
-}
-
 /**
  * Текущий сценарий с историей изменений.
  *
@@ -17,8 +13,9 @@ function getInitialScript() {
  * ссылка важнее localStorage, и без этого обновление страницы отменяло бы правки.
  */
 export function useScript() {
-  const [isOpenedByLink] = useState(() => readScriptFromLink(window.location.search) !== null)
-  const script = useHistoryState(getInitialScript)
+  const [linkScript] = useState(() => readScriptFromLink(window.location.search))
+  const script = useHistoryState(() => linkScript ?? loadScript() ?? DEFAULT_SCRIPT)
+  const isOpenedByLink = linkScript !== null
 
   useEffect(() => {
     saveScript(script.value)
