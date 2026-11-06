@@ -146,7 +146,7 @@
 
   .layout-settings__sheet-fold {
     margin-top: 0;
-    margin-left: 20px;
+    margin-left: 8px;
   }
 
   .layout-settings__sheet-fold--closed {
@@ -161,11 +161,6 @@
     gap: 8px;
     margin: calc(-1 * var(--layout-settings-shadow-space));
     padding: var(--layout-settings-shadow-space);
-  }
-
-  .layout-settings__group + .layout-settings__group {
-    padding-left: 8px;
-    border-left: 1px solid var(--color-accent-border);
   }
 }
 
