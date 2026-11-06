@@ -15,7 +15,9 @@ import { loadPrintSettings, savePrintSettings } from './utils/printSettingsStora
 import { saveScript } from './utils/scriptStorage'
 
 vi.mock('./components/layout/preview/PdfPreview', () => ({
-  PdfPreview: () => <p>Превью PDF</p>,
+  PdfPreview: ({ isStale }: { isStale: boolean }) => (
+    <p>{isStale ? 'Устаревшее превью' : 'Превью PDF'}</p>
+  ),
 }))
 vi.mock('./utils/loadScriptPdf')
 vi.mock('./utils/downloadBlob')
@@ -204,6 +206,28 @@ describe('App', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
 
     expect(screen.getByRole<HTMLButtonElement>('button', { name: 'PDF' }).disabled).toBe(true)
+  })
+
+  it('превью устарело, пока новый PDF не готов, а при ошибке перестаёт быть устаревшим', async () => {
+    await renderEditor()
+    await userEvent.click(screen.getByRole('button', { name: 'Макет' }))
+    await screen.findByText('Превью PDF')
+
+    let finish: (blob: Blob) => void = () => undefined
+    vi.mocked(loadScriptPdf).mockReturnValueOnce(new Promise((resolve) => {
+      finish = resolve
+    }))
+    await userEvent.click(screen.getByRole('button', { name: 'Фон' }))
+    expect(await screen.findByText('Устаревшее превью')).toBeDefined()
+
+    await waitFor(() => expect(loadScriptPdf).toHaveBeenCalledTimes(2))
+    finish(new Blob(['новый']))
+    expect(await screen.findByText('Превью PDF')).toBeDefined()
+
+    vi.mocked(loadScriptPdf).mockRejectedValueOnce(new Error('Нет шрифта'))
+    await userEvent.click(screen.getByRole('button', { name: 'Логотип' }))
+    expect(await screen.findByText('Устаревшее превью')).toBeDefined()
+    expect(await screen.findByText('Превью PDF')).toBeDefined()
   })
 
   it('меняет экран с анимацией, а смена режима на том же экране её не запускает', async () => {

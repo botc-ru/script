@@ -2,6 +2,11 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  transition: filter 0.15s ease;
+}
+
+.pdf-preview[aria-busy='true'] {
+  filter: brightness(0.8);
 }
 
 .pdf-preview__page {
@@ -12,4 +17,10 @@
 
 .pdf-preview__message {
   text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pdf-preview {
+    transition: none;
+  }
 }

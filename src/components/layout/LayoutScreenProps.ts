@@ -5,6 +5,7 @@ export interface LayoutScreenProps {
   settings: PrintSettings
   onSettingsChange: (settings: PrintSettings) => void
   blob: Blob | null
+  isFresh: boolean
   isError: boolean
   onDownloadPdf?: () => void
 }

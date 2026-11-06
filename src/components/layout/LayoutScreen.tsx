@@ -15,12 +15,14 @@ const PdfPreview = lazy(() => import('./preview/PdfPreview').then(({ PdfPreview 
  *
  * Превью прокручивается вместе со страницей и начинается с первого листа. Пока экран закрыт,
  * оно рисуется заранее и скрыто: при открытии страницы уже готовы и пустого экрана нет.
+ * Пока `blob` не соответствует текущим данным (`isFresh`), превью затемнено.
  */
 export function LayoutScreen({
   isOpen,
   settings,
   onSettingsChange,
   blob,
+  isFresh,
   isError,
   onDownloadPdf,
 }: LayoutScreenProps) {
@@ -38,7 +40,11 @@ export function LayoutScreen({
     return (
       <>
         {isError && <p className="layout-screen__message">Не удалось создать PDF</p>}
-        {blob && <Suspense fallback={loading}><PdfPreview blob={blob} /></Suspense>}
+        {blob && (
+          <Suspense fallback={loading}>
+            <PdfPreview blob={blob} isStale={!isFresh && !isError} />
+          </Suspense>
+        )}
         {!blob && !isError && loading}
       </>
     )

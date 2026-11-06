@@ -142,6 +142,7 @@ export function App() {
         settings={printSettings}
         onSettingsChange={setPrintSettings}
         blob={pdf.blob}
+        isFresh={pdf.isFresh}
         isError={pdf.isError}
         onDownloadPdf={pdf.download}
       />

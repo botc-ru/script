@@ -25,6 +25,10 @@ function getPages() {
   return document.querySelectorAll('.pdf-preview__page')
 }
 
+function isBusy() {
+  return document.querySelector('.pdf-preview')?.getAttribute('aria-busy') === 'true'
+}
+
 describe('PdfPreview', () => {
   beforeEach(() => {
     vi.mocked(getDocument).mockReset()
@@ -33,21 +37,21 @@ describe('PdfPreview', () => {
   it('рисует все страницы', async () => {
     stubDocument(3)
 
-    render(<PdfPreview blob={new Blob(['1'])} />)
+    render(<PdfPreview blob={new Blob(['1'])} isStale={false} />)
 
     await waitFor(() => expect(getPages()).toHaveLength(3))
   })
 
   it('оставляет старые страницы, пока новые не готовы, и заменяет их разом', async () => {
     stubDocument(3)
-    const { rerender } = render(<PdfPreview blob={new Blob(['1'])} />)
+    const { rerender } = render(<PdfPreview blob={new Blob(['1'])} isStale={false} />)
     await waitFor(() => expect(getPages()).toHaveLength(3))
 
     let finishPage: () => void = () => undefined
     stubDocument(1, () => new Promise((resolve) => {
       finishPage = resolve
     }))
-    rerender(<PdfPreview blob={new Blob(['2'])} />)
+    rerender(<PdfPreview blob={new Blob(['2'])} isStale={false} />)
     await waitFor(() => expect(getDocument).toHaveBeenCalledTimes(2))
     expect(getPages()).toHaveLength(3)
 
@@ -55,16 +59,39 @@ describe('PdfPreview', () => {
     await waitFor(() => expect(getPages()).toHaveLength(1))
   })
 
+  it('затемнено, пока PDF создаётся и пока рисуются новые страницы', async () => {
+    const first = new Blob(['1'])
+    stubDocument(2)
+    const { rerender } = render(<PdfPreview blob={first} isStale={false} />)
+    await waitFor(() => expect(getPages()).toHaveLength(2))
+    await waitFor(() => expect(isBusy()).toBe(false))
+
+    rerender(<PdfPreview blob={first} isStale />)
+    expect(isBusy()).toBe(true)
+
+    let finishPage: () => void = () => undefined
+    stubDocument(1, () => new Promise((resolve) => {
+      finishPage = resolve
+    }))
+    rerender(<PdfPreview blob={new Blob(['2'])} isStale={false} />)
+    expect(isBusy()).toBe(true)
+
+    await waitFor(() => expect(getDocument).toHaveBeenCalledTimes(2))
+    finishPage()
+    await waitFor(() => expect(getPages()).toHaveLength(1))
+    await waitFor(() => expect(isBusy()).toBe(false))
+  })
+
   it('отбрасывает устаревшую отрисовку и закрывает её документ', async () => {
     let finishPage: () => void = () => undefined
     const destroyFirst = stubDocument(1, () => new Promise((resolve) => {
       finishPage = resolve
     }))
-    const { rerender } = render(<PdfPreview blob={new Blob(['1'])} />)
+    const { rerender } = render(<PdfPreview blob={new Blob(['1'])} isStale={false} />)
     await waitFor(() => expect(getDocument).toHaveBeenCalledOnce())
 
     stubDocument(2)
-    rerender(<PdfPreview blob={new Blob(['2'])} />)
+    rerender(<PdfPreview blob={new Blob(['2'])} isStale={false} />)
     await waitFor(() => expect(getPages()).toHaveLength(2))
     expect(destroyFirst).toHaveBeenCalledOnce()
 
@@ -81,8 +108,9 @@ describe('PdfPreview', () => {
       destroy: () => Promise.resolve(),
     } as unknown as PDFDocumentLoadingTask)
 
-    render(<PdfPreview blob={new Blob(['1'])} />)
+    render(<PdfPreview blob={new Blob(['1'])} isStale={false} />)
 
     expect(await screen.findByText('Не удалось показать PDF')).toBeDefined()
+    expect(isBusy()).toBe(false)
   })
 })

@@ -18,9 +18,13 @@ const ZOOM_RESERVE = 1.5
  * «Открыть». Новые страницы рисуются вне экрана и заменяют старые разом, поэтому превью
  * не моргает и прокрутка не сбивается. Размер холста считается от ширины контейнера:
  * у iOS есть лимит площади холста.
+ *
+ * Превью затемнено, пока показанные страницы устарели: `isStale` говорит, что новый PDF ещё
+ * создаётся, а затем страницы затемнены до конца отрисовки готового файла.
  */
-export function PdfPreview({ blob }: PdfPreviewProps) {
+export function PdfPreview({ blob, isStale }: PdfPreviewProps) {
   const pagesRef = useRef<HTMLDivElement>(null)
+  const [renderedBlob, setRenderedBlob] = useState<Blob | null>(null)
   const [isError, setIsError] = useState(false)
 
   useEffect(() => {
@@ -48,6 +52,7 @@ export function PdfPreview({ blob }: PdfPreviewProps) {
 
       if (!isCurrent) return
       element.replaceChildren(...canvases)
+      setRenderedBlob(blob)
       setIsError(false)
     }
 
@@ -61,10 +66,12 @@ export function PdfPreview({ blob }: PdfPreviewProps) {
     }
   }, [blob])
 
+  const isUpdating = !isError && (isStale || renderedBlob !== blob)
+
   return (
     <>
       {isError && <p className="pdf-preview__message">Не удалось показать PDF</p>}
-      <div className="pdf-preview" ref={pagesRef} />
+      <div className="pdf-preview" ref={pagesRef} aria-busy={isUpdating} />
     </>
   )
 }
