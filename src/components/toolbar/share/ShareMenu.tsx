@@ -11,8 +11,8 @@ import { PopupMenu } from '../menu/PopupMenu'
 import type { ShareMenuProps } from './ShareMenuProps'
 
 /**
- * Меню «Поделиться». Импорт заменяет текущий сценарий: из буфера обмена (ссылка или JSON)
- * и из файла JSON. Экспорт: копирование и скачивание JSON, копирование ссылки, скачивание PDF.
+ * Меню «Поделиться» с группами «Открыть», «Копировать» и «Скачать».
+ * «Открыть» заменяет текущий сценарий: из буфера обмена (ссылка или JSON) и из файла JSON.
  * Без `onDownloadPdf` скачивание PDF неактивно.
  *
  * Результат действия передаётся в `onNotify`.
@@ -51,35 +51,35 @@ export function ShareMenu({ script, onImport, onNotify, onDownloadPdf }: ShareMe
 
   const groups: MenuGroup[] = [
     {
-      title: 'Импорт',
+      title: 'Открыть',
       actions: [
-        { icon: Clipboard, label: 'Из буфера обмена', onClick: importFromClipboard },
-        { icon: FileUp, label: 'Из файла JSON', onClick: () => fileInput.current?.click() },
+        { icon: Clipboard, label: 'Вставить', onClick: importFromClipboard },
+        { icon: FileUp, label: 'Загрузить', onClick: () => fileInput.current?.click() },
       ],
     },
     {
-      title: 'Экспорт',
+      title: 'Копировать',
       actions: [
         {
-          icon: Copy,
-          label: 'Копировать JSON',
-          onClick: () => copy(buildScriptJson(script), 'JSON скопирован'),
-        },
-        {
-          icon: Download,
-          label: 'Скачать JSON',
-          onClick: () => downloadFile(`${script.name || 'script'}.json`, buildScriptJson(script)),
-        },
-        {
           icon: Link,
-          label: 'Копировать ссылку',
+          label: 'Ссылку',
           onClick: () => copy(buildScriptLink(script), 'Ссылка скопирована'),
         },
         {
-          icon: FileDown,
-          label: 'Скачать PDF',
-          disabled: !onDownloadPdf,
-          onClick: onDownloadPdf,
+          icon: Copy,
+          label: 'JSON',
+          onClick: () => copy(buildScriptJson(script), 'JSON скопирован'),
+        },
+      ],
+    },
+    {
+      title: 'Скачать',
+      actions: [
+        { icon: FileDown, label: 'PDF', disabled: !onDownloadPdf, onClick: onDownloadPdf },
+        {
+          icon: Download,
+          label: 'JSON',
+          onClick: () => downloadFile(`${script.name || 'script'}.json`, buildScriptJson(script)),
         },
       ],
     },

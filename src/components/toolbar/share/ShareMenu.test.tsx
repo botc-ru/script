@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -23,9 +23,14 @@ function renderMenu(onDownloadPdf?: () => void) {
   return { onImport, onNotify }
 }
 
-async function choose(item: string) {
+function getItems(group: string) {
+  return within(screen.getByRole('group', { name: group })).getAllByRole('button')
+}
+
+async function choose(group: string, item: string) {
   await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
-  await userEvent.click(screen.getByRole('button', { name: item }))
+  const button = getItems(group).find(({ textContent }) => textContent === item)
+  if (button) await userEvent.click(button)
 }
 
 describe('ShareMenu', () => {
@@ -33,22 +38,23 @@ describe('ShareMenu', () => {
     vi.restoreAllMocks()
   })
 
-  it('разделяет импорт и экспорт, без обработчика PDF неактивен', async () => {
+  it('показывает группы, без обработчика PDF неактивен', async () => {
     renderMenu()
 
     await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
 
-    expect(screen.getByText('Импорт')).toBeDefined()
-    expect(screen.getByText('Экспорт')).toBeDefined()
-    expect(screen.getByRole<HTMLButtonElement>('button', { name: 'Скачать PDF' }).disabled)
-      .toBe(true)
+    const labels = (group: string) => getItems(group).map(({ textContent }) => textContent)
+    expect(labels('Открыть')).toEqual(['Вставить', 'Загрузить'])
+    expect(labels('Копировать')).toEqual(['Ссылку', 'JSON'])
+    expect(labels('Скачать')).toEqual(['PDF', 'JSON'])
+    expect((getItems('Скачать')[0] as HTMLButtonElement).disabled).toBe(true)
   })
 
   it('скачивает PDF', async () => {
     const onDownloadPdf = vi.fn()
     renderMenu(onDownloadPdf)
 
-    await choose('Скачать PDF')
+    await choose('Скачать', 'PDF')
 
     expect(onDownloadPdf).toHaveBeenCalledOnce()
   })
@@ -57,7 +63,7 @@ describe('ShareMenu', () => {
     const { onImport } = renderMenu()
     stubClipboard({ readText: () => Promise.resolve('https://a.b/script/?title=Т&roles=x') })
 
-    await choose('Из буфера обмена')
+    await choose('Открыть', 'Вставить')
 
     await waitFor(() => expect(onImport).toHaveBeenCalledOnce())
     expect(onImport.mock.calls[0]?.[0]).toMatchObject({ name: 'Т', roleIds: ['x'] })
@@ -67,7 +73,7 @@ describe('ShareMenu', () => {
     const { onImport } = renderMenu()
     stubClipboard({ readText: () => Promise.resolve('["x"]') })
 
-    await choose('Из буфера обмена')
+    await choose('Открыть', 'Вставить')
 
     await waitFor(() => expect(onImport).toHaveBeenCalledOnce())
   })
@@ -76,7 +82,7 @@ describe('ShareMenu', () => {
     const { onImport, onNotify } = renderMenu()
     stubClipboard({ readText: () => Promise.resolve('привет') })
 
-    await choose('Из буфера обмена')
+    await choose('Открыть', 'Вставить')
 
     await waitFor(() => expect(onNotify).toHaveBeenCalledWith('Не удалось распознать сценарий'))
     expect(onImport).not.toHaveBeenCalled()
@@ -86,7 +92,7 @@ describe('ShareMenu', () => {
     const { onNotify } = renderMenu()
     stubClipboard({ readText: () => Promise.reject(new Error('denied')) })
 
-    await choose('Из буфера обмена')
+    await choose('Открыть', 'Вставить')
 
     await waitFor(() => expect(onNotify).toHaveBeenCalledWith('Нет доступа к буферу обмена'))
   })
@@ -106,7 +112,7 @@ describe('ShareMenu', () => {
     const writeText = vi.fn(() => Promise.resolve())
     stubClipboard({ writeText })
 
-    await choose('Копировать JSON')
+    await choose('Копировать', 'JSON')
 
     await waitFor(() => expect(onNotify).toHaveBeenCalledWith('JSON скопирован'))
     expect(writeText.mock.calls[0]).toBeDefined()
@@ -117,7 +123,7 @@ describe('ShareMenu', () => {
     const writeText = vi.fn<(text: string) => Promise<void>>(() => Promise.resolve())
     stubClipboard({ writeText })
 
-    await choose('Копировать ссылку')
+    await choose('Копировать', 'Ссылку')
 
     await waitFor(() => expect(onNotify).toHaveBeenCalledWith('Ссылка скопирована'))
     expect(writeText.mock.calls[0]?.[0]).toContain('?title=Буря')
@@ -128,7 +134,7 @@ describe('ShareMenu', () => {
     const prompt = vi.spyOn(window, 'prompt').mockReturnValue(null)
     stubClipboard({ writeText: () => Promise.reject(new Error('denied')) })
 
-    await choose('Копировать ссылку')
+    await choose('Копировать', 'Ссылку')
 
     await waitFor(() => expect(prompt).toHaveBeenCalledOnce())
     expect(onNotify).not.toHaveBeenCalled()
@@ -150,7 +156,7 @@ describe('ShareMenu', () => {
     vi.stubGlobal('URL', Object.assign(URL, { createObjectURL: createUrl, revokeObjectURL: vi.fn() }))
     const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined)
 
-    await choose('Скачать JSON')
+    await choose('Скачать', 'JSON')
 
     expect(createUrl).toHaveBeenCalledOnce()
     expect((click.mock.contexts[0] as HTMLAnchorElement).download).toBe('Буря.json')

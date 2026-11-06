@@ -6,7 +6,8 @@ import type { PopupMenuProps } from './PopupMenuProps'
 import './PopupMenu.css'
 
 /**
- * Плавающая кнопка с выпадающим меню. Пункты разбиты на группы, у группы может быть заголовок.
+ * Плавающая кнопка с выпадающим меню. Пункты разбиты на группы, у группы может быть заголовок:
+ * он же имя группы для экранного чтения, поэтому подписи пунктов в разных группах могут совпадать.
  *
  * На ПК меню открывается вниз, на телефоне вверх. Текущий пункт (`isActive`) подсвечен.
  * Меню закрывается после выбора пункта и повторным нажатием на кнопку.
@@ -19,7 +20,7 @@ export function PopupMenu({ icon, label, groups, align }: PopupMenuProps) {
       {isOpen && (
         <div className={`popup-menu__panel popup-menu__panel--${align}`}>
           {groups.map(({ title, actions }) => (
-            <div key={title ?? 'main'}>
+            <div key={title ?? 'main'} role="group" aria-label={title}>
               {title && <div className="popup-menu__title">{title}</div>}
               <ul className="popup-menu__list">
                 {actions.map(({ icon: Icon, label: actionLabel, isActive, disabled, onClick }) => (

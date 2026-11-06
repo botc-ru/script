@@ -119,7 +119,7 @@ describe('App', () => {
     await renderEditor()
 
     await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Скачать PDF' }))
+    await userEvent.click(screen.getByRole('button', { name: 'PDF' }))
 
     await waitFor(() => expect(downloadBlob).toHaveBeenCalledWith('Буря.pdf', blob))
   })
@@ -131,7 +131,7 @@ describe('App', () => {
     await screen.findByText('Превью PDF')
 
     await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Скачать PDF' }))
+    await userEvent.click(screen.getByRole('button', { name: 'PDF' }))
 
     expect(downloadBlob).toHaveBeenCalledWith('Сценарий.pdf', blob)
     expect(loadScriptPdf).toHaveBeenCalledOnce()
@@ -143,7 +143,7 @@ describe('App', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /Принцесса/ }))
     await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Скачать PDF' }))
+    await userEvent.click(screen.getByRole('button', { name: 'PDF' }))
 
     expect(screen.getByText('Создаём PDF...')).toBeDefined()
     await waitFor(() => expect(loadScriptPdf).toHaveBeenCalledTimes(2))
@@ -185,7 +185,7 @@ describe('App', () => {
     await renderEditor()
 
     await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Скачать PDF' }))
+    await userEvent.click(screen.getByRole('button', { name: 'PDF' }))
 
     await waitFor(() => {
       expect(screen.getByRole('status').textContent).toBe('Не удалось создать PDF')
@@ -203,8 +203,7 @@ describe('App', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
 
-    expect(screen.getByRole<HTMLButtonElement>('button', { name: 'Скачать PDF' }).disabled)
-      .toBe(true)
+    expect(screen.getByRole<HTMLButtonElement>('button', { name: 'PDF' }).disabled).toBe(true)
   })
 
   it('Макет показывает превью вместо сценария, возврат показывает сценарий', async () => {
@@ -261,7 +260,7 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: 'Отменить' })).toBeDefined()
 
     await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
-    await userEvent.click(screen.getByRole('button', { name: 'Из буфера обмена' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Вставить' }))
 
     expect(await screen.findByDisplayValue('Новый')).toBeDefined()
     expect(screen.getByRole('status').textContent).toBe('Сценарий загружен')
