@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { getSelectableRoles } from '../../../utils/getSelectableRoles'
 import { searchRoles } from '../../../utils/searchRoles'
 import { SearchResults } from './SearchResults'
 import type { ToolbarSearchProps } from './ToolbarSearchProps'
@@ -57,7 +58,7 @@ export function ToolbarSearch({
       />
       {hasResults && (
         <SearchResults
-          roles={searchRoles(Object.values(roles.roles), query).slice(0, RESULTS_LIMIT)}
+          roles={searchRoles(getSelectableRoles(roles.roles), query).slice(0, RESULTS_LIMIT)}
           selectedRoleIds={selectedRoleIds}
           onSelect={selectRole}
         />

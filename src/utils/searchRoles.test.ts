@@ -39,10 +39,4 @@ describe('searchRoles', () => {
   it('ищет по id', () => {
     expect(search('scholar')).toEqual(['scholar'])
   })
-
-  it('не находит служебные записи без команды', () => {
-    const service: Role = { id: 'dusk', name: 'Закат', ability: '', image: '' }
-
-    expect(searchRoles([service], 'закат')).toEqual([])
-  })
 })

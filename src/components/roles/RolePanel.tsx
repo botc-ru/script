@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import type { RoleSort } from '../../types/RoleSort'
 import type { TeamFilter } from '../../types/TeamFilter'
+import { getSelectableRoles } from '../../utils/getSelectableRoles'
 import { searchRoles } from '../../utils/searchRoles'
 import { sortRoles } from '../../utils/sortRoles'
 import { TeamFilters } from './filters/TeamFilters'
@@ -29,9 +30,7 @@ export function RolePanel({ roles, selectedRoleIds, onToggleRole }: RolePanelPro
     panelRef.current?.scrollIntoView()
   }, [])
 
-  const allRoles = roles.status === 'ready'
-    ? Object.values(roles.roles).filter((role) => role.team)
-    : []
+  const allRoles = roles.status === 'ready' ? getSelectableRoles(roles.roles) : []
   const teamRoles = allRoles.filter((role) => team === 'all' || role.team === team)
   const foundRoles = query.trim() ? searchRoles(teamRoles, query) : teamRoles
 

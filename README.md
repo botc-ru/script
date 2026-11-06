@@ -41,6 +41,5 @@
 ## Документация
 
 - [SPEC.md](SPEC.md): функции и их поведение
-- [docs/pdf.md](docs/pdf.md): устройство PDF-макета
-- [docs/decisions.md](docs/decisions.md): принятые решения и их причины
+- [docs/toolbar.md](docs/toolbar.md): плавающие кнопки и поиск
 - [CLAUDE.md](CLAUDE.md): инструкции для Claude Code

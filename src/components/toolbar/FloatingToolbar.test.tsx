@@ -153,6 +153,19 @@ describe('FloatingToolbar', () => {
     expect(screen.getAllByRole('listitem')).toHaveLength(5)
   })
 
+  it('не находит служебные записи без команды', async () => {
+    renderToolbar({
+      roles: {
+        status: 'ready',
+        roles: { dusk: { id: 'dusk', name: 'Закат', ability: '', image: '' } },
+      },
+    })
+
+    await typeSearch('закат')
+
+    expect(screen.getByText('Ничего не найдено')).toBeDefined()
+  })
+
   it('сообщает, что ничего не найдено', async () => {
     renderToolbar()
 

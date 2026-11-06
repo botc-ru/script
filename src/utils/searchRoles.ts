@@ -15,15 +15,13 @@ function getRank(role: Role, query: string): number {
  * Ищет роли по названию, способности и id без учёта регистра, `ё` и `е` считаются одной буквой.
  *
  * Сначала идут роли, чьё название начинается с запроса, затем содержит его, затем остальные
- * совпадения. Внутри группы роли упорядочены по алфавиту. Служебные записи без команды
- * не участвуют.
+ * совпадения. Внутри группы роли упорядочены по алфавиту.
  */
 export function searchRoles(roles: Role[], query: string): Role[] {
   const normalizedQuery = normalize(query.trim())
   if (!normalizedQuery) return []
 
   return roles
-    .filter((role) => role.team)
     .map((role) => ({ role, rank: getRank(role, normalizedQuery) }))
     .filter(({ rank }) => rank >= 0)
     .sort((a, b) => a.rank - b.rank || a.role.name.localeCompare(b.role.name, 'ru'))
