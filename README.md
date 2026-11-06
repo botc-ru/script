@@ -41,4 +41,5 @@
 ## Документация
 
 - [docs/toolbar.md](docs/toolbar.md): плавающие кнопки и поиск
+- [docs/pdf-layout.md](docs/pdf-layout.md): Макет и PDF
 - [CLAUDE.md](CLAUDE.md): инструкции для Claude Code

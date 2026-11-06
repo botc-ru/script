@@ -7,6 +7,7 @@ import { Toast } from './components/toast/Toast'
 import { FloatingToolbar } from './components/toolbar/FloatingToolbar'
 import { useRoles } from './contexts/roles/useRoles'
 import { useHideOnScroll } from './hooks/useHideOnScroll'
+import { useLinkAction } from './hooks/useLinkAction'
 import { usePrintSettings } from './hooks/usePrintSettings'
 import { useScript } from './hooks/useScript'
 import { useScriptPdf } from './hooks/useScriptPdf'
@@ -16,10 +17,12 @@ import type { ScriptData } from './types/ScriptData'
 import type { ScriptMode } from './types/ScriptMode'
 import type { Team } from './types/Team'
 import type { TeamFilter } from './types/TeamFilter'
+import { copyText } from './utils/copyText'
 import { downloadBlob } from './utils/downloadBlob'
 import { hasPdfPages } from './utils/hasPdfPages'
 import { loadScriptPdf } from './utils/loadScriptPdf'
 import { resolveRoleIds } from './utils/resolveRoleIds'
+import { buildScriptJson } from './utils/scriptJson'
 import { toggleRole } from './utils/toggleRole'
 
 import './App.css'
@@ -32,6 +35,8 @@ import './App.css'
  *
  * Клик по заголовку секции открывает панель ролей с фильтром по этой команде.
  * При закрытии панели фильтр сбрасывается.
+ *
+ * Адрес с `?action=pdf` скачивает PDF, а с `?action=json` копирует JSON после загрузки ролей.
  */
 export function App() {
   const roles = useRoles()
@@ -85,6 +90,17 @@ export function App() {
   const downloadAction = roles.status === 'ready' && hasPdfPages(printSettings)
     ? downloadPdf
     : undefined
+
+  function runLinkAction(action: string) {
+    if (action === 'pdf') downloadAction?.()
+    if (action === 'json') {
+      void copyText(buildScriptJson(script.value)).then((isCopied) => {
+        if (isCopied) showToast('JSON скопирован')
+      })
+    }
+  }
+
+  useLinkAction(roles.status === 'ready', runLinkAction)
 
   const className = [
     'app',

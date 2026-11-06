@@ -120,6 +120,27 @@ describe('App', () => {
     await waitFor(() => expect(downloadBlob).toHaveBeenCalledWith('Буря.pdf', blob))
   })
 
+  it('адрес с action=pdf скачивает PDF после загрузки ролей', async () => {
+    window.history.replaceState(null, '', '/script/?action=pdf&roles=princess')
+    const blob = new Blob(['pdf'])
+    vi.mocked(loadScriptPdf).mockResolvedValue(blob)
+
+    await renderEditor()
+
+    await waitFor(() => expect(downloadBlob).toHaveBeenCalledWith('script.pdf', blob))
+  })
+
+  it('адрес с action=json копирует JSON', async () => {
+    window.history.replaceState(null, '', '/script/?action=json&title=Буря&roles=princess')
+    const writeText = vi.fn(() => Promise.resolve())
+    stubClipboard({ writeText })
+
+    await renderEditor()
+
+    await waitFor(() => expect(writeText).toHaveBeenCalledOnce())
+    expect(screen.getByText('JSON скопирован')).toBeDefined()
+  })
+
   it('сообщает об ошибке создания PDF', async () => {
     vi.mocked(loadScriptPdf).mockRejectedValue(new Error('Нет шрифта'))
     await renderEditor()

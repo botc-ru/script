@@ -3,6 +3,6 @@ import type { NightOrderEntry } from '../../types/NightOrderEntry'
 export interface NightColumnProps {
   title: string
   entries: NightOrderEntry[]
-  /** Перевернуть колонку: её читает рассказчик с другой стороны листа. */
+  /** Повернуть заголовок и строки на 180°. */
   isRotated?: boolean
 }

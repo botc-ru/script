@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
 /**
  * Узкая колонка порядка ночи на листе рассказчика: заголовок и список с иконками.
  *
- * Перевёрнутая колонка стоит справа и читается снизу вверх: листом пользуются с двух сторон стола.
+ * Перевёрнутая колонка стоит справа, а её заголовок и строки повёрнуты на 180°.
  */
 export function NightColumn({ title, entries, isRotated = false }: NightColumnProps) {
   const fontSize = useFontSize()

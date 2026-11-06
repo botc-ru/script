@@ -4,6 +4,6 @@ export interface NightDetailColumnProps {
   title: string
   entries: NightOrderEntry[]
   scriptTitle: string
-  /** Перевернуть колонку: её читает рассказчик с другой стороны листа. */
+  /** Повернуть заголовок и строки на 180°. */
   isRotated?: boolean
 }
