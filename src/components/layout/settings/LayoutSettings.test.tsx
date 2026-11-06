@@ -18,6 +18,10 @@ function renderSettings(settings: Partial<PrintSettings> = {}, onDownloadPdf?: (
   return onChange
 }
 
+function isFolded(element: HTMLElement) {
+  return element.closest('.layout-settings__sheet-fold--closed[inert]') !== null
+}
+
 describe('LayoutSettings', () => {
   it.each<[string, Partial<PrintSettings>]>([
     ['Фон', { background: false }],
@@ -53,14 +57,15 @@ describe('LayoutSettings', () => {
     expect(onChange).toHaveBeenCalledWith({ ...DEFAULT_PRINT_SETTINGS, ...patch })
   })
 
-  it('скрывает настройки выключенного листа', () => {
-    renderSettings({ playerSheet: false, storytellerSheet: false, nightOrder: false })
+  it('сворачивает настройки выключенного листа', () => {
+    renderSettings({ playerSheet: false, nightOrder: false })
 
-    expect(screen.queryByRole('button', { name: 'Растянуть' })).toBeNull()
-    expect(screen.queryByRole('group', { name: 'Колонки' })).toBeNull()
-    expect(screen.queryByRole('button', { name: 'Таблица' })).toBeNull()
-    expect(screen.queryByRole('button', { name: 'Подсказки' })).toBeNull()
-    expect(screen.getByRole('button', { name: 'Список ролей', pressed: false })).toBeDefined()
+    expect(isFolded(screen.getByRole('button', { name: 'Растянуть' }))).toBe(true)
+    expect(isFolded(screen.getByRole('group', { name: 'Колонки' }))).toBe(true)
+    expect(isFolded(screen.getByRole('button', { name: 'Подсказки' }))).toBe(true)
+    expect(isFolded(screen.getByRole('button', { name: 'Таблица' }))).toBe(false)
+    expect(isFolded(screen.getByRole('button', { name: 'Список ролей', pressed: false })))
+      .toBe(false)
   })
 
   it('состояние переключателя видно не только по цвету', () => {

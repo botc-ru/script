@@ -23,8 +23,36 @@
   gap: 4px;
 }
 
+.layout-settings__group--sheet {
+  gap: 0;
+}
+
+/* Высота и ширина анимируются через дорожки сетки: у auto переходов нет */
+.layout-settings__sheet-fold {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+  margin-top: 4px;
+  transition:
+    grid-template-rows 0.2s ease,
+    grid-template-columns 0.2s ease,
+    margin 0.2s ease,
+    opacity 0.2s ease,
+    visibility 0.2s;
+}
+
+.layout-settings__sheet-fold--closed {
+  grid-template-rows: 0fr;
+  margin-top: 0;
+  opacity: 0;
+  visibility: hidden;
+}
+
 .layout-settings__sheet-options {
+  min-width: 0;
+  min-height: 0;
   padding-left: 16px;
+  overflow: hidden;
 }
 
 .layout-settings__download {
@@ -112,10 +140,27 @@
     gap: 8px;
   }
 
+  .layout-settings__group--sheet {
+    gap: 0;
+  }
+
+  .layout-settings__sheet-fold {
+    margin-top: 0;
+    margin-left: 20px;
+  }
+
+  .layout-settings__sheet-fold--closed {
+    grid-template-rows: 1fr;
+    grid-template-columns: 0fr;
+    margin-left: 0;
+  }
+
+  /* Поля компенсируют обрезку: иначе свёртка срезала бы тени капсул */
   .layout-settings__sheet-options {
     flex-direction: row;
     gap: 8px;
-    padding-left: 12px;
+    margin: calc(-1 * var(--layout-settings-shadow-space));
+    padding: var(--layout-settings-shadow-space);
   }
 
   .layout-settings__group + .layout-settings__group {
@@ -126,7 +171,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .layout-settings__download,
-  .layout-settings__groups {
+  .layout-settings__groups,
+  .layout-settings__sheet-fold {
     transition: none;
   }
 }
