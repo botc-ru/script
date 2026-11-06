@@ -187,7 +187,9 @@ describe('App', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
     await userEvent.click(screen.getByRole('button', { name: 'Скачать PDF' }))
 
-    expect(await screen.findByText('Не удалось создать PDF')).toBeDefined()
+    await waitFor(() => {
+      expect(screen.getByRole('status').textContent).toBe('Не удалось создать PDF')
+    })
   })
 
   it('без включённых листов скачивание PDF неактивно', async () => {
