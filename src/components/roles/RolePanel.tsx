@@ -17,7 +17,8 @@ import './RolePanel.css'
  *
  * На ПК это панель слева со своей прокруткой. На телефоне это отдельный экран: прокручивается
  * вся страница, поле поиска плавает внизу между кнопками, а фильтры плавающей панелью над ним.
- * При открытии и смене поиска или фильтра экран возвращается к началу списка.
+ * При открытии экран начинается с начала списка. При вводе прокрутка намеренно не меняется:
+ * на телефоне она сбивает положение поля поиска, пока открыта клавиатура.
  */
 export function RolePanel({ roles, selectedRoleIds, onToggleRole }: RolePanelProps) {
   const [query, setQuery] = useState('')
@@ -27,7 +28,7 @@ export function RolePanel({ roles, selectedRoleIds, onToggleRole }: RolePanelPro
 
   useEffect(() => {
     panelRef.current?.scrollIntoView()
-  }, [query, team])
+  }, [])
 
   const allRoles = roles.status === 'ready'
     ? Object.values(roles.roles).filter((role) => role.team)

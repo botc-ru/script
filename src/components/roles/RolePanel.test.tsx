@@ -74,16 +74,13 @@ describe('RolePanel', () => {
     expect(onToggleRole).toHaveBeenCalledWith('imp')
   })
 
-  it('возвращается к началу списка при смене поиска и фильтра', async () => {
+  it('прокручивает к началу только при открытии, а не при вводе', async () => {
     const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView')
     renderPanel()
+
+    await userEvent.type(screen.getByRole('searchbox'), 'пов')
+
     expect(scrollIntoView).toHaveBeenCalledTimes(1)
-
-    await userEvent.type(screen.getByRole('searchbox'), 'п')
-    expect(scrollIntoView).toHaveBeenCalledTimes(2)
-
-    await userEvent.click(screen.getByRole('button', { name: 'Демоны' }))
-    expect(scrollIntoView).toHaveBeenCalledTimes(3)
 
     scrollIntoView.mockRestore()
   })
