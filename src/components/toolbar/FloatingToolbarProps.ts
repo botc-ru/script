@@ -1,12 +1,13 @@
 import type { RolesState } from '../../contexts/roles/RolesState'
+import type { AppScreen } from '../../types/AppScreen'
 import type { ScriptData } from '../../types/ScriptData'
 import type { ScriptMode } from '../../types/ScriptMode'
 
 export interface FloatingToolbarProps {
   mode: ScriptMode
   onModeChange: (mode: ScriptMode) => void
-  isRolesOpen: boolean
-  onRolesOpenChange: (isOpen: boolean) => void
+  screen: AppScreen
+  onScreenChange: (screen: AppScreen) => void
   roles: RolesState
   script: ScriptData
   onImport: (script: ScriptData) => void

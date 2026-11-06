@@ -39,8 +39,8 @@ import './FloatingToolbar.css'
 export function FloatingToolbar({
   mode,
   onModeChange,
-  isRolesOpen,
-  onRolesOpenChange,
+  screen,
+  onScreenChange,
   roles,
   script,
   onImport,
@@ -54,6 +54,7 @@ export function FloatingToolbar({
   const [search, setSearch] = useState<SearchState>('closed')
   const isSearchVisible = search !== 'closed'
   const isEditing = mode === 'edit'
+  const isRolesOpen = screen === 'roles'
 
   function changeMode(nextMode: ScriptMode) {
     setSearch('closed')
@@ -72,10 +73,10 @@ export function FloatingToolbar({
     {
       icon: ScrollText,
       label: 'Сценарий',
-      isActive: !isRolesOpen,
-      onClick: () => onRolesOpenChange(false),
+      isActive: screen === 'script',
+      onClick: () => onScreenChange('script'),
     },
-    { ...rolesAction, onClick: () => onRolesOpenChange(true) },
+    { ...rolesAction, onClick: () => onScreenChange('roles') },
     layoutAction,
   ]
 
@@ -96,7 +97,7 @@ export function FloatingToolbar({
                   <ToolbarButton
                     {...rolesAction}
                     showLabel
-                    onClick={() => onRolesOpenChange(!isRolesOpen)}
+                    onClick={() => onScreenChange(isRolesOpen ? 'script' : 'roles')}
                   />
                   <ToolbarButton {...layoutAction} showLabel />
                 </div>

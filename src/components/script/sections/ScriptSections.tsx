@@ -1,25 +1,19 @@
 import { Fragment } from 'react'
 
 import { TEAM_LABELS } from '../../../types/TeamLabels'
-import { REQUIRED_TEAMS, TEAMS } from '../../../types/TeamOrder'
 import { getActiveJinxes } from '../../../utils/getActiveJinxes'
 import { getOrderedRoles } from '../../../utils/getOrderedRoles'
+import { getScriptSections } from '../../../utils/getScriptSections'
 import { JinxSection } from '../jinxes/JinxSection'
 import { ScriptSection } from '../section/ScriptSection'
 import type { ScriptSectionsProps } from './ScriptSectionsProps'
-
-const DJINN_ID = 'djinn'
 
 /**
  * Секции сценария по командам. В режиме `edit` позволяет удалять и перетаскивать роли,
  * а клик по заголовку секции вызывает `onSelectTeam` с её командой.
  *
- * Порядок секций строгий:
- * - Горожане, Изгои, Приспешники, Демоны показываются всегда, даже пустые.
- * - Летописцы, Сказочники, Правила Джинна, Странники скрываются, если пустые.
- *
- * Если в сценарии есть хотя бы один джинкс, первым Сказочником автоматически становится Джинн,
- * а после Сказочников появляются Правила Джинна.
+ * Состав секций задаёт `getScriptSections`. Если в сценарии есть хотя бы один джинкс,
+ * после Сказочников появляются Правила Джинна.
  *
  * Без `customOrder` роли сортируются по SAO. Перетаскивание фиксирует текущий порядок
  * и включает `customOrder`.
@@ -34,17 +28,7 @@ export function ScriptSections({
   const isEditing = mode === 'edit'
   const orderedRoles = getOrderedRoles(script, roles)
   const jinxes = getActiveJinxes(orderedRoles, roles)
-  const djinn = jinxes.length > 0 ? roles[DJINN_ID] : undefined
-
-  const sections = TEAMS
-    .map((team) => ({
-      team,
-      teamRoles: orderedRoles.filter((role) => role.team === team && role !== djinn),
-      pinnedRoles: team === 'fabled' && djinn ? [djinn] : [],
-    }))
-    .filter(({ team, teamRoles, pinnedRoles }) => (
-      REQUIRED_TEAMS.includes(team) || teamRoles.length + pinnedRoles.length > 0
-    ))
+  const sections = getScriptSections(orderedRoles, jinxes, roles)
 
   function removeRole(roleId: string) {
     onChange?.({ roleIds: script.roleIds.filter((id) => id !== roleId) })
@@ -57,7 +41,7 @@ export function ScriptSections({
     onChange?.({ roleIds, customOrder: true })
   }
 
-  return sections.map(({ team, teamRoles, pinnedRoles }) => (
+  return sections.map(({ team, roles: teamRoles, pinnedRoles }) => (
     <Fragment key={team}>
       <ScriptSection
         title={TEAM_LABELS[team]}

@@ -12,8 +12,8 @@ function renderToolbar(props: Partial<FloatingToolbarProps> = {}) {
   const defaults: FloatingToolbarProps = {
     mode: 'edit',
     onModeChange: vi.fn(),
-    isRolesOpen: false,
-    onRolesOpenChange: vi.fn(),
+    screen: 'script' as const,
+    onScreenChange: vi.fn(),
     roles: { status: 'ready', roles: TEST_ROLES },
     script: DEFAULT_SCRIPT,
     onImport: vi.fn(),
@@ -95,8 +95,8 @@ describe('FloatingToolbar', () => {
     const { rerender } = renderToolbar()
     const props = {
       onModeChange: vi.fn(),
-      isRolesOpen: false,
-      onRolesOpenChange: vi.fn(),
+      screen: 'script' as const,
+      onScreenChange: vi.fn(),
       roles: { status: 'loading' } as const,
       script: DEFAULT_SCRIPT,
       onImport: vi.fn(),
@@ -211,16 +211,16 @@ describe('FloatingToolbar', () => {
   })
 
   it('кнопка Роли переключает панель и показывает, что она открыта', async () => {
-    const onRolesOpenChange = vi.fn()
-    renderToolbar({ isRolesOpen: true, onRolesOpenChange })
+    const onScreenChange = vi.fn()
+    renderToolbar({ screen: 'roles', onScreenChange })
 
     await userEvent.click(screen.getByRole('button', { name: 'Роли', pressed: true }))
 
-    expect(onRolesOpenChange).toHaveBeenCalledWith(false)
+    expect(onScreenChange).toHaveBeenCalledWith('script')
   })
 
-  it.each([false, true])('порядок пунктов меню не зависит от экрана: %s', async (isRolesOpen) => {
-    renderToolbar({ isRolesOpen })
+  it.each(['script', 'roles'] as const)('порядок пунктов меню не зависит от экрана: %s', async (appScreen) => {
+    renderToolbar({ screen: appScreen })
 
     await userEvent.click(screen.getByRole('button', { name: 'Меню' }))
     const items = screen.getAllByRole('listitem').map((item) => item.textContent)
@@ -229,7 +229,7 @@ describe('FloatingToolbar', () => {
   })
 
   it('меню подсвечивает текущий экран', async () => {
-    renderToolbar({ isRolesOpen: true })
+    renderToolbar({ screen: 'roles' })
 
     await userEvent.click(screen.getByRole('button', { name: 'Меню' }))
     const current = document.querySelector('[aria-current="true"]')
@@ -238,16 +238,16 @@ describe('FloatingToolbar', () => {
   })
 
   it('пункт Сценарий закрывает панель, а пункт Роли открывает', async () => {
-    const onRolesOpenChange = vi.fn()
-    renderToolbar({ onRolesOpenChange })
+    const onScreenChange = vi.fn()
+    renderToolbar({ onScreenChange })
 
     await userEvent.click(screen.getByRole('button', { name: 'Меню' }))
     await userEvent.click(screen.getByRole('button', { name: 'Сценарий' }))
-    expect(onRolesOpenChange).toHaveBeenLastCalledWith(false)
+    expect(onScreenChange).toHaveBeenLastCalledWith('script')
 
     await userEvent.click(screen.getByRole('button', { name: 'Меню' }))
     await userEvent.click(screen.getAllByRole('button', { name: 'Роли' })[1] ?? document.body)
-    expect(onRolesOpenChange).toHaveBeenLastCalledWith(true)
+    expect(onScreenChange).toHaveBeenLastCalledWith('roles')
   })
 
   it('меню закрывается повторным нажатием на кнопку', async () => {

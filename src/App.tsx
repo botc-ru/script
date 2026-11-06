@@ -8,6 +8,7 @@ import { useRoles } from './contexts/roles/useRoles'
 import { useHideOnScroll } from './hooks/useHideOnScroll'
 import { useScript } from './hooks/useScript'
 import { useToast } from './hooks/useToast'
+import type { AppScreen } from './types/AppScreen'
 import type { ScriptData } from './types/ScriptData'
 import type { ScriptMode } from './types/ScriptMode'
 import type { Team } from './types/Team'
@@ -32,22 +33,22 @@ export function App() {
   const { message, showToast } = useToast()
   const isControlsHidden = useHideOnScroll()
   const [mode, setMode] = useState<ScriptMode>('view')
-  const [isRolesOpen, setIsRolesOpen] = useState(false)
+  const [screen, setScreen] = useState<AppScreen>('script')
   const [rolesTeam, setRolesTeam] = useState<TeamFilter>('all')
 
-  function changeRolesOpen(isOpen: boolean) {
-    setIsRolesOpen(isOpen)
-    if (!isOpen) setRolesTeam('all')
+  function changeScreen(nextScreen: AppScreen) {
+    setScreen(nextScreen)
+    if (nextScreen !== 'roles') setRolesTeam('all')
   }
 
   function changeMode(nextMode: ScriptMode) {
     setMode(nextMode)
-    changeRolesOpen(false)
+    changeScreen('script')
   }
 
   function openTeamRoles(team: Team) {
     setRolesTeam(team)
-    setIsRolesOpen(true)
+    setScreen('roles')
   }
 
   function toggleScriptRole(roleId: string) {
@@ -66,7 +67,7 @@ export function App() {
 
   const className = [
     'app',
-    isRolesOpen && 'app--roles-open',
+    screen === 'roles' && 'app--roles-open',
     isControlsHidden && 'app--controls-hidden',
   ].filter(Boolean).join(' ')
 
@@ -75,8 +76,8 @@ export function App() {
       <FloatingToolbar
         mode={mode}
         onModeChange={changeMode}
-        isRolesOpen={isRolesOpen}
-        onRolesOpenChange={changeRolesOpen}
+        screen={screen}
+        onScreenChange={changeScreen}
         roles={roles}
         script={script.value}
         onImport={importScript}
@@ -87,7 +88,7 @@ export function App() {
         onUndo={script.undo}
         onRedo={script.redo}
       />
-      {isRolesOpen && (
+      {screen === 'roles' && (
         <RolePanel
           roles={roles}
           selectedRoleIds={script.value.roleIds}
