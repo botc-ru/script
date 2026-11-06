@@ -1,52 +1,41 @@
-:root {
-  --role-panel-controls-height: 104px;
-}
-
 .role-panel {
-  --role-panel-gap: 8px;
-
   position: fixed;
   top: calc(var(--toolbar-button-size) + 32px);
   bottom: 16px;
-  left: 32px;
+  left: var(--toolbar-side-offset);
   display: flex;
   flex-direction: column;
-  gap: var(--role-panel-gap);
-  box-sizing: border-box;
+  gap: 8px;
   width: 216px;
-  padding: var(--role-panel-gap);
-  background-image: var(--texture-paper);
-  background-size: cover;
-  box-shadow: 0 1px 4px var(--color-shadow);
 }
 
 .role-panel__controls {
   display: flex;
   flex-direction: column;
-  gap: var(--role-panel-gap);
+  gap: 8px;
 }
 
 .role-panel__search {
   position: relative;
   display: flex;
-  height: 40px;
+  height: var(--toolbar-button-size);
   overflow: hidden;
-  border: 1px solid var(--color-accent-border);
-  border-radius: 20px;
+  border-radius: calc(var(--toolbar-button-size) / 2);
   background: var(--color-accent-soft);
+  box-shadow: 0 1px 4px var(--color-shadow);
 }
 
 .role-panel__search-icon {
   position: absolute;
-  top: 11px;
-  left: 10px;
+  top: calc(50% - 8px);
+  left: 12px;
   color: var(--color-accent);
 }
 
 .role-panel__input {
   flex: 1;
   min-width: 0;
-  padding: 0 8px 0 30px;
+  padding: 0 8px 0 34px;
   border: none;
   background: none;
   color: var(--color-text);
@@ -65,7 +54,7 @@
 
 .role-panel__sort {
   flex-shrink: 0;
-  padding: 0 10px;
+  padding: 0 12px;
   border: none;
   border-left: 1px solid var(--color-accent-border);
   background: none;
@@ -86,26 +75,30 @@
     position: static;
     display: block;
     width: auto;
-    padding: 0;
-    background: var(--color-accent-soft);
-    box-shadow: none;
   }
 
-  .role-panel__controls {
+  .role-panel__search {
     position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
+    right: calc(var(--toolbar-side-offset) + var(--toolbar-button-size) + 8px);
+    bottom: var(--toolbar-bottom-offset);
+    left: calc(var(--toolbar-side-offset) + var(--toolbar-button-size) + 8px);
     z-index: 5;
-    box-sizing: border-box;
-    height: var(--role-panel-controls-height);
-    padding: var(--role-panel-gap) 16px;
+  }
+
+  .role-panel__filters {
+    position: fixed;
+    right: var(--toolbar-side-offset);
+    bottom: calc(var(--toolbar-bottom-offset) + var(--toolbar-button-size) + 8px);
+    left: var(--toolbar-side-offset);
+    z-index: 5;
+    padding: 4px;
+    border-radius: 12px;
     background: var(--color-accent-soft);
     box-shadow: 0 1px 4px var(--color-shadow);
   }
 
   .role-panel__list {
-    padding: calc(var(--role-panel-controls-height) + 8px) 8px 8px;
+    padding: 8px 8px calc(var(--toolbar-button-size) + 8px);
     overflow: visible;
   }
 }

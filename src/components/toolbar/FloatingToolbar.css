@@ -1,12 +1,13 @@
 :root {
   --toolbar-button-size: 44px;
+  --toolbar-side-offset: 32px;
 }
 
 .floating-toolbar {
   position: fixed;
   top: 16px;
-  right: 32px;
-  left: 32px;
+  right: var(--toolbar-side-offset);
+  left: var(--toolbar-side-offset);
   z-index: 10;
   display: flex;
   justify-content: space-between;
@@ -38,12 +39,14 @@
 @media (max-width: 768px) {
   :root {
     --toolbar-button-size: 48px;
+
+    /* 5px: тень кнопки целиком помещается в экран */
+    --toolbar-bottom-offset: calc(5px + env(safe-area-inset-bottom));
   }
 
   .floating-toolbar {
     top: auto;
-    /* 5px: тень кнопки целиком помещается в экран */
-    bottom: calc(5px + env(safe-area-inset-bottom));
+    bottom: var(--toolbar-bottom-offset);
   }
 
   .floating-toolbar__desktop {
@@ -54,7 +57,8 @@
     display: block;
   }
 
-  .floating-toolbar--roles .floating-toolbar__search-button {
+  .floating-toolbar--roles .floating-toolbar__search-button,
+  .floating-toolbar--roles .floating-toolbar__history {
     display: none;
   }
 

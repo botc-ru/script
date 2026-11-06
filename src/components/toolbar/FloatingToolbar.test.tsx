@@ -12,7 +12,7 @@ function renderToolbar(props: Partial<FloatingToolbarProps> = {}) {
     mode: 'edit',
     onModeChange: vi.fn(),
     isRolesOpen: false,
-    onRolesToggle: vi.fn(),
+    onRolesOpenChange: vi.fn(),
     roles: { status: 'ready', roles: TEST_ROLES },
     selectedRoleIds: [],
     onToggleRole: vi.fn(),
@@ -93,7 +93,7 @@ describe('FloatingToolbar', () => {
     const props = {
       onModeChange: vi.fn(),
       isRolesOpen: false,
-      onRolesToggle: vi.fn(),
+      onRolesOpenChange: vi.fn(),
       roles: { status: 'loading' } as const,
       selectedRoleIds: [],
       onToggleRole: vi.fn(),
@@ -193,26 +193,43 @@ describe('FloatingToolbar', () => {
   })
 
   it('кнопка Роли переключает панель и показывает, что она открыта', async () => {
-    const onRolesToggle = vi.fn()
-    renderToolbar({ isRolesOpen: true, onRolesToggle })
+    const onRolesOpenChange = vi.fn()
+    renderToolbar({ isRolesOpen: true, onRolesOpenChange })
 
-    const button = screen.getByRole('button', { name: 'Роли', pressed: true })
-    await userEvent.click(button)
+    await userEvent.click(screen.getByRole('button', { name: 'Роли', pressed: true }))
 
-    expect(onRolesToggle).toHaveBeenCalledOnce()
+    expect(onRolesOpenChange).toHaveBeenCalledWith(false)
   })
 
-  it('в меню на экране ролей вместо пункта Роли показывает Сценарий', async () => {
-    const onRolesToggle = vi.fn()
-    renderToolbar({ isRolesOpen: true, onRolesToggle })
+  it.each([false, true])('порядок пунктов меню не зависит от экрана: %s', async (isRolesOpen) => {
+    renderToolbar({ isRolesOpen })
 
     await userEvent.click(screen.getByRole('button', { name: 'Меню' }))
     const items = screen.getAllByRole('listitem').map((item) => item.textContent)
 
-    expect(items).toEqual(['Просмотр', 'Сценарий', 'Макет'])
+    expect(items).toEqual(['Просмотр', 'Сценарий', 'Роли', 'Макет'])
+  })
 
+  it('меню подсвечивает текущий экран', async () => {
+    renderToolbar({ isRolesOpen: true })
+
+    await userEvent.click(screen.getByRole('button', { name: 'Меню' }))
+    const current = document.querySelector('[aria-current="true"]')
+
+    expect(current?.textContent).toBe('Роли')
+  })
+
+  it('пункт Сценарий закрывает панель, а пункт Роли открывает', async () => {
+    const onRolesOpenChange = vi.fn()
+    renderToolbar({ onRolesOpenChange })
+
+    await userEvent.click(screen.getByRole('button', { name: 'Меню' }))
     await userEvent.click(screen.getByRole('button', { name: 'Сценарий' }))
-    expect(onRolesToggle).toHaveBeenCalledOnce()
+    expect(onRolesOpenChange).toHaveBeenLastCalledWith(false)
+
+    await userEvent.click(screen.getByRole('button', { name: 'Меню' }))
+    await userEvent.click(screen.getAllByRole('button', { name: 'Роли' })[1] ?? document.body)
+    expect(onRolesOpenChange).toHaveBeenLastCalledWith(true)
   })
 
   it('меню закрывается повторным нажатием на кнопку', async () => {
@@ -231,7 +248,7 @@ describe('FloatingToolbar', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Меню' }))
     const items = screen.getAllByRole('listitem').map((item) => item.textContent)
 
-    expect(items).toEqual(['Просмотр', 'Роли', 'Макет'])
+    expect(items).toEqual(['Просмотр', 'Сценарий', 'Роли', 'Макет'])
 
     await userEvent.click(screen.getAllByRole('button', { name: 'Просмотр' })[1] ?? document.body)
 

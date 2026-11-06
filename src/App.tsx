@@ -37,7 +37,7 @@ export function App() {
         mode={mode}
         onModeChange={changeMode}
         isRolesOpen={isRolesOpen}
-        onRolesToggle={() => setIsRolesOpen((isOpen) => !isOpen)}
+        onRolesOpenChange={setIsRolesOpen}
         roles={roles}
         selectedRoleIds={script.value.roleIds}
         onToggleRole={toggleScriptRole}

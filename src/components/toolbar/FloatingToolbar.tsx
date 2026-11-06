@@ -26,8 +26,9 @@ import './FloatingToolbar.css'
  * Плавающие кнопки поверх страницы: на ПК вверху экрана, на телефоне внизу.
  *
  * Слева в просмотре одна кнопка Редактировать. В редактировании слева Просмотр, Роли и Макет:
- * на ПК это отдельные кнопки, на телефоне одна кнопка с меню. На экране ролей на телефоне пункт
- * Роли меняется на Сценарий, а кнопки поиска нет: у панели своё поле поиска.
+ * на ПК это отдельные кнопки, на телефоне меню с постоянным порядком пунктов: Просмотр, Сценарий,
+ * Роли, Макет. На экране ролей на телефоне справа остаётся только Поделиться: между кнопками
+ * находится поле поиска панели.
  *
  * Справа в редактировании отмена и повтор (если доступны) и поиск, в обоих режимах Поделиться.
  * Открытый поиск заменяет Поделиться крестиком, а на телефоне скрывает остальные кнопки.
@@ -38,7 +39,7 @@ export function FloatingToolbar({
   mode,
   onModeChange,
   isRolesOpen,
-  onRolesToggle,
+  onRolesOpenChange,
   roles,
   selectedRoleIds,
   onToggleRole,
@@ -62,14 +63,18 @@ export function FloatingToolbar({
     onClick: () => changeMode('view'),
   }
   const layoutAction: ModeAction = { icon: FileText, label: 'Макет', disabled: true }
-  const rolesAction: ModeAction = {
-    icon: Users,
-    label: 'Роли',
-    isActive: isRolesOpen,
-    onClick: onRolesToggle,
-  }
-  const backAction: ModeAction = { icon: ScrollText, label: 'Сценарий', onClick: onRolesToggle }
-  const menuActions = [viewAction, isRolesOpen ? backAction : rolesAction, layoutAction]
+  const rolesAction: ModeAction = { icon: Users, label: 'Роли', isActive: isRolesOpen }
+  const menuActions: ModeAction[] = [
+    viewAction,
+    {
+      icon: ScrollText,
+      label: 'Сценарий',
+      isActive: !isRolesOpen,
+      onClick: () => onRolesOpenChange(false),
+    },
+    { ...rolesAction, onClick: () => onRolesOpenChange(true) },
+    layoutAction,
+  ]
 
   const className = [
     'floating-toolbar',
@@ -84,9 +89,13 @@ export function FloatingToolbar({
           ? (
               <>
                 <div className="floating-toolbar__desktop">
-                  {[viewAction, rolesAction, layoutAction].map((action) => (
-                    <ToolbarButton key={action.label} {...action} showLabel />
-                  ))}
+                  <ToolbarButton {...viewAction} showLabel />
+                  <ToolbarButton
+                    {...rolesAction}
+                    showLabel
+                    onClick={() => onRolesOpenChange(!isRolesOpen)}
+                  />
+                  <ToolbarButton {...layoutAction} showLabel />
                 </div>
                 <div className="floating-toolbar__mobile">
                   <ModeMenu actions={menuActions} />

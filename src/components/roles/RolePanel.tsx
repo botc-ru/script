@@ -16,7 +16,8 @@ import './RolePanel.css'
  * Нажатие на роль добавляет её в сценарий или удаляет, панель остаётся открытой.
  *
  * На ПК это панель слева со своей прокруткой. На телефоне это отдельный экран: прокручивается
- * вся страница, а поиск и фильтры закреплены вверху. При открытии экран начинается с начала списка.
+ * вся страница, поле поиска плавает внизу между кнопками, а фильтры плавающей панелью над ним.
+ * При открытии экран начинается с начала списка.
  */
 export function RolePanel({ roles, selectedRoleIds, onToggleRole }: RolePanelProps) {
   const [query, setQuery] = useState('')
@@ -55,7 +56,9 @@ export function RolePanel({ roles, selectedRoleIds, onToggleRole }: RolePanelPro
             {sort === 'name' ? 'Имя' : 'Порядок'}
           </button>
         </div>
-        <TeamFilters value={team} onChange={setTeam} />
+        <div className="role-panel__filters">
+          <TeamFilters value={team} onChange={setTeam} />
+        </div>
       </div>
 
       <div className="role-panel__list">

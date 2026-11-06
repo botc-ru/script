@@ -32,6 +32,11 @@
   text-align: left;
 }
 
+.mode-menu__item[aria-current='true'] {
+  background: var(--color-surface-hover);
+  font-weight: 700;
+}
+
 .mode-menu__item:disabled {
   opacity: 0.5;
 }

@@ -9,7 +9,7 @@ import './ModeMenu.css'
 /**
  * Кнопка-гамбургер для телефона: открывает вверх меню с подписанными действиями.
  *
- * Меню закрывается после выбора пункта и повторным нажатием на кнопку.
+ * Текущий экран подсвечен. Меню закрывается после выбора пункта и повторным нажатием на кнопку.
  */
 export function ModeMenu({ actions }: ModeMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
@@ -18,11 +18,12 @@ export function ModeMenu({ actions }: ModeMenuProps) {
     <div className="mode-menu">
       {isOpen && (
         <ul className="mode-menu__list">
-          {actions.map(({ icon: Icon, label, disabled, onClick }) => (
+          {actions.map(({ icon: Icon, label, isActive, disabled, onClick }) => (
             <li key={label}>
               <button
                 type="button"
                 className="mode-menu__item"
+                aria-current={isActive}
                 disabled={disabled}
                 onClick={() => {
                   onClick?.()

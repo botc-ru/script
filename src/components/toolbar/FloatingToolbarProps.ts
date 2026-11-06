@@ -5,7 +5,7 @@ export interface FloatingToolbarProps {
   mode: ScriptMode
   onModeChange: (mode: ScriptMode) => void
   isRolesOpen: boolean
-  onRolesToggle: () => void
+  onRolesOpenChange: (isOpen: boolean) => void
   roles: RolesState
   selectedRoleIds: string[]
   onToggleRole: (roleId: string) => void

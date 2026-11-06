@@ -17,6 +17,6 @@
 
   .app {
     padding-top: 0;
-    padding-bottom: calc(var(--toolbar-button-size) + 21px + env(safe-area-inset-bottom));
+    padding-bottom: calc(var(--toolbar-bottom-offset) + var(--toolbar-button-size) + 16px);
   }
 }
