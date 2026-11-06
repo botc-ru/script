@@ -46,6 +46,7 @@
 
 .search-results__name {
   color: var(--team-color);
+  font-weight: 700;
 }
 
 .search-results__empty {
