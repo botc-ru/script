@@ -6,6 +6,7 @@ import { getNightOrder } from '../utils/getNightOrder'
 import { getNightRoles } from '../utils/getNightRoles'
 import { getOrderedRoles } from '../utils/getOrderedRoles'
 import { getScriptSections } from '../utils/getScriptSections'
+import { getScriptTitle } from '../utils/getScriptTitle'
 import { NightOrderSheet } from './pages/NightOrderSheet'
 import { PlayerSheet } from './pages/PlayerSheet'
 import { StorytellerSheet } from './pages/StorytellerSheet'
@@ -13,7 +14,7 @@ import { PdfSettingsContext } from './PdfSettingsContext'
 
 /** PDF сценария. Состав листов задают настройки, размеры шрифтов и фон они же через контекст. */
 export function ScriptDocument({ script, roles, settings }: ScriptPdfData) {
-  const title = script.name || 'Сценарий'
+  const title = getScriptTitle(script)
   const orderedRoles = getOrderedRoles(script, roles)
   const jinxes = getActiveJinxes(orderedRoles, roles)
   const sections = getScriptSections(orderedRoles, jinxes, roles)

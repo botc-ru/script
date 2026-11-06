@@ -131,7 +131,7 @@ describe('App', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
     await userEvent.click(screen.getByRole('button', { name: 'Скачать PDF' }))
 
-    expect(downloadBlob).toHaveBeenCalledWith('script.pdf', blob)
+    expect(downloadBlob).toHaveBeenCalledWith('Сценарий.pdf', blob)
     expect(loadScriptPdf).toHaveBeenCalledOnce()
   })
 
@@ -164,7 +164,7 @@ describe('App', () => {
 
     await renderEditor()
 
-    await waitFor(() => expect(downloadBlob).toHaveBeenCalledWith('script.pdf', blob))
+    await waitFor(() => expect(downloadBlob).toHaveBeenCalledWith('Сценарий.pdf', blob))
   })
 
   it('адрес с action=json копирует JSON', async () => {

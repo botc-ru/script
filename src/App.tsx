@@ -19,6 +19,7 @@ import type { Team } from './types/Team'
 import type { TeamFilter } from './types/TeamFilter'
 import { copyText } from './utils/copyText'
 import { downloadBlob } from './utils/downloadBlob'
+import { getScriptTitle } from './utils/getScriptTitle'
 import { hasPdfPages } from './utils/hasPdfPages'
 import { loadScriptPdf } from './utils/loadScriptPdf'
 import { resolveRoleIds } from './utils/resolveRoleIds'
@@ -81,7 +82,7 @@ export function App() {
   function downloadPdf() {
     if (roles.status !== 'ready') return
 
-    const fileName = `${script.value.name || 'script'}.pdf`
+    const fileName = `${getScriptTitle(script.value)}.pdf`
     if (pdf.blob && pdf.isFresh) {
       downloadBlob(fileName, pdf.blob)
       return
