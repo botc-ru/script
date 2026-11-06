@@ -74,13 +74,17 @@ describe('RolePanel', () => {
     expect(onToggleRole).toHaveBeenCalledWith('imp')
   })
 
-  it('прокручивает к началу только при открытии, а не при вводе', async () => {
+  it('прокручивает к началу при открытии и нажатии на поле, но не при вводе', async () => {
     const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView')
     renderPanel()
-
-    await userEvent.type(screen.getByRole('searchbox'), 'пов')
-
     expect(scrollIntoView).toHaveBeenCalledTimes(1)
+
+    await userEvent.click(screen.getByRole('searchbox'))
+    expect(scrollIntoView).toHaveBeenCalledTimes(2)
+
+    await userEvent.keyboard('пов')
+    await userEvent.click(screen.getByRole('searchbox'))
+    expect(scrollIntoView).toHaveBeenCalledTimes(2)
 
     scrollIntoView.mockRestore()
   })
