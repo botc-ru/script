@@ -4,7 +4,8 @@
 
 .app--roles-open,
 .app--layout-open {
-  padding-left: 264px;
+  /* 216px: ширина левой панели */
+  padding-left: calc(var(--toolbar-side-offset) * 2 + 216px);
 }
 
 @media (max-width: 768px) {

@@ -1,6 +1,6 @@
 :root {
   --toolbar-button-size: 44px;
-  --toolbar-side-offset: 32px;
+  --toolbar-side-offset: 16px;
 }
 
 .floating-toolbar {
@@ -40,8 +40,7 @@
   :root {
     --toolbar-button-size: 48px;
 
-    /* 5px: тень кнопки целиком помещается в экран */
-    --toolbar-bottom-offset: calc(5px + env(safe-area-inset-bottom));
+    --toolbar-bottom-offset: calc(16px + env(safe-area-inset-bottom));
   }
 
   .floating-toolbar {
