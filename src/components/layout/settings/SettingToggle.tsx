@@ -12,7 +12,7 @@ import './SettingToggle.css'
  * Переключатель листа (`isSheet`) выделен жирным шрифтом: цвет кнопки занят главной кнопкой.
  */
 export function SettingToggle({ label, value, isSheet, onChange }: SettingToggleProps) {
-  const className = `setting-toggle${isSheet ? ' setting-toggle--sheet' : ''}`
+  const className = `setting-toggle pressable${isSheet ? ' setting-toggle--sheet' : ''}`
 
   return (
     <button

@@ -12,7 +12,7 @@ export function RoleRow({ role, isSelected, onClick }: RoleRowProps) {
   return (
     <button
       type="button"
-      className={`role-row ${getTeamClass(role.team)}`}
+      className={`role-row pressable ${getTeamClass(role.team)}`}
       aria-pressed={isSelected}
       onClick={onClick}
     >

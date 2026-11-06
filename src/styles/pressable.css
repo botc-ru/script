@@ -1,0 +1,10 @@
+/* Отклик на нажатие. Свойство scale, а не transform: transform занят скрытием при прокрутке */
+@media (prefers-reduced-motion: no-preference) {
+  .pressable {
+    transition: scale 0.1s ease;
+  }
+
+  .pressable:active:not(:disabled) {
+    scale: 0.97;
+  }
+}

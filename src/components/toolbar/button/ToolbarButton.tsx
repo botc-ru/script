@@ -17,7 +17,7 @@ export function ToolbarButton({
   return (
     <button
       type="button"
-      className="toolbar-button"
+      className="toolbar-button pressable"
       aria-label={label}
       title={label}
       aria-pressed={isActive}

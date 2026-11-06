@@ -38,7 +38,7 @@ import './App.css'
 export function App() {
   const roles = useRoles()
   const script = useScript()
-  const { message, showToast } = useToast()
+  const { message, isLeaving, showToast } = useToast()
   const isControlsHidden = useHideOnScroll()
   const [printSettings, setPrintSettings] = usePrintSettings()
   const [mode, setMode] = useState<ScriptMode>('view')
@@ -137,7 +137,7 @@ export function App() {
         isError={pdf.isError}
         onDownloadPdf={pdf.download}
       />
-      {message && <Toast message={message} />}
+      {message && <Toast message={message} isLeaving={isLeaving} />}
     </div>
   )
 }

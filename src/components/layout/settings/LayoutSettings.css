@@ -73,7 +73,7 @@
     border-radius: calc(var(--toolbar-button-size) / 2);
     box-shadow: 0 1px 4px var(--color-shadow);
     font-size: 15px;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, scale 0.1s ease;
   }
 
   .app--controls-hidden .layout-settings__download {

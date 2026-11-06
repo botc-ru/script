@@ -15,7 +15,7 @@ export function TeamFilters({ value, onChange }: TeamFiltersProps) {
     <div className="team-filters">
       <button
         type="button"
-        className="team-filters__button"
+        className="team-filters__button pressable"
         aria-pressed={value === 'all'}
         onClick={() => onChange('all')}
       >
@@ -25,7 +25,7 @@ export function TeamFilters({ value, onChange }: TeamFiltersProps) {
         <button
           key={team}
           type="button"
-          className="team-filters__button"
+          className="team-filters__button pressable"
           title={TEAM_LABELS[team]}
           aria-label={TEAM_LABELS[team]}
           aria-pressed={value === team}

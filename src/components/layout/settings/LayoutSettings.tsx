@@ -45,7 +45,7 @@ export function LayoutSettings({ settings, onChange, onDownloadPdf }: LayoutSett
     <div className="layout-settings">
       <button
         type="button"
-        className="layout-settings__download"
+        className="layout-settings__download pressable"
         disabled={!onDownloadPdf}
         onClick={onDownloadPdf}
       >

@@ -44,7 +44,7 @@ export function RoleCard({ role, jinxPartners = [], isLink, onRemove, onDropRole
     return (
       <button
         type="button"
-        className={className}
+        className={`${className} pressable`}
         draggable
         onClick={onRemove}
         onDragStart={(event) => event.dataTransfer.setData('text/plain', role.id)}
@@ -62,7 +62,7 @@ export function RoleCard({ role, jinxPartners = [], isLink, onRemove, onDropRole
   if (isLink) {
     return (
       <a
-        className={className}
+        className={`${className} pressable`}
         href={`https://wiki.bloodontheclocktower.com/${role.id}`}
         target="_blank"
         rel="noreferrer"

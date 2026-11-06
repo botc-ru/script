@@ -11,7 +11,7 @@ export function SettingOptions<T>({ label, options, value, onChange }: SettingOp
         <button
           key={option.label}
           type="button"
-          className="setting-options__button"
+          className="setting-options__button pressable"
           aria-pressed={option.value === value}
           onClick={() => onChange(option.value)}
         >
