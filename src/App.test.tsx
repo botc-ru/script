@@ -37,6 +37,9 @@ describe('App', () => {
   beforeEach(() => {
     window.history.replaceState(null, '', '/script/?roles=princess,goon')
     vi.stubGlobal('fetch', vi.fn(() => Promise.resolve(Response.json(ROLES))))
+    vi.mocked(downloadBlob).mockClear()
+    vi.mocked(loadScriptPdf).mockReset()
+    vi.mocked(loadScriptPdf).mockResolvedValue(new Blob(['pdf']))
   })
 
   afterEach(() => {
@@ -116,8 +119,42 @@ describe('App', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
     await userEvent.click(screen.getByRole('button', { name: 'Скачать PDF' }))
 
-    expect(screen.getByText('Создаём PDF...')).toBeDefined()
     await waitFor(() => expect(downloadBlob).toHaveBeenCalledWith('Буря.pdf', blob))
+  })
+
+  it('скачивает готовый PDF без повторного создания', async () => {
+    const blob = new Blob(['pdf'])
+    vi.mocked(loadScriptPdf).mockResolvedValue(blob)
+    await renderEditor()
+    await screen.findByText('Превью PDF')
+
+    await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Скачать PDF' }))
+
+    expect(downloadBlob).toHaveBeenCalledWith('script.pdf', blob)
+    expect(loadScriptPdf).toHaveBeenCalledOnce()
+  })
+
+  it('после правки создаёт PDF заново', async () => {
+    await renderEditor()
+    await screen.findByText('Превью PDF')
+
+    await userEvent.click(screen.getByRole('button', { name: /Принцесса/ }))
+    await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Скачать PDF' }))
+
+    expect(screen.getByText('Создаём PDF...')).toBeDefined()
+    await waitFor(() => expect(loadScriptPdf).toHaveBeenCalledTimes(2))
+  })
+
+  it('создаёт PDF заранее: Макет открывается без ожидания', async () => {
+    await renderEditor()
+    await screen.findByText('Превью PDF')
+
+    await userEvent.click(screen.getByRole('button', { name: 'Макет' }))
+
+    expect(screen.queryByText('Создаём PDF...')).toBeNull()
+    expect(loadScriptPdf).toHaveBeenCalledOnce()
   })
 
   it('адрес с action=pdf скачивает PDF после загрузки ролей', async () => {
@@ -167,13 +204,11 @@ describe('App', () => {
   })
 
   it('Макет показывает превью вместо сценария, возврат показывает сценарий', async () => {
-    vi.mocked(loadScriptPdf).mockResolvedValue(new Blob(['pdf']))
     await renderEditor()
 
     await userEvent.click(screen.getByRole('button', { name: 'Макет' }))
 
-    expect(screen.getByText('Создаём PDF...')).toBeDefined()
-    expect(await screen.findByText('Превью PDF')).toBeDefined()
+    expect(screen.getByRole('button', { name: 'Скачать PDF' })).toBeDefined()
     expect(screen.queryByText('Принцесса')).toBeNull()
 
     await userEvent.click(screen.getAllByRole('button', { name: 'Макет' })[0] ?? document.body)
@@ -181,7 +216,6 @@ describe('App', () => {
   })
 
   it('настройки макета сохраняются', async () => {
-    vi.mocked(loadScriptPdf).mockResolvedValue(new Blob(['pdf']))
     await renderEditor()
 
     await userEvent.click(screen.getByRole('button', { name: 'Макет' }))

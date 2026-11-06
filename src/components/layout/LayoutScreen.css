@@ -12,3 +12,13 @@
     margin: 0 0 calc(var(--toolbar-button-size) + 16px);
   }
 }
+
+/* Не display: none: превью рисуется заранее, и ему нужна ширина контейнера */
+.layout-screen__preview--hidden {
+  position: absolute;
+  width: 100%;
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+  visibility: hidden;
+}

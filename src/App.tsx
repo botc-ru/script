@@ -81,9 +81,15 @@ export function App() {
   function downloadPdf() {
     if (roles.status !== 'ready') return
 
+    const fileName = `${script.value.name || 'script'}.pdf`
+    if (pdf.blob && pdf.isFresh) {
+      downloadBlob(fileName, pdf.blob)
+      return
+    }
+
     showToast('Создаём PDF...')
     loadScriptPdf({ script: script.value, roles: roles.roles, settings: printSettings })
-      .then((blob) => downloadBlob(`${script.value.name || 'script'}.pdf`, blob))
+      .then((blob) => downloadBlob(fileName, blob))
       .catch(() => showToast('Не удалось создать PDF'))
   }
 
@@ -136,25 +142,23 @@ export function App() {
           onToggleRole={toggleScriptRole}
         />
       )}
-      {screen === 'layout'
-        ? (
-            <LayoutScreen
-              settings={printSettings}
-              onSettingsChange={setPrintSettings}
-              blob={pdf.blob}
-              isError={pdf.isError}
-              onDownloadPdf={downloadAction}
-            />
-          )
-        : (
-            <Script
-              script={script.value}
-              roles={roles}
-              mode={mode}
-              onChange={(patch) => script.update((current) => ({ ...current, ...patch }))}
-              onSelectTeam={openTeamRoles}
-            />
-          )}
+      {screen !== 'layout' && (
+        <Script
+          script={script.value}
+          roles={roles}
+          mode={mode}
+          onChange={(patch) => script.update((current) => ({ ...current, ...patch }))}
+          onSelectTeam={openTeamRoles}
+        />
+      )}
+      <LayoutScreen
+        isOpen={screen === 'layout'}
+        settings={printSettings}
+        onSettingsChange={setPrintSettings}
+        blob={pdf.blob}
+        isError={pdf.isError}
+        onDownloadPdf={downloadAction}
+      />
       {message && <Toast message={message} />}
     </div>
   )

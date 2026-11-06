@@ -13,10 +13,11 @@ const PdfPreview = lazy(() => import('./preview/PdfPreview').then(({ PdfPreview 
 /**
  * Экран «Макет»: настройки и превью PDF вместо сценария.
  *
- * Превью прокручивается вместе со страницей и начинается с первого листа.
- * Код просмотра PDF загружается отдельно, только при открытии экрана.
+ * Превью прокручивается вместе со страницей и начинается с первого листа. Пока экран закрыт,
+ * оно рисуется заранее и скрыто: при открытии страницы уже готовы и пустого экрана нет.
  */
 export function LayoutScreen({
+  isOpen,
   settings,
   onSettingsChange,
   blob,
@@ -24,8 +25,8 @@ export function LayoutScreen({
   onDownloadPdf,
 }: LayoutScreenProps) {
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    if (isOpen) window.scrollTo(0, 0)
+  }, [isOpen])
 
   const loading = <p className="layout-screen__message">Создаём PDF...</p>
 
@@ -45,12 +46,16 @@ export function LayoutScreen({
 
   return (
     <div className="layout-screen">
-      <LayoutSettings
-        settings={settings}
-        onChange={onSettingsChange}
-        onDownloadPdf={onDownloadPdf}
-      />
-      <div className="layout-screen__preview">{renderPreview()}</div>
+      {isOpen && (
+        <LayoutSettings
+          settings={settings}
+          onChange={onSettingsChange}
+          onDownloadPdf={onDownloadPdf}
+        />
+      )}
+      <div className={`layout-screen__preview${isOpen ? '' : ' layout-screen__preview--hidden'}`}>
+        {renderPreview()}
+      </div>
     </div>
   )
 }
