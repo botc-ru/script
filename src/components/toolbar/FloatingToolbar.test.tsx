@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
+import { finishAnimation } from '../../test/finishAnimation'
 import { FloatingToolbar } from './FloatingToolbar'
 import type { FloatingToolbarProps } from './FloatingToolbarProps'
 
@@ -64,6 +65,7 @@ describe('FloatingToolbar', () => {
     expect(screen.queryByRole('button', { name: 'Поделиться' })).toBeNull()
 
     await userEvent.click(screen.getByRole('button', { name: 'Закрыть поиск' }))
+    finishAnimation(screen.getByRole('searchbox'))
 
     expect(screen.queryByRole('searchbox')).toBeNull()
     expect(screen.getByRole('button', { name: 'Поделиться' })).toBeDefined()
@@ -92,7 +94,22 @@ describe('FloatingToolbar', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Поиск' }))
     await userEvent.keyboard('{Escape}')
+    finishAnimation(screen.getByRole('searchbox'))
 
+    expect(screen.queryByRole('searchbox')).toBeNull()
+  })
+
+  it('держит поле на экране до конца анимации закрытия', async () => {
+    renderToolbar()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Поиск' }))
+    finishAnimation(screen.getByRole('searchbox'))
+    expect(screen.getByRole<HTMLInputElement>('searchbox').disabled).toBe(false)
+
+    await userEvent.click(screen.getByRole('button', { name: 'Закрыть поиск' }))
+    expect(screen.getByRole<HTMLInputElement>('searchbox').disabled).toBe(true)
+
+    finishAnimation(screen.getByRole('searchbox'))
     expect(screen.queryByRole('searchbox')).toBeNull()
   })
 

@@ -14,8 +14,18 @@
   animation: toolbar-search-open 0.2s ease-out;
 }
 
+.toolbar-search--closing {
+  animation: toolbar-search-close 0.2s ease-in forwards;
+}
+
 @keyframes toolbar-search-open {
   from {
+    width: var(--toolbar-button-size);
+  }
+}
+
+@keyframes toolbar-search-close {
+  to {
     width: var(--toolbar-button-size);
   }
 }
@@ -31,8 +41,9 @@
   }
 }
 
+/* Не animation: none: без события animationend поле не закроется */
 @media (prefers-reduced-motion: reduce) {
   .toolbar-search {
-    animation: none;
+    animation-duration: 1ms;
   }
 }

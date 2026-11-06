@@ -6,6 +6,7 @@ import { ToolbarButton } from './button/ToolbarButton'
 import type { FloatingToolbarProps } from './FloatingToolbarProps'
 import { ModeMenu } from './mode-menu/ModeMenu'
 import type { ModeAction } from './ModeAction'
+import type { SearchState } from './search/SearchState'
 import { ToolbarSearch } from './search/ToolbarSearch'
 
 import './FloatingToolbar.css'
@@ -28,11 +29,12 @@ export function FloatingToolbar({
   onUndo,
   onRedo,
 }: FloatingToolbarProps) {
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [search, setSearch] = useState<SearchState>('closed')
+  const isSearchVisible = search !== 'closed'
   const isEditing = mode === 'edit'
 
   function changeMode(nextMode: ScriptMode) {
-    setIsSearchOpen(false)
+    setSearch('closed')
     onModeChange(nextMode)
   }
 
@@ -43,7 +45,7 @@ export function FloatingToolbar({
   ]
 
   return (
-    <div className={`floating-toolbar${isSearchOpen ? ' floating-toolbar--searching' : ''}`}>
+    <div className={`floating-toolbar${isSearchVisible ? ' floating-toolbar--searching' : ''}`}>
       <div className="floating-toolbar__modes floating-toolbar__secondary">
         {isEditing
           ? (
@@ -75,12 +77,18 @@ export function FloatingToolbar({
             {canRedo && <ToolbarButton icon={Redo2} label="Повторить" onClick={onRedo} />}
           </div>
         )}
-        {isSearchOpen && <ToolbarSearch onClose={() => setIsSearchOpen(false)} />}
-        {isEditing && !isSearchOpen && (
-          <ToolbarButton icon={Search} label="Поиск" onClick={() => setIsSearchOpen(true)} />
+        {isSearchVisible && (
+          <ToolbarSearch
+            isClosing={search === 'closing'}
+            onClose={() => setSearch('closing')}
+            onClosed={() => setSearch('closed')}
+          />
         )}
-        {isSearchOpen
-          ? <ToolbarButton icon={X} label="Закрыть поиск" onClick={() => setIsSearchOpen(false)} />
+        {isEditing && !isSearchVisible && (
+          <ToolbarButton icon={Search} label="Поиск" onClick={() => setSearch('open')} />
+        )}
+        {isSearchVisible
+          ? <ToolbarButton icon={X} label="Закрыть поиск" onClick={() => setSearch('closing')} />
           : <ToolbarButton icon={Share2} label="Поделиться" disabled />}
       </div>
     </div>
