@@ -30,9 +30,9 @@ const COLUMNS: SettingOption<1 | 2>[] = [
  * Настройки макета: скачивание, общие настройки и группа на каждый лист.
  * Настройки листа видны, только пока лист включён.
  *
- * На ПК это столбец слева. На телефоне плавающая строка над кнопками, она листается
- * влево и вправо, а группы разделены линиями. Край строки плавно исчезает: так видно,
- * что настройки продолжаются.
+ * На ПК это столбец слева. На телефоне каждая настройка отдельная капсула в плавающей строке
+ * над кнопками. Строка идёт от края до края экрана и листается, группы разделены линиями.
+ * Скачивание на телефоне стоит внизу между кнопками.
  *
  * Без `onDownloadPdf` скачивание неактивно.
  */
@@ -43,17 +43,17 @@ export function LayoutSettings({ settings, onChange, onDownloadPdf }: LayoutSett
 
   return (
     <div className="layout-settings">
-      <div className="layout-settings__scroll">
-        <button
-          type="button"
-          className="layout-settings__download"
-          disabled={!onDownloadPdf}
-          onClick={onDownloadPdf}
-        >
-          <FileDown size={16} aria-hidden />
-          Скачать PDF
-        </button>
+      <button
+        type="button"
+        className="layout-settings__download"
+        disabled={!onDownloadPdf}
+        onClick={onDownloadPdf}
+      >
+        <FileDown size={16} aria-hidden />
+        Скачать PDF
+      </button>
 
+      <div className="layout-settings__groups">
         <div className="layout-settings__group">
           <SettingOptions
             label="Шрифт"

@@ -3,19 +3,23 @@
   top: calc(var(--toolbar-button-size) + 32px);
   bottom: 16px;
   left: var(--toolbar-side-offset);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   width: 216px;
   overflow-y: auto;
 }
 
-.layout-settings__scroll,
+.layout-settings__groups {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .layout-settings__group {
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-
-.layout-settings__scroll {
-  gap: 16px;
 }
 
 .layout-settings__download {
@@ -42,51 +46,76 @@
 }
 
 @media (max-width: 768px) {
+  :root {
+    /* Запас внутри строки: прокрутка обрезала бы тени капсул */
+    --layout-settings-shadow-space: 6px;
+  }
+
   .layout-settings {
-    top: auto;
-    right: var(--toolbar-side-offset);
-    bottom: calc(var(--toolbar-bottom-offset) + var(--toolbar-button-size) + 16px);
-    z-index: 5;
+    position: static;
+    display: block;
     width: auto;
+    overflow: visible;
+  }
+
+  .layout-settings__download {
+    position: fixed;
+    right: calc(var(--toolbar-side-offset) + var(--toolbar-button-size) + 8px);
+    bottom: var(--toolbar-bottom-offset);
+    left: calc(var(--toolbar-side-offset) + var(--toolbar-button-size) + 8px);
+    z-index: 5;
     height: var(--toolbar-button-size);
-    overflow: hidden;
     border-radius: calc(var(--toolbar-button-size) / 2);
-    background: var(--color-accent-soft);
     box-shadow: 0 1px 4px var(--color-shadow);
+    font-size: 15px;
     transition: transform 0.2s ease;
   }
 
-  .app--controls-hidden .layout-settings {
-    transform: translateY(calc(200% + 16px + var(--toolbar-bottom-offset))) scale(0.8);
+  .app--controls-hidden .layout-settings__download {
+    transform: translateY(calc(100% + var(--toolbar-bottom-offset))) scale(0.8);
   }
 
-  .layout-settings__scroll {
+  .layout-settings__groups {
+    position: fixed;
+    right: 0;
+    bottom: calc(
+      var(--toolbar-bottom-offset) + var(--toolbar-button-size) + 16px -
+      var(--layout-settings-shadow-space)
+    );
+    left: 0;
+    z-index: 5;
     flex-direction: row;
-    align-items: center;
     gap: 8px;
-    box-sizing: border-box;
-    height: 100%;
-    padding: 0 16px;
+    padding: var(--layout-settings-shadow-space) var(--toolbar-side-offset);
     overflow-x: auto;
     scrollbar-width: none;
-    mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+    transition: transform 0.2s ease;
   }
 
-  .layout-settings__scroll::-webkit-scrollbar {
+  .layout-settings__groups::-webkit-scrollbar {
     display: none;
+  }
+
+  .app--controls-hidden .layout-settings__groups {
+    transform: translateY(calc(200% + 16px + var(--toolbar-bottom-offset))) scale(0.8);
   }
 
   .layout-settings__group {
     flex-direction: row;
     flex-shrink: 0;
     align-items: center;
+    gap: 8px;
+  }
+
+  .layout-settings__group + .layout-settings__group {
     padding-left: 8px;
-    border-left: 1px solid var(--color-accent-divider);
+    border-left: 1px solid var(--color-accent-border);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .layout-settings {
+  .layout-settings__download,
+  .layout-settings__groups {
     transition: none;
   }
 }
