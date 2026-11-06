@@ -19,12 +19,11 @@ export function useHideOnScroll(): boolean {
       const scroll = Math.min(Math.max(window.scrollY, 0), Math.max(maxScroll, 0))
       const delta = scroll - lastScroll.current
 
-      if (scroll === 0) setIsHidden(false)
       if (Math.abs(delta) < SCROLL_THRESHOLD) return
 
       lastScroll.current = scroll
       if (document.activeElement instanceof HTMLInputElement) return
-      setIsHidden(delta > 0 && scroll > 0)
+      setIsHidden(delta > 0)
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
