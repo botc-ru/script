@@ -47,6 +47,11 @@
   .floating-toolbar {
     top: auto;
     bottom: var(--toolbar-bottom-offset);
+    transition: transform 0.2s ease;
+  }
+
+  .app--controls-hidden .floating-toolbar {
+    transform: translateY(calc(100% + var(--toolbar-bottom-offset))) scale(0.8);
   }
 
   .floating-toolbar__desktop {
@@ -69,5 +74,11 @@
   .floating-toolbar--searching .floating-toolbar__actions {
     flex: 1;
     justify-content: flex-end;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-toolbar {
+    transition: none;
   }
 }

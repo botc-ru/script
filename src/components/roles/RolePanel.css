@@ -83,6 +83,11 @@
     bottom: var(--toolbar-bottom-offset);
     left: calc(var(--toolbar-side-offset) + var(--toolbar-button-size) + 8px);
     z-index: 5;
+    transition: transform 0.2s ease;
+  }
+
+  .app--controls-hidden .role-panel__search {
+    transform: translateY(calc(100% + var(--toolbar-bottom-offset))) scale(0.8);
   }
 
   .role-panel__filters {
@@ -99,10 +104,22 @@
     border-radius: calc(var(--toolbar-button-size) / 2);
     background: var(--color-accent-soft);
     box-shadow: 0 1px 4px var(--color-shadow);
+    transition: transform 0.2s ease;
+  }
+
+  .app--controls-hidden .role-panel__filters {
+    transform: translateY(calc(200% + 16px + var(--toolbar-bottom-offset))) scale(0.8);
   }
 
   .role-panel__list {
     padding: 8px 8px calc(var(--toolbar-button-size) + 16px);
     overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .role-panel__search,
+  .role-panel__filters {
+    transition: none;
   }
 }
