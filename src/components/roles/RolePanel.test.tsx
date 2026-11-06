@@ -1,9 +1,11 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
 import type { RolesState } from '../../contexts/roles/RolesState'
 import { TEST_ROLES } from '../../test/testRoles'
+import type { TeamFilter } from '../../types/TeamFilter'
 import { RolePanel } from './RolePanel'
 import type { RolePanelProps } from './RolePanelProps'
 
@@ -15,8 +17,23 @@ const READY: RolesState = {
   },
 }
 
+function FilteredPanel(props: Partial<RolePanelProps>) {
+  const [team, setTeam] = useState<TeamFilter>('all')
+
+  return (
+    <RolePanel
+      roles={READY}
+      selectedRoleIds={[]}
+      team={team}
+      onTeamChange={setTeam}
+      onToggleRole={vi.fn()}
+      {...props}
+    />
+  )
+}
+
 function renderPanel(props: Partial<RolePanelProps> = {}) {
-  render(<RolePanel roles={READY} selectedRoleIds={[]} onToggleRole={vi.fn()} {...props} />)
+  render(<FilteredPanel {...props} />)
 }
 
 function getNames() {
@@ -42,6 +59,13 @@ describe('RolePanel', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Все' }))
     expect(getNames().length).toBeGreaterThan(1)
+  })
+
+  it('показывает команду, заданную снаружи', () => {
+    renderPanel({ team: 'demon' })
+
+    expect(getNames()).toEqual(['Бес'])
+    expect(screen.getByRole('button', { name: 'Демоны', pressed: true })).toBeDefined()
   })
 
   it('ищет по списку и учитывает фильтр команды', async () => {

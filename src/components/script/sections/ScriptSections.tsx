@@ -11,7 +11,8 @@ import type { ScriptSectionsProps } from './ScriptSectionsProps'
 const DJINN_ID = 'djinn'
 
 /**
- * Секции сценария по командам. В режиме `edit` позволяет удалять и перетаскивать роли.
+ * Секции сценария по командам. В режиме `edit` позволяет удалять и перетаскивать роли,
+ * а клик по заголовку секции вызывает `onSelectTeam` с её командой.
  *
  * Порядок секций строгий:
  * - Горожане, Изгои, Приспешники, Демоны показываются всегда, даже пустые.
@@ -23,7 +24,13 @@ const DJINN_ID = 'djinn'
  * Без `customOrder` роли сортируются по SAO. Перетаскивание фиксирует текущий порядок
  * и включает `customOrder`.
  */
-export function ScriptSections({ script, roles, mode, onChange }: ScriptSectionsProps) {
+export function ScriptSections({
+  script,
+  roles,
+  mode,
+  onChange,
+  onSelectTeam,
+}: ScriptSectionsProps) {
   const isEditing = mode === 'edit'
   const orderedRoles = getOrderedRoles(script, roles)
   const jinxes = getActiveJinxes(orderedRoles, roles)
@@ -59,6 +66,7 @@ export function ScriptSections({ script, roles, mode, onChange }: ScriptSections
         jinxes={jinxes}
         onRemoveRole={isEditing ? removeRole : undefined}
         onMoveRole={isEditing ? moveRole : undefined}
+        onTitleClick={isEditing ? () => onSelectTeam?.(team) : undefined}
       />
       {team === 'fabled' && jinxes.length > 0 && <JinxSection jinxes={jinxes} />}
     </Fragment>

@@ -13,9 +13,10 @@ import './Script.css'
  * Режимы:
  * - `view`: только просмотр.
  * - `edit`: можно менять название, автора и цвет. Клик по роли удаляет её из сценария,
- *   перетаскивание меняет порядок ролей внутри секции.
+ *   перетаскивание меняет порядок ролей внутри секции, клик по заголовку секции вызывает
+ *   `onSelectTeam`.
  */
-export function Script({ script, roles, mode, onChange }: ScriptProps) {
+export function Script({ script, roles, mode, onChange, onSelectTeam }: ScriptProps) {
   return (
     <div className="script">
       <ScriptHeader script={script} mode={mode} onChange={onChange} />
@@ -23,7 +24,13 @@ export function Script({ script, roles, mode, onChange }: ScriptProps) {
       {roles.status === 'loading' && <p>Загрузка ролей...</p>}
       {roles.status === 'error' && <p>Не удалось загрузить роли</p>}
       {roles.status === 'ready' && (
-        <ScriptSections script={script} roles={roles.roles} mode={mode} onChange={onChange} />
+        <ScriptSections
+          script={script}
+          roles={roles.roles}
+          mode={mode}
+          onChange={onChange}
+          onSelectTeam={onSelectTeam}
+        />
       )}
     </div>
   )

@@ -14,6 +14,7 @@ import './ScriptSection.css'
  *
  * Если переданы `onRemoveRole` и `onMoveRole`, роли можно удалять и перетаскивать внутри секции.
  * Иначе карточки ведут на вики. `pinnedRoles` идут первыми, удалить и перетащить их нельзя.
+ * Если передан `onTitleClick`, заголовок секции становится кнопкой.
  */
 export function ScriptSection({
   title,
@@ -22,6 +23,7 @@ export function ScriptSection({
   jinxes,
   onRemoveRole,
   onMoveRole,
+  onTitleClick,
 }: ScriptSectionProps) {
   function handleDropRole(roleId: string, targetId: string) {
     if (roleId === targetId || !roles.some((role) => role.id === roleId)) return
@@ -46,7 +48,11 @@ export function ScriptSection({
 
   return (
     <section>
-      <SectionTitle title={title} count={pinnedRoles.length + roles.length} />
+      <SectionTitle
+        title={title}
+        count={pinnedRoles.length + roles.length}
+        onClick={onTitleClick}
+      />
       <ul className="script-section__roles">
         {pinnedRoles.map((role) => renderRole(role, true))}
         {roles.map((role) => renderRole(role, false))}

@@ -225,6 +225,36 @@ describe('Script', () => {
     expect(within(getSection(/^Горожане/)).getByText('Библиотекарь')).toBeDefined()
   })
 
+  it('в редактировании клик по заголовку секции сообщает её команду', async () => {
+    const onSelectTeam = vi.fn()
+    render(
+      <Script
+        script={createScript(['drunk'])}
+        roles={READY_ROLES}
+        mode="edit"
+        onSelectTeam={onSelectTeam}
+      />,
+    )
+
+    await userEvent.click(screen.getByRole('button', { name: 'Изгои (1)' }))
+
+    expect(onSelectTeam).toHaveBeenCalledExactlyOnceWith('outsider')
+  })
+
+  it('заголовок Правил Джинна не кнопка', () => {
+    render(<Script script={createScript(['goon', 'boffin'])} roles={READY_ROLES} mode="edit" />)
+
+    expect(screen.getByRole('heading', { name: /Правила Джинна/ })).toBeDefined()
+    expect(screen.queryByRole('button', { name: /Правила Джинна/ })).toBeNull()
+  })
+
+  it('в просмотре заголовки секций не кнопки', () => {
+    render(<Script script={createScript(['drunk'])} roles={READY_ROLES} mode="view" />)
+
+    expect(screen.getByRole('heading', { name: 'Изгои (1)' })).toBeDefined()
+    expect(screen.queryByRole('button', { name: 'Изгои (1)' })).toBeNull()
+  })
+
   it('показывает модификации роли в квадратных скобках', () => {
     const baron = {
       id: 'baron',

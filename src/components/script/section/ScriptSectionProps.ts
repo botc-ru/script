@@ -9,4 +9,5 @@ export interface ScriptSectionProps {
   jinxes: ActiveJinx[]
   onRemoveRole?: (roleId: string) => void
   onMoveRole?: (roleId: string, targetId: string) => void
+  onTitleClick?: () => void
 }

@@ -2,7 +2,6 @@ import { Search } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 import type { RoleSort } from '../../types/RoleSort'
-import type { TeamFilter } from '../../types/TeamFilter'
 import { getSelectableRoles } from '../../utils/getSelectableRoles'
 import { searchRoles } from '../../utils/searchRoles'
 import { sortRoles } from '../../utils/sortRoles'
@@ -15,14 +14,20 @@ import './RolePanel.css'
 /**
  * Панель выбора ролей: сверху поиск, сортировка и фильтры по командам, ниже список.
  * Нажатие на роль добавляет её в сценарий или удаляет, панель остаётся открытой.
+ * Фильтр по команде хранит родитель: его можно задать и снаружи панели.
  *
  * На ПК это панель слева со своей прокруткой. На телефоне это отдельный экран: прокручивается
  * вся страница, поле поиска плавает внизу между кнопками, а фильтры плавающей панелью над ним.
  * При открытии экран начинается с начала списка.
  */
-export function RolePanel({ roles, selectedRoleIds, onToggleRole }: RolePanelProps) {
+export function RolePanel({
+  roles,
+  selectedRoleIds,
+  team,
+  onTeamChange,
+  onToggleRole,
+}: RolePanelProps) {
   const [query, setQuery] = useState('')
-  const [team, setTeam] = useState<TeamFilter>('all')
   const [sort, setSort] = useState<RoleSort>('name')
   const panelRef = useRef<HTMLDivElement>(null)
 
@@ -56,7 +61,7 @@ export function RolePanel({ roles, selectedRoleIds, onToggleRole }: RolePanelPro
           </button>
         </div>
         <div className="role-panel__filters">
-          <TeamFilters value={team} onChange={setTeam} />
+          <TeamFilters value={team} onChange={onTeamChange} />
         </div>
       </div>
 

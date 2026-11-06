@@ -10,6 +10,8 @@ import { useScript } from './hooks/useScript'
 import { useToast } from './hooks/useToast'
 import type { ScriptData } from './types/ScriptData'
 import type { ScriptMode } from './types/ScriptMode'
+import type { Team } from './types/Team'
+import type { TeamFilter } from './types/TeamFilter'
 import { resolveRoleIds } from './utils/resolveRoleIds'
 import { toggleRole } from './utils/toggleRole'
 
@@ -20,6 +22,9 @@ import './App.css'
  *
  * Сценарий отрисовывается сразу, не дожидаясь загрузки ролей. Приложение всегда открывается
  * в режиме просмотра. На телефоне плавающие элементы скрываются при прокрутке вниз.
+ *
+ * Клик по заголовку секции открывает панель ролей с фильтром по этой команде.
+ * При закрытии панели фильтр сбрасывается.
  */
 export function App() {
   const roles = useRoles()
@@ -28,10 +33,21 @@ export function App() {
   const isControlsHidden = useHideOnScroll()
   const [mode, setMode] = useState<ScriptMode>('view')
   const [isRolesOpen, setIsRolesOpen] = useState(false)
+  const [rolesTeam, setRolesTeam] = useState<TeamFilter>('all')
+
+  function changeRolesOpen(isOpen: boolean) {
+    setIsRolesOpen(isOpen)
+    if (!isOpen) setRolesTeam('all')
+  }
 
   function changeMode(nextMode: ScriptMode) {
     setMode(nextMode)
-    setIsRolesOpen(false)
+    changeRolesOpen(false)
+  }
+
+  function openTeamRoles(team: Team) {
+    setRolesTeam(team)
+    setIsRolesOpen(true)
   }
 
   function toggleScriptRole(roleId: string) {
@@ -60,7 +76,7 @@ export function App() {
         mode={mode}
         onModeChange={changeMode}
         isRolesOpen={isRolesOpen}
-        onRolesOpenChange={setIsRolesOpen}
+        onRolesOpenChange={changeRolesOpen}
         roles={roles}
         script={script.value}
         onImport={importScript}
@@ -75,6 +91,8 @@ export function App() {
         <RolePanel
           roles={roles}
           selectedRoleIds={script.value.roleIds}
+          team={rolesTeam}
+          onTeamChange={setRolesTeam}
           onToggleRole={toggleScriptRole}
         />
       )}
@@ -83,6 +101,7 @@ export function App() {
         roles={roles}
         mode={mode}
         onChange={(patch) => script.update((current) => ({ ...current, ...patch }))}
+        onSelectTeam={openTeamRoles}
       />
       {message && <Toast message={message} />}
     </div>

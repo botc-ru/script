@@ -73,6 +73,30 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: 'Громила', pressed: true })).toBeDefined()
   })
 
+  it('клик по заголовку секции открывает роли с фильтром по команде', async () => {
+    await renderEditor()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Изгои (1)' }))
+    expect(screen.getByRole('button', { name: 'Изгои', pressed: true })).toBeDefined()
+    expect(screen.getByRole('button', { name: 'Громила', pressed: true })).toBeDefined()
+    expect(screen.queryByRole('button', { name: 'Принцесса', pressed: true })).toBeNull()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Горожане (1)' }))
+    expect(screen.getByRole('button', { name: 'Горожане', pressed: true })).toBeDefined()
+    expect(screen.getByRole('button', { name: 'Принцесса', pressed: true })).toBeDefined()
+  })
+
+  it('закрытие панели ролей сбрасывает фильтр', async () => {
+    await renderEditor()
+    const rolesButton = screen.getByRole('button', { name: 'Роли' })
+
+    await userEvent.click(screen.getByRole('button', { name: 'Изгои (1)' }))
+    await userEvent.click(rolesButton)
+    await userEvent.click(rolesButton)
+
+    expect(screen.getByRole('button', { name: 'Все', pressed: true })).toBeDefined()
+  })
+
   it('возврат в просмотр закрывает панель ролей', async () => {
     await renderEditor()
 
