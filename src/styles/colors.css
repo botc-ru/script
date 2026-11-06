@@ -18,6 +18,7 @@
   --color-surface-active: #cdc6b2;
   --color-accent-border: rgba(119, 102, 68, 0.53);
   --color-accent-divider: rgba(119, 102, 68, 0.35);
+  --color-selected: rgba(119, 102, 68, 0.25);
 
   /* Команды */
   --color-team-good: #0066bb;

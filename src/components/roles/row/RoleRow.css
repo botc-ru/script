@@ -19,8 +19,9 @@
   background: var(--color-hover);
 }
 
-.role-row[aria-pressed='true'] {
-  background: var(--color-surface-hover);
+.role-row[aria-pressed='true'],
+.role-row[aria-pressed='true']:hover {
+  background: var(--color-selected);
 }
 
 .role-row__icon {
