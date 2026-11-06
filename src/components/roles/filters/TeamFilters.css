@@ -12,7 +12,7 @@
   height: 40px;
   padding: 0;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: 999px;
   background: none;
   color: var(--color-text);
   font-family: var(--font-body);
@@ -43,13 +43,13 @@
 @media (max-width: 768px) {
   .team-filters {
     grid-template-columns: repeat(8, 1fr);
+    width: 100%;
   }
 
   .team-filters__button {
     height: auto;
     aspect-ratio: 1;
     border: none;
-    border-radius: 50%;
   }
 
   .team-filters__button[aria-pressed='true'] {

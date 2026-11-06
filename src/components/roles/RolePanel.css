@@ -91,8 +91,12 @@
     bottom: calc(var(--toolbar-bottom-offset) + var(--toolbar-button-size) + 16px);
     left: var(--toolbar-side-offset);
     z-index: 5;
-    padding: 4px;
-    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    height: var(--toolbar-button-size);
+    padding: 0 6px;
+    border-radius: calc(var(--toolbar-button-size) / 2);
     background: var(--color-accent-soft);
     box-shadow: 0 1px 4px var(--color-shadow);
   }
