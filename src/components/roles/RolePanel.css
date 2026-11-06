@@ -88,7 +88,7 @@
   .role-panel__filters {
     position: fixed;
     right: var(--toolbar-side-offset);
-    bottom: calc(var(--toolbar-bottom-offset) + var(--toolbar-button-size) + 8px);
+    bottom: calc(var(--toolbar-bottom-offset) + var(--toolbar-button-size) + 16px);
     left: var(--toolbar-side-offset);
     z-index: 5;
     padding: 4px;
@@ -98,7 +98,7 @@
   }
 
   .role-panel__list {
-    padding: 8px 8px calc(var(--toolbar-button-size) + 8px);
+    padding: 8px 8px calc(var(--toolbar-button-size) + 16px);
     overflow: visible;
   }
 }

@@ -44,4 +44,15 @@
   .team-filters {
     grid-template-columns: repeat(8, 1fr);
   }
+
+  .team-filters__button {
+    height: auto;
+    aspect-ratio: 1;
+    border: none;
+    border-radius: 50%;
+  }
+
+  .team-filters__button[aria-pressed='true'] {
+    background: var(--color-surface-hover);
+  }
 }
