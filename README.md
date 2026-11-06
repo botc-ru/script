@@ -40,6 +40,5 @@
 
 ## Документация
 
-- [SPEC.md](SPEC.md): функции и их поведение
 - [docs/toolbar.md](docs/toolbar.md): плавающие кнопки и поиск
 - [CLAUDE.md](CLAUDE.md): инструкции для Claude Code
