@@ -1,5 +1,6 @@
 import type { ModeAction } from '../ModeAction'
 
-export interface ModeMenuProps {
+export interface MenuGroup {
+  title?: string
   actions: ModeAction[]
 }

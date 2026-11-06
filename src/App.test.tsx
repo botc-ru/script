@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { App } from './App'
 import { RolesProvider } from './contexts/roles/RolesProvider'
 import { finishAnimation } from './test/finishAnimation'
+import { stubClipboard } from './test/stubClipboard'
 import type { RolesById } from './types/RolesById'
 
 const ROLES: RolesById = {
@@ -81,6 +82,22 @@ describe('App', () => {
     await userEvent.click(screen.getAllByRole('button', { name: 'Просмотр' })[0] ?? document.body)
 
     expect(screen.queryByRole('searchbox', { name: 'Поиск по ролям' })).toBeNull()
+  })
+
+  it('импорт заменяет сценарий, очищает историю и сообщает об этом', async () => {
+    stubClipboard({ readText: () => Promise.resolve('[{"id":"_meta","name":"Новый"},"GOON"]') })
+    await renderEditor()
+
+    await userEvent.click(screen.getByRole('button', { name: /Принцесса/ }))
+    expect(screen.getByRole('button', { name: 'Отменить' })).toBeDefined()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Поделиться' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Из буфера обмена' }))
+
+    expect(await screen.findByDisplayValue('Новый')).toBeDefined()
+    expect(screen.getByRole('status').textContent).toBe('Сценарий загружен')
+    expect(screen.getByRole('heading', { name: 'Изгои (1)' })).toBeDefined()
+    expect(screen.queryByRole('button', { name: 'Отменить' })).toBeNull()
   })
 
   it('всегда открывается в режиме просмотра', async () => {

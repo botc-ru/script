@@ -1,11 +1,11 @@
 import {
   Eye,
   FileText,
+  Menu,
   Pencil,
   Redo2,
   ScrollText,
   Search,
-  Share2,
   Undo2,
   Users,
   X,
@@ -15,10 +15,11 @@ import { useState } from 'react'
 import type { ScriptMode } from '../../types/ScriptMode'
 import { ToolbarButton } from './button/ToolbarButton'
 import type { FloatingToolbarProps } from './FloatingToolbarProps'
-import { ModeMenu } from './mode-menu/ModeMenu'
+import { PopupMenu } from './menu/PopupMenu'
 import type { ModeAction } from './ModeAction'
 import type { SearchState } from './search/SearchState'
 import { ToolbarSearch } from './search/ToolbarSearch'
+import { ShareMenu } from './share/ShareMenu'
 
 import './FloatingToolbar.css'
 
@@ -33,7 +34,7 @@ import './FloatingToolbar.css'
  * Справа в редактировании отмена и повтор (если доступны) и поиск, в обоих режимах Поделиться.
  * Открытый поиск заменяет Поделиться крестиком, а на телефоне скрывает остальные кнопки.
  *
- * Макет и Поделиться пока неактивны: их функций ещё нет. Подробнее: `docs/toolbar.md`.
+ * Макет пока неактивен: его функции ещё нет. Подробнее: `docs/toolbar.md`.
  */
 export function FloatingToolbar({
   mode,
@@ -41,7 +42,9 @@ export function FloatingToolbar({
   isRolesOpen,
   onRolesOpenChange,
   roles,
-  selectedRoleIds,
+  script,
+  onImport,
+  onNotify,
   onToggleRole,
   canUndo,
   canRedo,
@@ -98,7 +101,7 @@ export function FloatingToolbar({
                   <ToolbarButton {...layoutAction} showLabel />
                 </div>
                 <div className="floating-toolbar__mobile">
-                  <ModeMenu actions={menuActions} />
+                  <PopupMenu icon={Menu} label="Меню" groups={[{ actions: menuActions }]} align="left" />
                 </div>
               </>
             )
@@ -122,7 +125,7 @@ export function FloatingToolbar({
         {isSearchVisible && (
           <ToolbarSearch
             roles={roles}
-            selectedRoleIds={selectedRoleIds}
+            selectedRoleIds={script.roleIds}
             isClosing={search === 'closing'}
             onToggleRole={onToggleRole}
             onClose={() => setSearch('closing')}
@@ -136,7 +139,7 @@ export function FloatingToolbar({
         )}
         {isSearchVisible
           ? <ToolbarButton icon={X} label="Закрыть поиск" onClick={() => setSearch('closing')} />
-          : <ToolbarButton icon={Share2} label="Поделиться" disabled />}
+          : <ShareMenu script={script} onImport={onImport} onNotify={onNotify} />}
       </div>
     </div>
   )

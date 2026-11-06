@@ -29,6 +29,12 @@ export function buildScriptQuery(script: ScriptData): string {
     .join('&')
 }
 
+/** Собирает полную ссылку на сценарий. */
+export function buildScriptLink(script: ScriptData): string {
+  const url = new URL(import.meta.env.BASE_URL, window.location.origin)
+  return `${url.href}?${buildScriptQuery(script)}`
+}
+
 /**
  * Читает сценарий из query-строки. Ссылкой считается адрес с параметром `title` или `roles`.
  *

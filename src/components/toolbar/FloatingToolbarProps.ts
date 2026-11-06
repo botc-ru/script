@@ -1,4 +1,5 @@
 import type { RolesState } from '../../contexts/roles/RolesState'
+import type { ScriptData } from '../../types/ScriptData'
 import type { ScriptMode } from '../../types/ScriptMode'
 
 export interface FloatingToolbarProps {
@@ -7,7 +8,9 @@ export interface FloatingToolbarProps {
   isRolesOpen: boolean
   onRolesOpenChange: (isOpen: boolean) => void
   roles: RolesState
-  selectedRoleIds: string[]
+  script: ScriptData
+  onImport: (script: ScriptData) => void
+  onNotify: (message: string) => void
   onToggleRole: (roleId: string) => void
   canUndo: boolean
   canRedo: boolean

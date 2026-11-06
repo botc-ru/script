@@ -1,0 +1,17 @@
+.toast {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  z-index: 20;
+  box-sizing: border-box;
+  max-width: calc(100vw - 32px);
+  padding: 10px 16px;
+  border-radius: 22px;
+  background: var(--color-accent);
+  box-shadow: 0 1px 4px var(--color-shadow);
+  color: var(--color-accent-soft);
+  font-family: var(--font-body);
+  font-size: 15px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}

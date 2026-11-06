@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { finishAnimation } from '../../test/finishAnimation'
 import { TEST_ROLES } from '../../test/testRoles'
+import { DEFAULT_SCRIPT } from '../../utils/defaultScript'
 import { FloatingToolbar } from './FloatingToolbar'
 import type { FloatingToolbarProps } from './FloatingToolbarProps'
 
@@ -14,7 +15,9 @@ function renderToolbar(props: Partial<FloatingToolbarProps> = {}) {
     isRolesOpen: false,
     onRolesOpenChange: vi.fn(),
     roles: { status: 'ready', roles: TEST_ROLES },
-    selectedRoleIds: [],
+    script: DEFAULT_SCRIPT,
+    onImport: vi.fn(),
+    onNotify: vi.fn(),
     onToggleRole: vi.fn(),
     canUndo: false,
     canRedo: false,
@@ -95,7 +98,9 @@ describe('FloatingToolbar', () => {
       isRolesOpen: false,
       onRolesOpenChange: vi.fn(),
       roles: { status: 'loading' } as const,
-      selectedRoleIds: [],
+      script: DEFAULT_SCRIPT,
+      onImport: vi.fn(),
+      onNotify: vi.fn(),
       onToggleRole: vi.fn(),
       canUndo: false,
       canRedo: false,
@@ -183,7 +188,7 @@ describe('FloatingToolbar', () => {
   })
 
   it('отмечает роли, которые уже есть в сценарии', async () => {
-    renderToolbar({ selectedRoleIds: ['chef'] })
+    renderToolbar({ script: { ...DEFAULT_SCRIPT, roleIds: ['chef'] } })
 
     await typeSearch('пов')
 

@@ -27,6 +27,17 @@ describe('useHistoryState', () => {
     expect(result.current).toMatchObject({ value: 3, canRedo: false })
   })
 
+  it('reset заменяет значение и очищает историю', () => {
+    const { result } = renderHook(() => useHistoryState(() => 1))
+
+    act(() => result.current.update(() => 2))
+    act(() => result.current.update(() => 3))
+    act(() => result.current.undo())
+    act(() => result.current.reset(10))
+
+    expect(result.current).toMatchObject({ value: 10, canUndo: false, canRedo: false })
+  })
+
   it('хранит не больше 50 шагов', () => {
     const { result } = renderHook(() => useHistoryState(() => 0))
 

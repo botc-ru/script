@@ -11,7 +11,7 @@ interface History<T> {
 /**
  * Состояние с историей: отмена и повтор до 50 шагов, только в памяти.
  *
- * Новое значение очищает шаги для повтора.
+ * Новое значение очищает шаги для повтора, а `reset` заменяет значение и очищает всю историю.
  */
 export function useHistoryState<T>(getInitial: () => T) {
   const [history, setHistory] = useState<History<T>>(() => ({
@@ -26,6 +26,10 @@ export function useHistoryState<T>(getInitial: () => T) {
       present: getNext(present),
       future: [],
     }))
+  }
+
+  function reset(value: T) {
+    setHistory({ past: [], present: value, future: [] })
   }
 
   function undo() {
@@ -47,6 +51,7 @@ export function useHistoryState<T>(getInitial: () => T) {
   return {
     value: history.present,
     update,
+    reset,
     undo,
     redo,
     canUndo: history.past.length > 0,
