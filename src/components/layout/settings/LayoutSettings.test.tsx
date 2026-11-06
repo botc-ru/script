@@ -63,6 +63,13 @@ describe('LayoutSettings', () => {
     expect(screen.getByRole('button', { name: 'Список ролей', pressed: false })).toBeDefined()
   })
 
+  it('состояние переключателя видно не только по цвету', () => {
+    renderSettings({ logo: false })
+
+    expect(screen.getByRole('button', { name: 'Фон' }).querySelector('svg')).not.toBeNull()
+    expect(screen.getByRole('button', { name: 'Логотип' }).querySelector('svg')).toBeNull()
+  })
+
   it('скачивает PDF', async () => {
     const onDownloadPdf = vi.fn()
     renderSettings({}, onDownloadPdf)

@@ -21,19 +21,22 @@
   border: none;
   border-radius: 14px;
   background: none;
-  color: var(--color-text-muted);
+  color: var(--color-accent);
   font-family: var(--font-body);
   font-size: 14px;
   cursor: pointer;
 }
 
-.setting-options__button:hover {
-  background: var(--color-surface-hover);
+.setting-options__button[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 1.5px var(--color-accent);
+  color: var(--color-text);
+  font-weight: 700;
 }
 
-.setting-options__button[aria-pressed='true'] {
-  background: var(--color-surface-active);
-  color: var(--color-text);
+@media (hover: hover) {
+  .setting-options__button:hover {
+    background: var(--color-surface-hover);
+  }
 }
 
 @media (max-width: 768px) {
