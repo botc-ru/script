@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    width: mm(26),
     marginLeft: mm(1),
   },
 })
@@ -69,7 +68,7 @@ export function PdfRoleCard({
     return (
       <View style={styles.card} wrap={false}>
         <Image src={role.image} style={styles.iconCompact} />
-        <View style={styles.nameCompact}>
+        <View style={[styles.nameCompact, { width: fontSize(28) }]}>
           {name}
           {jinxes}
         </View>

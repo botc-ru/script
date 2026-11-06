@@ -1,7 +1,8 @@
 """Создаёт жирное начертание шрифта Petersburg: у него есть только обычное.
 
-Контуры букв утолщаются, а ширина знаков остаётся прежней, поэтому вёрстка не меняется.
-Запуск: python scripts/embolden-font.py <вход.ttf> <выход.ttf> [толщина]
+Повторяет жирный, который браузер рисует на странице: вертикальные штрихи заметно толще,
+тонкие горизонтальные линии почти не меняются, а буквы раздвигаются на ту же величину.
+Запуск: python scripts/embolden-font.py <вход.ttf> <выход.ttf> [по_горизонтали] [по_вертикали]
 Нужны пакеты fonttools и freetype-py.
 """
 import ctypes
@@ -12,7 +13,8 @@ from fontTools.ttLib import TTFont
 from fontTools.ttLib.tables._g_l_y_f import GlyphCoordinates
 
 source, target = sys.argv[1:3]
-strength = int(sys.argv[3]) if len(sys.argv) > 3 else 140
+x_strength = int(sys.argv[3]) if len(sys.argv) > 3 else 130
+y_strength = int(sys.argv[4]) if len(sys.argv) > 4 else 20
 
 font = TTFont(source)
 face = freetype.Face(source)
@@ -22,20 +24,22 @@ flags = freetype.FT_LOAD_NO_SCALE | freetype.FT_LOAD_NO_HINTING | freetype.FT_LO
 
 for name in font.getGlyphOrder():
     glyph = glyf[name]
+    width = hmtx[name][0] + x_strength
     if glyph.numberOfContours <= 0:
+        hmtx[name] = (width, hmtx[name][1])
         continue
 
     face.load_glyph(font.getGlyphID(name), flags)
     outline = face.glyph.outline
-    freetype.FT_Outline_Embolden(ctypes.byref(outline._FT_Outline), strength)
-    points = [(x - strength // 2, y - strength // 2) for x, y in outline.points]
+    freetype.FT_Outline_EmboldenXY(ctypes.byref(outline._FT_Outline), x_strength, y_strength)
+    points = [(x, y - y_strength // 2) for x, y in outline.points]
     if len(points) != len(glyph.coordinates):
         raise ValueError(f'{name}: изменилось число точек')
 
     glyph.coordinates = GlyphCoordinates(points)
     glyph.program.fromBytecode(b'')
     glyph.recalcBounds(glyf)
-    hmtx[name] = (hmtx[name][0], glyph.xMin)
+    hmtx[name] = (width, glyph.xMin)
 
 for table in ('fpgm', 'prep', 'cvt ', 'hdmx', 'VDMX', 'LTSH'):
     if table in font:
