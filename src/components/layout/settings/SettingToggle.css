@@ -1,0 +1,28 @@
+.setting-toggle {
+  flex-shrink: 0;
+  height: 36px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 18px;
+  background: none;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: 14px;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.setting-toggle:hover {
+  background: var(--color-surface-hover);
+}
+
+.setting-toggle[aria-pressed='true'] {
+  background: var(--color-surface-active);
+  color: var(--color-text);
+}
+
+.setting-toggle--sheet[aria-pressed='true'] {
+  background: var(--color-accent);
+  color: var(--color-accent-soft);
+}

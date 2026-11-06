@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 
+import type { AppScreen } from '../../types/AppScreen'
 import type { ScriptMode } from '../../types/ScriptMode'
 import { ToolbarButton } from './button/ToolbarButton'
 import type { FloatingToolbarProps } from './FloatingToolbarProps'
@@ -33,8 +34,7 @@ import './FloatingToolbar.css'
  *
  * Справа в редактировании отмена и повтор (если доступны) и поиск, в обоих режимах Поделиться.
  * Открытый поиск заменяет Поделиться крестиком, а на телефоне скрывает остальные кнопки.
- *
- * Макет пока неактивен: его функции ещё нет. Подробнее: `docs/toolbar.md`.
+ * В Макете отмены, повтора и поиска нет. Подробнее: `docs/toolbar.md`.
  */
 export function FloatingToolbar({
   mode,
@@ -56,10 +56,17 @@ export function FloatingToolbar({
   const isSearchVisible = search !== 'closed'
   const isEditing = mode === 'edit'
   const isRolesOpen = screen === 'roles'
+  const isLayoutOpen = screen === 'layout'
+  const hasScriptTools = isEditing && !isLayoutOpen
 
   function changeMode(nextMode: ScriptMode) {
     setSearch('closed')
     onModeChange(nextMode)
+  }
+
+  function changeScreen(nextScreen: AppScreen) {
+    if (nextScreen === 'layout') setSearch('closed')
+    onScreenChange(nextScreen)
   }
 
   const viewAction: ModeAction = {
@@ -67,7 +74,7 @@ export function FloatingToolbar({
     label: 'Просмотр',
     onClick: () => changeMode('view'),
   }
-  const layoutAction: ModeAction = { icon: FileText, label: 'Макет', disabled: true }
+  const layoutAction: ModeAction = { icon: FileText, label: 'Макет', isActive: isLayoutOpen }
   const rolesAction: ModeAction = { icon: Users, label: 'Роли', isActive: isRolesOpen }
   const menuActions: ModeAction[] = [
     viewAction,
@@ -75,10 +82,10 @@ export function FloatingToolbar({
       icon: ScrollText,
       label: 'Сценарий',
       isActive: screen === 'script',
-      onClick: () => onScreenChange('script'),
+      onClick: () => changeScreen('script'),
     },
-    { ...rolesAction, onClick: () => onScreenChange('roles') },
-    layoutAction,
+    { ...rolesAction, onClick: () => changeScreen('roles') },
+    { ...layoutAction, onClick: () => changeScreen('layout') },
   ]
 
   const className = [
@@ -98,9 +105,13 @@ export function FloatingToolbar({
                   <ToolbarButton
                     {...rolesAction}
                     showLabel
-                    onClick={() => onScreenChange(isRolesOpen ? 'script' : 'roles')}
+                    onClick={() => changeScreen(isRolesOpen ? 'script' : 'roles')}
                   />
-                  <ToolbarButton {...layoutAction} showLabel />
+                  <ToolbarButton
+                    {...layoutAction}
+                    showLabel
+                    onClick={() => changeScreen(isLayoutOpen ? 'script' : 'layout')}
+                  />
                 </div>
                 <div className="floating-toolbar__mobile">
                   <PopupMenu icon={Menu} label="Меню" groups={[{ actions: menuActions }]} align="left" />
@@ -118,7 +129,7 @@ export function FloatingToolbar({
       </div>
 
       <div className="floating-toolbar__actions">
-        {isEditing && (
+        {hasScriptTools && (
           <div className="floating-toolbar__history floating-toolbar__secondary">
             {canUndo && <ToolbarButton icon={Undo2} label="Отменить" onClick={onUndo} />}
             {canRedo && <ToolbarButton icon={Redo2} label="Повторить" onClick={onRedo} />}
@@ -134,7 +145,7 @@ export function FloatingToolbar({
             onClosed={() => setSearch('closed')}
           />
         )}
-        {isEditing && !isSearchVisible && (
+        {hasScriptTools && !isSearchVisible && (
           <div className="floating-toolbar__search-button">
             <ToolbarButton icon={Search} label="Поиск" onClick={() => setSearch('open')} />
           </div>

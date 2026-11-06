@@ -1,0 +1,15 @@
+.pdf-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pdf-preview__page {
+  width: 100%;
+  height: auto;
+  box-shadow: 0 1px 4px var(--color-shadow);
+}
+
+.pdf-preview__message {
+  text-align: center;
+}

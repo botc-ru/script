@@ -2,12 +2,14 @@
   padding-top: calc(var(--toolbar-button-size) + 16px);
 }
 
-.app--roles-open {
+.app--roles-open,
+.app--layout-open {
   padding-left: 264px;
 }
 
 @media (max-width: 768px) {
-  .app--roles-open {
+  .app--roles-open,
+  .app--layout-open {
     padding-left: 0;
   }
 

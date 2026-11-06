@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { LayoutScreen } from './components/layout/LayoutScreen'
 import { RolePanel } from './components/roles/RolePanel'
 import { Script } from './components/script/Script'
 import { Toast } from './components/toast/Toast'
@@ -8,6 +9,7 @@ import { useRoles } from './contexts/roles/useRoles'
 import { useHideOnScroll } from './hooks/useHideOnScroll'
 import { usePrintSettings } from './hooks/usePrintSettings'
 import { useScript } from './hooks/useScript'
+import { useScriptPdf } from './hooks/useScriptPdf'
 import { useToast } from './hooks/useToast'
 import type { AppScreen } from './types/AppScreen'
 import type { ScriptData } from './types/ScriptData'
@@ -23,7 +25,7 @@ import { toggleRole } from './utils/toggleRole'
 import './App.css'
 
 /**
- * Корневой компонент приложения: сценарий, панель ролей, плавающие кнопки и уведомления.
+ * Корневой компонент приложения: сценарий, панель ролей, Макет, плавающие кнопки и уведомления.
  *
  * Сценарий отрисовывается сразу, не дожидаясь загрузки ролей. Приложение всегда открывается
  * в режиме просмотра. На телефоне плавающие элементы скрываются при прокрутке вниз.
@@ -36,10 +38,11 @@ export function App() {
   const script = useScript()
   const { message, showToast } = useToast()
   const isControlsHidden = useHideOnScroll()
-  const [printSettings] = usePrintSettings()
+  const [printSettings, setPrintSettings] = usePrintSettings()
   const [mode, setMode] = useState<ScriptMode>('view')
   const [screen, setScreen] = useState<AppScreen>('script')
   const [rolesTeam, setRolesTeam] = useState<TeamFilter>('all')
+  const pdf = useScriptPdf(script.value, roles, printSettings, screen === 'layout')
 
   function changeScreen(nextScreen: AppScreen) {
     setScreen(nextScreen)
@@ -79,11 +82,14 @@ export function App() {
       .catch(() => showToast('Не удалось создать PDF'))
   }
 
-  const canDownloadPdf = roles.status === 'ready' && hasPdfPages(printSettings)
+  const downloadAction = roles.status === 'ready' && hasPdfPages(printSettings)
+    ? downloadPdf
+    : undefined
 
   const className = [
     'app',
     screen === 'roles' && 'app--roles-open',
+    screen === 'layout' && 'app--layout-open',
     isControlsHidden && 'app--controls-hidden',
   ].filter(Boolean).join(' ')
 
@@ -98,7 +104,7 @@ export function App() {
         script={script.value}
         onImport={importScript}
         onNotify={showToast}
-        onDownloadPdf={canDownloadPdf ? downloadPdf : undefined}
+        onDownloadPdf={downloadAction}
         onToggleRole={toggleScriptRole}
         canUndo={script.canUndo}
         canRedo={script.canRedo}
@@ -114,13 +120,25 @@ export function App() {
           onToggleRole={toggleScriptRole}
         />
       )}
-      <Script
-        script={script.value}
-        roles={roles}
-        mode={mode}
-        onChange={(patch) => script.update((current) => ({ ...current, ...patch }))}
-        onSelectTeam={openTeamRoles}
-      />
+      {screen === 'layout'
+        ? (
+            <LayoutScreen
+              settings={printSettings}
+              onSettingsChange={setPrintSettings}
+              blob={pdf.blob}
+              isError={pdf.isError}
+              onDownloadPdf={downloadAction}
+            />
+          )
+        : (
+            <Script
+              script={script.value}
+              roles={roles}
+              mode={mode}
+              onChange={(patch) => script.update((current) => ({ ...current, ...patch }))}
+              onSelectTeam={openTeamRoles}
+            />
+          )}
       {message && <Toast message={message} />}
     </div>
   )

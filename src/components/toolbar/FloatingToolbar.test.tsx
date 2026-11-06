@@ -228,6 +228,24 @@ describe('FloatingToolbar', () => {
     expect(items).toEqual(['Просмотр', 'Сценарий', 'Роли', 'Макет'])
   })
 
+  it('кнопка Макет открывает экран и закрывает его повторным нажатием', async () => {
+    const onScreenChange = vi.fn()
+    renderToolbar({ onScreenChange })
+
+    await userEvent.click(screen.getAllByRole('button', { name: 'Макет' })[0] ?? document.body)
+    expect(onScreenChange).toHaveBeenLastCalledWith('layout')
+  })
+
+  it('в Макете нет отмены, повтора и поиска, Поделиться остаётся', () => {
+    renderToolbar({ screen: 'layout', canUndo: true, canRedo: true })
+
+    expect(screen.getByRole('button', { name: 'Макет', pressed: true })).toBeDefined()
+    expect(screen.queryByRole('button', { name: 'Отменить' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Повторить' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Поиск' })).toBeNull()
+    expect(screen.getByRole('button', { name: 'Поделиться' })).toBeDefined()
+  })
+
   it('меню подсвечивает текущий экран', async () => {
     renderToolbar({ screen: 'roles' })
 

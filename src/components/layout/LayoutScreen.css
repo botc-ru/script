@@ -1,0 +1,14 @@
+.layout-screen__preview {
+  max-width: 760px;
+  margin: 16px auto;
+}
+
+.layout-screen__message {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .layout-screen__preview {
+    margin: 0 0 calc(var(--toolbar-button-size) + 16px);
+  }
+}

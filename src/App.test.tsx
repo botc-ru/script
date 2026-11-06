@@ -10,8 +10,11 @@ import type { RolesById } from './types/RolesById'
 import { DEFAULT_PRINT_SETTINGS } from './utils/defaultPrintSettings'
 import { downloadBlob } from './utils/downloadBlob'
 import { loadScriptPdf } from './utils/loadScriptPdf'
-import { savePrintSettings } from './utils/printSettingsStorage'
+import { loadPrintSettings, savePrintSettings } from './utils/printSettingsStorage'
 
+vi.mock('./components/layout/preview/PdfPreview', () => ({
+  PdfPreview: () => <p>Превью PDF</p>,
+}))
 vi.mock('./utils/loadScriptPdf')
 vi.mock('./utils/downloadBlob')
 
@@ -140,6 +143,44 @@ describe('App', () => {
 
     expect(screen.getByRole<HTMLButtonElement>('button', { name: 'Скачать PDF' }).disabled)
       .toBe(true)
+  })
+
+  it('Макет показывает превью вместо сценария, возврат показывает сценарий', async () => {
+    vi.mocked(loadScriptPdf).mockResolvedValue(new Blob(['pdf']))
+    await renderEditor()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Макет' }))
+
+    expect(screen.getByText('Создаём PDF...')).toBeDefined()
+    expect(await screen.findByText('Превью PDF')).toBeDefined()
+    expect(screen.queryByText('Принцесса')).toBeNull()
+
+    await userEvent.click(screen.getAllByRole('button', { name: 'Макет' })[0] ?? document.body)
+    expect(screen.getByText('Принцесса')).toBeDefined()
+  })
+
+  it('настройки макета сохраняются', async () => {
+    vi.mocked(loadScriptPdf).mockResolvedValue(new Blob(['pdf']))
+    await renderEditor()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Макет' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Фон' }))
+
+    expect(loadPrintSettings().background).toBe(false)
+  })
+
+  it('без включённых листов Макет просит включить лист', async () => {
+    savePrintSettings({
+      ...DEFAULT_PRINT_SETTINGS,
+      playerSheet: false,
+      storytellerSheet: false,
+      nightOrder: false,
+    })
+    await renderEditor()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Макет' }))
+
+    expect(screen.getByText('Включите хотя бы один лист')).toBeDefined()
   })
 
   it('возврат в просмотр закрывает панель ролей', async () => {
