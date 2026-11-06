@@ -1,0 +1,21 @@
+.team--townsfolk,
+.team--outsider {
+  --team-color: var(--color-team-good);
+}
+
+.team--minion,
+.team--demon {
+  --team-color: var(--color-team-evil);
+}
+
+.team--loric {
+  --team-color: var(--color-team-loric);
+}
+
+.team--fabled {
+  --team-color: var(--color-team-fabled);
+}
+
+.team--traveller {
+  --team-color: var(--color-team-traveller);
+}

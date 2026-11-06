@@ -1,0 +1,61 @@
+.search-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: 0;
+  margin: 0;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--color-accent-soft);
+  box-shadow: 0 1px 4px var(--color-shadow);
+  list-style: none;
+  pointer-events: auto;
+}
+
+.search-results__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 2px 8px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  font-family: var(--font-display);
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.search-results__row:hover {
+  background: var(--color-hover);
+}
+
+.search-results__row[aria-pressed='true'] {
+  background: var(--color-surface-hover);
+}
+
+.search-results__icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.search-results__name {
+  color: var(--team-color);
+}
+
+.search-results__empty {
+  padding: 12px 8px;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 768px) {
+  .search-results {
+    top: auto;
+    bottom: calc(100% + 8px);
+  }
+}

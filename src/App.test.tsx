@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { App } from './App'
 import { RolesProvider } from './contexts/roles/RolesProvider'
+import { finishAnimation } from './test/finishAnimation'
 import type { RolesById } from './types/RolesById'
 
 const ROLES: RolesById = {
@@ -42,6 +43,22 @@ describe('App', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Повторить' }))
     expect(screen.queryByText('Принцесса')).toBeNull()
+  })
+
+  it('добавляет и удаляет роль через поиск', async () => {
+    window.history.replaceState(null, '', '/script/?roles=princess')
+    await renderEditor()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Поиск' }))
+    await userEvent.type(screen.getByRole('searchbox'), 'гром')
+    await userEvent.click(screen.getByRole('button', { name: 'Громила', pressed: false }))
+    expect(screen.getByRole('heading', { name: 'Изгои (1)' })).toBeDefined()
+
+    finishAnimation(screen.getByRole('searchbox').parentElement ?? document.body)
+    await userEvent.click(screen.getByRole('button', { name: 'Поиск' }))
+    await userEvent.type(screen.getByRole('searchbox'), 'гром')
+    await userEvent.click(screen.getByRole('button', { name: 'Громила', pressed: true }))
+    expect(screen.getByRole('heading', { name: 'Изгои (0)' })).toBeDefined()
   })
 
   it('всегда открывается в режиме просмотра', async () => {

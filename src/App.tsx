@@ -5,6 +5,7 @@ import { FloatingToolbar } from './components/toolbar/FloatingToolbar'
 import { useRoles } from './contexts/roles/useRoles'
 import { useScript } from './hooks/useScript'
 import type { ScriptMode } from './types/ScriptMode'
+import { toggleRole } from './utils/toggleRole'
 
 import './App.css'
 
@@ -24,6 +25,9 @@ export function App() {
       <FloatingToolbar
         mode={mode}
         onModeChange={setMode}
+        roles={roles}
+        selectedRoleIds={script.value.roleIds}
+        onToggleRole={(roleId) => script.update((current) => toggleRole(current, roleId))}
         canUndo={script.canUndo}
         canRedo={script.canRedo}
         onUndo={script.undo}

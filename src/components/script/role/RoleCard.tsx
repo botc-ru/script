@@ -1,3 +1,4 @@
+import { getTeamClass } from '../../../utils/getTeamClass'
 import type { RoleCardProps } from './RoleCardProps'
 
 import './RoleCard.css'
@@ -11,7 +12,7 @@ import './RoleCard.css'
  * Иначе при `isLink` карточка открывает страницу роли в вики.
  */
 export function RoleCard({ role, jinxPartners = [], isLink, onRemove, onDropRole }: RoleCardProps) {
-  const className = role.team ? `role-card role-card--${role.team}` : 'role-card'
+  const className = `role-card ${getTeamClass(role.team)}`
   const content = (
     <>
       <img className="role-card__icon" src={role.image} alt="" />

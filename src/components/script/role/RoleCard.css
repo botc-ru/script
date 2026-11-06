@@ -30,28 +30,6 @@ a.role-card {
   text-decoration: none;
 }
 
-.role-card--townsfolk,
-.role-card--outsider {
-  --role-color: var(--color-team-good);
-}
-
-.role-card--minion,
-.role-card--demon {
-  --role-color: var(--color-team-evil);
-}
-
-.role-card--loric {
-  --role-color: var(--color-team-loric);
-}
-
-.role-card--fabled {
-  --role-color: var(--color-team-fabled);
-}
-
-.role-card--traveller {
-  --role-color: var(--color-team-traveller);
-}
-
 .role-card__text {
   display: flex;
   flex-direction: column;
@@ -79,7 +57,7 @@ a.role-card {
 
 .role-card__name {
   font-family: var(--font-display);
-  color: var(--role-color);
+  color: var(--team-color);
   font-size: 14px;
   font-weight: 700;
 }

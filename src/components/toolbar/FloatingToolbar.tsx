@@ -24,6 +24,9 @@ import './FloatingToolbar.css'
 export function FloatingToolbar({
   mode,
   onModeChange,
+  roles,
+  selectedRoleIds,
+  onToggleRole,
   canUndo,
   canRedo,
   onUndo,
@@ -79,7 +82,10 @@ export function FloatingToolbar({
         )}
         {isSearchVisible && (
           <ToolbarSearch
+            roles={roles}
+            selectedRoleIds={selectedRoleIds}
             isClosing={search === 'closing'}
+            onToggleRole={onToggleRole}
             onClose={() => setSearch('closing')}
             onClosed={() => setSearch('closed')}
           />
