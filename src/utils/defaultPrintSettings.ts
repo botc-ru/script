@@ -13,4 +13,5 @@ export const DEFAULT_PRINT_SETTINGS: PrintSettings = {
   playersTable: true,
   nightOrderColumns: true,
   nightOrder: true,
+  nightHints: true,
 }

@@ -138,6 +138,13 @@ export function LayoutSettings({ settings, onChange, onDownloadPdf }: LayoutSett
             isSheet
             onChange={(nightOrder) => set({ nightOrder })}
           />
+          {settings.nightOrder && (
+            <SettingToggle
+              label="Подсказки"
+              value={settings.nightHints}
+              onChange={(nightHints) => set({ nightHints })}
+            />
+          )}
         </div>
       </div>
     </div>

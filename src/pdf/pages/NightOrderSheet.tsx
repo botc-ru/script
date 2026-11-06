@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
 })
 
-/** Подробный порядок ночи: две колонки с подсказками, вторая перевёрнута. */
+/** Подробный порядок ночи: две колонки, вторая перевёрнута. */
 export function NightOrderSheet({ title, firstNight, otherNight }: NightOrderSheetProps) {
   return (
     <SheetPage style={styles.page}>

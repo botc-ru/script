@@ -29,6 +29,7 @@ describe('LayoutSettings', () => {
     ['Таблица', { playersTable: false }],
     ['Порядок ночи', { nightOrderColumns: false }],
     ['Подробная ночь', { nightOrder: false }],
+    ['Подсказки', { nightHints: false }],
   ])('переключатель %s меняет только свою настройку', async (name, patch) => {
     const onChange = renderSettings()
 
@@ -53,11 +54,12 @@ describe('LayoutSettings', () => {
   })
 
   it('скрывает настройки выключенного листа', () => {
-    renderSettings({ playerSheet: false, storytellerSheet: false })
+    renderSettings({ playerSheet: false, storytellerSheet: false, nightOrder: false })
 
     expect(screen.queryByRole('button', { name: 'Растянуть' })).toBeNull()
     expect(screen.queryByRole('group', { name: 'Колонки' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Таблица' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Подсказки' })).toBeNull()
     expect(screen.getByRole('button', { name: 'Список ролей', pressed: false })).toBeDefined()
   })
 

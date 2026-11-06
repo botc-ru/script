@@ -14,4 +14,5 @@ export interface PrintSettings {
   playersTable: boolean
   nightOrderColumns: boolean
   nightOrder: boolean
+  nightHints: boolean
 }

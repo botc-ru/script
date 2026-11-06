@@ -1,6 +1,8 @@
 import { Image, StyleSheet, View } from '@react-pdf/renderer'
+import { use } from 'react'
 
 import { PDF_ACCENT_COLOR, PDF_TEAM_COLORS } from '../pdfColors'
+import { PdfSettingsContext } from '../PdfSettingsContext'
 import { mm } from '../units'
 import { useFontSize } from '../useFontSize'
 import { Bold } from './Bold'
@@ -61,7 +63,8 @@ const styles = StyleSheet.create({
 })
 
 /**
- * Колонка подробного порядка ночи: заголовок, записи с подсказками и название сценария внизу.
+ * Колонка подробного порядка ночи: заголовок, записи и название сценария внизу.
+ * Подсказки к записям показываются при настройке `nightHints`.
  *
  * В перевёрнутой колонке заголовок и строки повёрнуты на 180°.
  */
@@ -71,6 +74,7 @@ export function NightDetailColumn({
   scriptTitle,
   isRotated = false,
 }: NightDetailColumnProps) {
+  const { nightHints } = use(PdfSettingsContext)
   const fontSize = useFontSize()
   const rotation = isRotated ? styles.rotated : {}
 
@@ -98,7 +102,7 @@ export function NightDetailColumn({
             >
               {role.name}
             </Bold>
-            {hint && <PdfText style={styles.hint}>{hint}</PdfText>}
+            {nightHints && hint && <PdfText style={styles.hint}>{hint}</PdfText>}
           </View>
         </View>
       ))}
