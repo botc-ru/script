@@ -68,11 +68,7 @@ export function ShareMenu({ script, onImport, onNotify, onDownloadPdf }: ShareMe
         {
           icon: Download,
           label: 'Скачать JSON',
-          onClick: () => downloadFile(
-            `${script.name || 'script'}.json`,
-            buildScriptJson(script),
-            'application/json',
-          ),
+          onClick: () => downloadFile(`${script.name || 'script'}.json`, buildScriptJson(script)),
         },
         {
           icon: Link,
