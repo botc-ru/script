@@ -42,11 +42,15 @@
 
 @media (max-width: 768px) {
   .team-filters {
-    grid-template-columns: repeat(8, 1fr);
+    display: flex;
+    justify-content: space-between;
+    gap: 0;
     width: 100%;
   }
 
   .team-filters__button {
+    /* 36px вмещаются на экране 360px, на более узких кнопки сжимаются */
+    flex: 0 1 36px;
     height: auto;
     aspect-ratio: 1;
     border: none;
