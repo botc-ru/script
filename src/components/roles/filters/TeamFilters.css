@@ -1,0 +1,47 @@
+.team-filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.team-filters__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 40px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: none;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.team-filters__button:hover {
+  opacity: 0.8;
+  filter: none;
+}
+
+.team-filters__button[aria-pressed='true'] {
+  border-color: var(--color-accent-border);
+  background: var(--color-accent-soft);
+  opacity: 1;
+  filter: none;
+}
+
+.team-filters__icon {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .team-filters {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}

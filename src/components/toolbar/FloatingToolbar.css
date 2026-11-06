@@ -54,6 +54,10 @@
     display: block;
   }
 
+  .floating-toolbar--roles .floating-toolbar__search-button {
+    display: none;
+  }
+
   .floating-toolbar--searching .floating-toolbar__secondary {
     display: none;
   }

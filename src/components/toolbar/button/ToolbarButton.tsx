@@ -10,6 +10,7 @@ export function ToolbarButton({
   icon: Icon,
   label,
   showLabel = false,
+  isActive,
   disabled = false,
   onClick,
 }: ToolbarButtonProps) {
@@ -19,6 +20,7 @@ export function ToolbarButton({
       className="toolbar-button"
       aria-label={label}
       title={label}
+      aria-pressed={isActive}
       disabled={disabled}
       onClick={onClick}
     >

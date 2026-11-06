@@ -61,6 +61,28 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'Изгои (0)' })).toBeDefined()
   })
 
+  it('панель ролей добавляет роль и остаётся открытой', async () => {
+    window.history.replaceState(null, '', '/script/?roles=princess')
+    await renderEditor()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Роли' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Громила', pressed: false }))
+
+    expect(screen.getByRole('heading', { name: 'Изгои (1)' })).toBeDefined()
+    expect(screen.getByRole('button', { name: 'Громила', pressed: true })).toBeDefined()
+  })
+
+  it('возврат в просмотр закрывает панель ролей', async () => {
+    await renderEditor()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Роли' }))
+    expect(screen.getByRole('searchbox', { name: 'Поиск по ролям' })).toBeDefined()
+
+    await userEvent.click(screen.getAllByRole('button', { name: 'Просмотр' })[0] ?? document.body)
+
+    expect(screen.queryByRole('searchbox', { name: 'Поиск по ролям' })).toBeNull()
+  })
+
   it('всегда открывается в режиме просмотра', async () => {
     render(
       <RolesProvider>

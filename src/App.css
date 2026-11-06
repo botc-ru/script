@@ -2,7 +2,19 @@
   padding-top: calc(var(--toolbar-button-size) + 16px);
 }
 
+.app--roles-open {
+  padding-left: 264px;
+}
+
 @media (max-width: 768px) {
+  .app--roles-open {
+    padding-left: 0;
+  }
+
+  .app--roles-open .script {
+    display: none;
+  }
+
   .app {
     padding-top: 0;
     padding-bottom: calc(var(--toolbar-button-size) + 21px + env(safe-area-inset-bottom));

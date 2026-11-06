@@ -11,6 +11,8 @@ function renderToolbar(props: Partial<FloatingToolbarProps> = {}) {
   const defaults: FloatingToolbarProps = {
     mode: 'edit',
     onModeChange: vi.fn(),
+    isRolesOpen: false,
+    onRolesToggle: vi.fn(),
     roles: { status: 'ready', roles: TEST_ROLES },
     selectedRoleIds: [],
     onToggleRole: vi.fn(),
@@ -90,6 +92,8 @@ describe('FloatingToolbar', () => {
     const { rerender } = renderToolbar()
     const props = {
       onModeChange: vi.fn(),
+      isRolesOpen: false,
+      onRolesToggle: vi.fn(),
       roles: { status: 'loading' } as const,
       selectedRoleIds: [],
       onToggleRole: vi.fn(),
@@ -186,6 +190,29 @@ describe('FloatingToolbar', () => {
 
     finishAnimation(getSearchContainer())
     expect(screen.queryByRole('searchbox')).toBeNull()
+  })
+
+  it('кнопка Роли переключает панель и показывает, что она открыта', async () => {
+    const onRolesToggle = vi.fn()
+    renderToolbar({ isRolesOpen: true, onRolesToggle })
+
+    const button = screen.getByRole('button', { name: 'Роли', pressed: true })
+    await userEvent.click(button)
+
+    expect(onRolesToggle).toHaveBeenCalledOnce()
+  })
+
+  it('в меню на экране ролей вместо пункта Роли показывает Сценарий', async () => {
+    const onRolesToggle = vi.fn()
+    renderToolbar({ isRolesOpen: true, onRolesToggle })
+
+    await userEvent.click(screen.getByRole('button', { name: 'Меню' }))
+    const items = screen.getAllByRole('listitem').map((item) => item.textContent)
+
+    expect(items).toEqual(['Просмотр', 'Сценарий', 'Макет'])
+
+    await userEvent.click(screen.getByRole('button', { name: 'Сценарий' }))
+    expect(onRolesToggle).toHaveBeenCalledOnce()
   })
 
   it('меню закрывается повторным нажатием на кнопку', async () => {

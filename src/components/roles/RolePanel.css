@@ -1,0 +1,111 @@
+:root {
+  --role-panel-controls-height: 104px;
+}
+
+.role-panel {
+  --role-panel-gap: 8px;
+
+  position: fixed;
+  top: calc(var(--toolbar-button-size) + 32px);
+  bottom: 16px;
+  left: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--role-panel-gap);
+  box-sizing: border-box;
+  width: 216px;
+  padding: var(--role-panel-gap);
+  background-image: var(--texture-paper);
+  background-size: cover;
+  box-shadow: 0 1px 4px var(--color-shadow);
+}
+
+.role-panel__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--role-panel-gap);
+}
+
+.role-panel__search {
+  position: relative;
+  display: flex;
+  height: 40px;
+  overflow: hidden;
+  border: 1px solid var(--color-accent-border);
+  border-radius: 20px;
+  background: var(--color-accent-soft);
+}
+
+.role-panel__search-icon {
+  position: absolute;
+  top: 11px;
+  left: 10px;
+  color: var(--color-accent);
+}
+
+.role-panel__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0 8px 0 30px;
+  border: none;
+  background: none;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  /* При шрифте меньше 16px Safari на iOS приближает страницу при фокусе */
+  font-size: 16px;
+}
+
+.role-panel__input:focus {
+  outline: none;
+}
+
+.role-panel__input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.role-panel__sort {
+  flex-shrink: 0;
+  padding: 0 10px;
+  border: none;
+  border-left: 1px solid var(--color-accent-border);
+  background: none;
+  color: var(--color-accent);
+  font-family: var(--font-body);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.role-panel__list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .role-panel {
+    position: static;
+    display: block;
+    width: auto;
+    padding: 0;
+    background: var(--color-accent-soft);
+    box-shadow: none;
+  }
+
+  .role-panel__controls {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 5;
+    box-sizing: border-box;
+    height: var(--role-panel-controls-height);
+    padding: var(--role-panel-gap) 16px;
+    background: var(--color-accent-soft);
+    box-shadow: 0 1px 4px var(--color-shadow);
+  }
+
+  .role-panel__list {
+    padding: calc(var(--role-panel-controls-height) + 8px) 8px 8px;
+    overflow: visible;
+  }
+}

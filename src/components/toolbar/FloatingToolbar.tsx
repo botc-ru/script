@@ -1,4 +1,15 @@
-import { Eye, FileText, Pencil, Redo2, Search, Share2, Undo2, Users, X } from 'lucide-react'
+import {
+  Eye,
+  FileText,
+  Pencil,
+  Redo2,
+  ScrollText,
+  Search,
+  Share2,
+  Undo2,
+  Users,
+  X,
+} from 'lucide-react'
 import { useState } from 'react'
 
 import type { ScriptMode } from '../../types/ScriptMode'
@@ -15,15 +26,19 @@ import './FloatingToolbar.css'
  * Плавающие кнопки поверх страницы: на ПК вверху экрана, на телефоне внизу.
  *
  * Слева в просмотре одна кнопка Редактировать. В редактировании слева Просмотр, Роли и Макет:
- * на ПК это отдельные кнопки, на телефоне одна кнопка с меню. Справа в редактировании отмена
- * и повтор (если доступны) и поиск, в обоих режимах Поделиться. Открытый поиск заменяет
- * Поделиться крестиком, а на телефоне скрывает остальные кнопки.
+ * на ПК это отдельные кнопки, на телефоне одна кнопка с меню. На экране ролей на телефоне пункт
+ * Роли меняется на Сценарий, а кнопки поиска нет: у панели своё поле поиска.
  *
- * Роли, Макет и Поделиться пока неактивны: их функций ещё нет. Подробнее: `docs/toolbar.md`.
+ * Справа в редактировании отмена и повтор (если доступны) и поиск, в обоих режимах Поделиться.
+ * Открытый поиск заменяет Поделиться крестиком, а на телефоне скрывает остальные кнопки.
+ *
+ * Макет и Поделиться пока неактивны: их функций ещё нет. Подробнее: `docs/toolbar.md`.
  */
 export function FloatingToolbar({
   mode,
   onModeChange,
+  isRolesOpen,
+  onRolesToggle,
   roles,
   selectedRoleIds,
   onToggleRole,
@@ -41,25 +56,40 @@ export function FloatingToolbar({
     onModeChange(nextMode)
   }
 
-  const editActions: ModeAction[] = [
-    { icon: Eye, label: 'Просмотр', onClick: () => changeMode('view') },
-    { icon: Users, label: 'Роли', disabled: true },
-    { icon: FileText, label: 'Макет', disabled: true },
-  ]
+  const viewAction: ModeAction = {
+    icon: Eye,
+    label: 'Просмотр',
+    onClick: () => changeMode('view'),
+  }
+  const layoutAction: ModeAction = { icon: FileText, label: 'Макет', disabled: true }
+  const rolesAction: ModeAction = {
+    icon: Users,
+    label: 'Роли',
+    isActive: isRolesOpen,
+    onClick: onRolesToggle,
+  }
+  const backAction: ModeAction = { icon: ScrollText, label: 'Сценарий', onClick: onRolesToggle }
+  const menuActions = [viewAction, isRolesOpen ? backAction : rolesAction, layoutAction]
+
+  const className = [
+    'floating-toolbar',
+    isSearchVisible && 'floating-toolbar--searching',
+    isRolesOpen && 'floating-toolbar--roles',
+  ].filter(Boolean).join(' ')
 
   return (
-    <div className={`floating-toolbar${isSearchVisible ? ' floating-toolbar--searching' : ''}`}>
+    <div className={className}>
       <div className="floating-toolbar__modes floating-toolbar__secondary">
         {isEditing
           ? (
               <>
                 <div className="floating-toolbar__desktop">
-                  {editActions.map((action) => (
+                  {[viewAction, rolesAction, layoutAction].map((action) => (
                     <ToolbarButton key={action.label} {...action} showLabel />
                   ))}
                 </div>
                 <div className="floating-toolbar__mobile">
-                  <ModeMenu actions={editActions} />
+                  <ModeMenu actions={menuActions} />
                 </div>
               </>
             )
@@ -91,7 +121,9 @@ export function FloatingToolbar({
           />
         )}
         {isEditing && !isSearchVisible && (
-          <ToolbarButton icon={Search} label="Поиск" onClick={() => setSearch('open')} />
+          <div className="floating-toolbar__search-button">
+            <ToolbarButton icon={Search} label="Поиск" onClick={() => setSearch('open')} />
+          </div>
         )}
         {isSearchVisible
           ? <ToolbarButton icon={X} label="Закрыть поиск" onClick={() => setSearch('closing')} />

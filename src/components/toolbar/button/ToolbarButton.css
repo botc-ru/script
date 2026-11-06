@@ -21,6 +21,12 @@
   background: var(--color-surface-hover);
 }
 
+.toolbar-button[aria-pressed='true'],
+.toolbar-button[aria-pressed='true']:hover:not(:disabled) {
+  background: var(--color-accent);
+  color: var(--color-accent-soft);
+}
+
 .toolbar-button:disabled {
   opacity: 0.5;
   cursor: default;

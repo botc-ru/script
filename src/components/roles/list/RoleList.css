@@ -1,0 +1,10 @@
+.role-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.role-list__message {
+  padding: 12px 8px;
+  color: var(--color-text-muted);
+}

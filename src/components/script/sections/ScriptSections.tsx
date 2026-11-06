@@ -1,15 +1,13 @@
 import { Fragment } from 'react'
 
-import type { Team } from '../../../types/Team'
 import { TEAM_LABELS } from '../../../types/TeamLabels'
+import { REQUIRED_TEAMS, TEAMS } from '../../../types/TeamOrder'
 import { getActiveJinxes } from '../../../utils/getActiveJinxes'
 import { getOrderedRoles } from '../../../utils/getOrderedRoles'
 import { JinxSection } from '../jinxes/JinxSection'
 import { ScriptSection } from '../section/ScriptSection'
 import type { ScriptSectionsProps } from './ScriptSectionsProps'
 
-const REQUIRED_TEAMS: Team[] = ['townsfolk', 'outsider', 'minion', 'demon']
-const OPTIONAL_TEAMS: Team[] = ['loric', 'fabled', 'traveller']
 const DJINN_ID = 'djinn'
 
 /**
@@ -31,7 +29,7 @@ export function ScriptSections({ script, roles, mode, onChange }: ScriptSections
   const jinxes = getActiveJinxes(orderedRoles, roles)
   const djinn = jinxes.length > 0 ? roles[DJINN_ID] : undefined
 
-  const sections = [...REQUIRED_TEAMS, ...OPTIONAL_TEAMS]
+  const sections = TEAMS
     .map((team) => ({
       team,
       teamRoles: orderedRoles.filter((role) => role.team === team && role !== djinn),

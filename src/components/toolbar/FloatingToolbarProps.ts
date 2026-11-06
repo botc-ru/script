@@ -4,6 +4,8 @@ import type { ScriptMode } from '../../types/ScriptMode'
 export interface FloatingToolbarProps {
   mode: ScriptMode
   onModeChange: (mode: ScriptMode) => void
+  isRolesOpen: boolean
+  onRolesToggle: () => void
   roles: RolesState
   selectedRoleIds: string[]
   onToggleRole: (roleId: string) => void
