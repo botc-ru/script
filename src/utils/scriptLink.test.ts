@@ -35,6 +35,16 @@ describe('readScriptFromLink', () => {
     expect(readScriptFromLink('?roles=a,,b,a,')?.roleIds).toEqual(['a', 'b'])
   })
 
+  it('раскодирует повторно закодированные значения, как в ссылках из Telegram', () => {
+    const script = readScriptFromLink('?title=Буря%2520%2526%2520Скверна&author=Автор%2520Имя&roles=a')
+
+    expect(script).toMatchObject({ name: 'Буря & Скверна', author: 'Автор Имя' })
+  })
+
+  it('оставляет как есть знак процента, который не раскодируется', () => {
+    expect(readScriptFromLink('?title=100%25')?.name).toBe('100%')
+  })
+
   it('поддерживает пустой список ролей', () => {
     expect(readScriptFromLink('?title=Пусто')?.roleIds).toEqual([])
   })

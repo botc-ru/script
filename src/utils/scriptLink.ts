@@ -11,6 +11,18 @@ function encodeQueryValue(value: string): string {
 }
 
 /**
+ * Раскодирует значение, которое закодировали повторно: так ссылку портят некоторые мессенджеры,
+ * и `%20` приходит как `%2520`. Строку, которая не раскодируется, возвращает как есть.
+ */
+function decodeTwiceEncoded(value: string): string {
+  try {
+    return decodeURIComponent(value)
+  } catch {
+    return value
+  }
+}
+
+/**
  * Собирает query-строку сценария. Кириллица не кодируется, чтобы ссылка оставалась читаемой.
  */
 export function buildScriptQuery(script: ScriptData): string {
@@ -39,16 +51,22 @@ export function buildScriptLink(script: ScriptData): string {
  * Читает сценарий из query-строки. Ссылкой считается адрес с параметром `title` или `roles`.
  *
  * Наличие параметра `customOrder` отключает автоматическую сортировку ролей.
+ * Повторно закодированные значения (`%2520` вместо `%20`) раскодируются ещё раз.
  */
 export function readScriptFromLink(search: string): ScriptData | null {
   const params = new URLSearchParams(search)
   if (!params.has('roles') && !params.has('title')) return null
 
+  function get(key: string): string | undefined {
+    const value = params.get(key)
+    return value === null ? undefined : decodeTwiceEncoded(value)
+  }
+
   return {
-    name: params.get('title') ?? DEFAULT_SCRIPT.name,
-    author: params.get('author') ?? DEFAULT_SCRIPT.author,
-    color: params.get('color') ?? DEFAULT_SCRIPT.color,
-    roleIds: [...new Set(params.get('roles')?.split(',').filter(Boolean))],
+    name: get('title') ?? DEFAULT_SCRIPT.name,
+    author: get('author') ?? DEFAULT_SCRIPT.author,
+    color: get('color') ?? DEFAULT_SCRIPT.color,
+    roleIds: [...new Set(get('roles')?.split(',').filter(Boolean))],
     customOrder: params.has('customOrder'),
   }
 }
