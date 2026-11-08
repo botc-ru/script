@@ -34,16 +34,23 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: mm(1.5),
   },
-  rowsEven: {
-    justifyContent: 'space-evenly',
+  row: {
+    flexGrow: 1,
+    flexDirection: 'row',
+    gap: mm(4),
+  },
+  cell: {
+    flex: 1,
+    justifyContent: 'center',
   },
 })
 
 /**
  * Секция листа игрока: заголовок и роли в одну или две колонки. Пустая секция не показывается.
  *
- * При настройке `stretch` секции делят свободную высоту листа пропорционально числу строк,
- * а роли идут общими строками: при нечётном числе ролей колонки всё равно начинаются вровень.
+ * При настройке `stretch` роли идут общими строками, и каждая строка получает равную долю
+ * свободной высоты листа, а карточки стоят в ней по центру. Так отступы между ролями одинаковые,
+ * а колонки начинаются вровень и при нечётном числе ролей.
  */
 export function PdfRoleSection({ title, roles, jinxes }: PdfRoleSectionProps) {
   const { columns, stretch } = use(PdfSettingsContext)
@@ -67,15 +74,15 @@ export function PdfRoleSection({ title, roles, jinxes }: PdfRoleSectionProps) {
   const gap = isCompact ? styles.columnCompact : {}
 
   return (
-    <View style={[styles.section, canStretch ? { flexGrow: rows + 1 } : {}]}>
+    <View style={[styles.section, canStretch ? { flexGrow: rows } : {}]}>
       <PdfSectionTitle title={title} />
       {canStretch
         ? (
-            <View style={[styles.rows, gap, rows > 1 ? styles.rowsEven : {}]}>
+            <View style={[styles.rows, gap]}>
               {splitIntoRows(roles, columns).map((row, rowIndex) => (
-                <View key={rowIndex} style={styles.columns}>
+                <View key={rowIndex} style={styles.row}>
                   {row.map((role, index) => (
-                    <View key={index} style={styles.column}>{role && renderCard(role)}</View>
+                    <View key={index} style={styles.cell}>{role && renderCard(role)}</View>
                   ))}
                 </View>
               ))}
