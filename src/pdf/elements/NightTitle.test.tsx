@@ -45,7 +45,7 @@ describe('NightTitle', () => {
     render(
       <>
         <NightColumn title="Первая ночь" entries={[]} />
-        <NightDetailColumn title="Другие ночи" entries={[]} scriptTitle="Сценарий" />
+        <NightDetailColumn title="Другие ночи" entries={[]} scriptTitle="Сценарий" scriptColor="#000" />
       </>,
     )
 

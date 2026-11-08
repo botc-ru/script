@@ -31,6 +31,7 @@ export function ScriptDocument({ script, roles, settings }: ScriptPdfData) {
         {settings.storytellerSheet && (
           <StorytellerSheet
             title={title}
+            color={script.color}
             author={script.author}
             sections={sections}
             jinxes={jinxes}
@@ -39,7 +40,12 @@ export function ScriptDocument({ script, roles, settings }: ScriptPdfData) {
           />
         )}
         {settings.nightOrder && (
-          <NightOrderSheet title={title} firstNight={firstNight} otherNight={otherNight} />
+          <NightOrderSheet
+            title={title}
+            color={script.color}
+            firstNight={firstNight}
+            otherNight={otherNight}
+          />
         )}
       </Document>
     </PdfSettingsContext>

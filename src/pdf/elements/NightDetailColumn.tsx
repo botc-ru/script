@@ -9,6 +9,7 @@ import { Bold } from './Bold'
 import type { NightDetailColumnProps } from './NightDetailColumnProps'
 import { NightTitle } from './NightTitle'
 import { PdfText } from './PdfText'
+import { ScriptTitle } from './ScriptTitle'
 
 const styles = StyleSheet.create({
   column: {
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
 })
 
 /**
- * Колонка подробного порядка ночи: заголовок, записи и название сценария внизу.
+ * Колонка подробного порядка ночи: заголовок, записи и название сценария в его цвете внизу.
  * Подсказки к записям показываются при настройке `nightHints`.
  *
  * В перевёрнутой колонке заголовок и строки повёрнуты на 180°.
@@ -69,6 +70,7 @@ export function NightDetailColumn({
   title,
   entries,
   scriptTitle,
+  scriptColor,
   isRotated = false,
 }: NightDetailColumnProps) {
   const { nightHints } = use(PdfSettingsContext)
@@ -82,7 +84,7 @@ export function NightDetailColumn({
   )
   const footer = (
     <View style={[styles.footer, isRotated ? {} : styles.rotated]}>
-      <Bold style={{ fontSize: fontSize(4) }}>{scriptTitle}</Bold>
+      <ScriptTitle title={scriptTitle} color={scriptColor} />
     </View>
   )
   const list = (

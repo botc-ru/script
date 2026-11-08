@@ -3,12 +3,12 @@ import { use } from 'react'
 
 import type { Team } from '../../types/Team'
 import { TEAM_LABELS } from '../../types/TeamLabels'
-import { Bold } from '../elements/Bold'
 import { NightColumn } from '../elements/NightColumn'
 import { PdfJinxRow } from '../elements/PdfJinxRow'
 import { PdfRoleCard } from '../elements/PdfRoleCard'
 import { PdfRoleList } from '../elements/PdfRoleList'
 import { PlayersTable } from '../elements/PlayersTable'
+import { ScriptTitle } from '../elements/ScriptTitle'
 import { PdfSettingsContext } from '../PdfSettingsContext'
 import { mm } from '../units'
 import { useFontSize } from '../useFontSize'
@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
  */
 export function StorytellerSheet({
   title,
+  color,
   author,
   sections,
   jinxes,
@@ -76,7 +77,7 @@ export function StorytellerSheet({
 
         <View style={styles.center}>
           <View style={styles.title}>
-            <Bold style={{ fontSize: fontSize(5.5) }}>{title}</Bold>
+            <ScriptTitle title={title} color={color} />
           </View>
           {author && <Text style={[styles.author, { fontSize: fontSize(4.5) }]}>{author}</Text>}
 

@@ -17,15 +17,21 @@ const styles = StyleSheet.create({
 })
 
 /** Подробный порядок ночи: две колонки, вторая перевёрнута. */
-export function NightOrderSheet({ title, firstNight, otherNight }: NightOrderSheetProps) {
+export function NightOrderSheet({ title, color, firstNight, otherNight }: NightOrderSheetProps) {
   return (
     <SheetPage style={styles.page}>
       <View style={styles.columns}>
-        <NightDetailColumn title="Первая ночь" entries={firstNight} scriptTitle={title} />
+        <NightDetailColumn
+          title="Первая ночь"
+          entries={firstNight}
+          scriptTitle={title}
+          scriptColor={color}
+        />
         <NightDetailColumn
           title="Другие ночи"
           entries={otherNight}
           scriptTitle={title}
+          scriptColor={color}
           isRotated
         />
       </View>
