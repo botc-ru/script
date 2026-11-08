@@ -7,6 +7,7 @@ import { mm } from '../units'
 import { useFontSize } from '../useFontSize'
 import { Bold } from './Bold'
 import type { NightDetailColumnProps } from './NightDetailColumnProps'
+import { NightTitle } from './NightTitle'
 import { PdfText } from './PdfText'
 
 const styles = StyleSheet.create({
@@ -24,10 +25,6 @@ const styles = StyleSheet.create({
   headingRotated: {
     alignItems: 'flex-start',
     marginTop: mm(5),
-  },
-  title: {
-    color: PDF_ACCENT_COLOR,
-    textTransform: 'uppercase',
   },
   list: {
     flex: 1,
@@ -80,7 +77,7 @@ export function NightDetailColumn({
 
   const heading = (
     <View style={[isRotated ? styles.headingRotated : styles.heading, rotation]}>
-      <Bold style={[styles.title, { fontSize: fontSize(4.5) }]}>{title}</Bold>
+      <NightTitle title={title} />
     </View>
   )
   const footer = (

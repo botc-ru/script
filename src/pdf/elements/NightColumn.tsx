@@ -1,10 +1,10 @@
 import { Image, StyleSheet, Text, View } from '@react-pdf/renderer'
 
-import { PDF_ACCENT_COLOR, PDF_TEXT_COLOR } from '../pdfColors'
+import { PDF_TEXT_COLOR } from '../pdfColors'
 import { mm } from '../units'
 import { useFontSize } from '../useFontSize'
-import { Bold } from './Bold'
 import type { NightColumnProps } from './NightColumnProps'
+import { NightTitle } from './NightTitle'
 
 const styles = StyleSheet.create({
   column: {
@@ -29,8 +29,6 @@ const styles = StyleSheet.create({
   },
   title: {
     width: mm(32),
-    color: PDF_ACCENT_COLOR,
-    textTransform: 'uppercase',
   },
   list: {
     flexDirection: 'column',
@@ -66,8 +64,8 @@ export function NightColumn({ title, entries, isRotated = false }: NightColumnPr
   const rotation = isRotated ? styles.rotated : {}
 
   const titleElement = (
-    <View style={rotation}>
-      <Bold style={[styles.title, { fontSize: fontSize(3.5) }]}>{title}</Bold>
+    <View style={[styles.title, rotation]}>
+      <NightTitle title={title} />
     </View>
   )
   const listElement = (

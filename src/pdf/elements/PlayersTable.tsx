@@ -4,7 +4,6 @@ import { TEAM_LABELS } from '../../types/TeamLabels'
 import { PLAYERS_COUNT_TABLE } from '../../utils/playersCountTable'
 import { PDF_ACCENT_COLOR, PDF_TEAM_COLORS } from '../pdfColors'
 import { mm } from '../units'
-import { useFontSize } from '../useFontSize'
 import { Bold } from './Bold'
 
 const { players, townsfolk, outsider, minion, demon } = PLAYERS_COUNT_TABLE
@@ -18,6 +17,9 @@ const ROWS = [
 
 const styles = StyleSheet.create({
   border: {
+    alignSelf: 'center',
+    width: '100%',
+    maxWidth: mm(114),
     padding: mm(0.15),
     borderWidth: 0.75,
     borderColor: PDF_ACCENT_COLOR,
@@ -47,12 +49,16 @@ const styles = StyleSheet.create({
   },
 })
 
-/** Таблица состава команд по числу игроков. */
-export function PlayersTable() {
-  const fontSize = useFontSize()
-  const labelStyle = { fontSize: fontSize(3.2) }
-  const cellStyle = { fontSize: fontSize(5), transform: 'scaleY(0.8)' }
+const labelStyle = { fontSize: mm(3.2) }
+const cellStyle = { fontSize: mm(5), transform: 'scaleY(0.8)' }
 
+/**
+ * Таблица состава команд по числу игроков.
+ *
+ * Размер шрифта не зависит от настройки масштаба: при крупном таблица не помещается в центральную
+ * колонку листа рассказчика. Ширина не больше этой колонки, без колонок ночи таблица по центру.
+ */
+export function PlayersTable() {
   return (
     <View style={styles.border}>
       <View style={styles.table}>
