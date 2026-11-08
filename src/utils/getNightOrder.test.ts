@@ -53,6 +53,13 @@ describe('getNightRoles', () => {
     expect(getIds('7+')).toEqual(['late', 'dusk', 'demoninfo', 'minioninfo'])
   })
 
+  it('не включает Странников', () => {
+    const traveller = createRole('beggar', { team: 'traveller', otherNight: 5 })
+
+    expect(getNightRoles([LATE, traveller], ROLES, '7+').map((role) => role.id))
+      .toEqual(['late', 'dusk', 'demoninfo', 'minioninfo'])
+  })
+
   it('при 5-6 игроках скрывает информацию для Демона и Приспешников', () => {
     expect(getIds('5-6')).toEqual(['late', 'dusk'])
   })
