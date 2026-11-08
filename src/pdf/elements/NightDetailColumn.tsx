@@ -54,9 +54,15 @@ const styles = StyleSheet.create({
   hint: {
     marginTop: mm(0.6),
   },
+  // Отступы подобраны так, чтобы от края листа до букв было столько же, сколько сбоку
   footer: {
     alignItems: 'flex-end',
-    paddingVertical: mm(2),
+    paddingTop: mm(0.8),
+    paddingBottom: mm(2),
+  },
+  footerRotated: {
+    paddingTop: 0,
+    marginBottom: mm(-0.8),
   },
 })
 
@@ -83,7 +89,7 @@ export function NightDetailColumn({
     </View>
   )
   const footer = (
-    <View style={[styles.footer, isRotated ? {} : styles.rotated]}>
+    <View style={[styles.footer, isRotated ? {} : [styles.footerRotated, styles.rotated]]}>
       <ScriptTitle title={scriptTitle} color={scriptColor} />
     </View>
   )
