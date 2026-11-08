@@ -7,7 +7,7 @@ import type { PdfTextProps } from './PdfTextProps'
 const styles = StyleSheet.create({
   text: {
     color: PDF_TEXT_COLOR,
-    fontFamily: 'Roboto-Condensed',
+    fontFamily: ['Roboto-Condensed', 'Token'],
     fontWeight: 300,
   },
   modifications: {
@@ -15,7 +15,10 @@ const styles = StyleSheet.create({
   },
 })
 
-/** Основной текст PDF: способности, джинксы и подсказки порядка ночи. */
+/**
+ * Основной текст PDF: способности, джинксы и подсказки порядка ночи.
+ * Значок жетона «𒊹» берётся из запасного шрифта Token.
+ */
 export function PdfText({ modifications, style = {}, children }: PdfTextProps) {
   const fontSize = useFontSize()
 
