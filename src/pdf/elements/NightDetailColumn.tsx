@@ -54,15 +54,15 @@ const styles = StyleSheet.create({
   hint: {
     marginTop: mm(0.6),
   },
-  // Отступы подобраны так, чтобы от края листа до букв было столько же, сколько сбоку
+  // От края листа до строчных букв столько же, сколько сбоку: заглавные чуть ближе к краю
   footer: {
     alignItems: 'flex-end',
-    paddingTop: mm(0.8),
+    marginTop: mm(-0.4),
     paddingBottom: mm(2),
   },
   footerRotated: {
-    paddingTop: 0,
-    marginBottom: mm(-0.8),
+    marginTop: 0,
+    marginBottom: mm(-2),
   },
 })
 
