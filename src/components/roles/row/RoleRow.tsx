@@ -16,7 +16,7 @@ export function RoleRow({ role, isSelected, onClick }: RoleRowProps) {
       aria-pressed={isSelected}
       onClick={onClick}
     >
-      <img className="role-row__icon" src={role.image} alt="" loading="lazy" />
+      <img className="role-row__icon" src={role.image} alt="" loading="lazy" decoding="async" />
       <span className="role-row__name">{role.name}</span>
     </button>
   )

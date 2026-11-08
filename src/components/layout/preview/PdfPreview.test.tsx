@@ -10,7 +10,7 @@ vi.mock('pdfjs-dist/build/pdf.worker.min.mjs?url', () => ({ default: 'worker.mjs
 function stubDocument(pages: number, renderPage: () => Promise<void> = () => Promise.resolve()) {
   const destroy = vi.fn(() => Promise.resolve())
   const page = {
-    getViewport: () => ({ width: 100, height: 141 }),
+    getViewport: ({ scale }: { scale: number }) => ({ width: 100 * scale, height: 141 * scale }),
     render: () => ({ promise: renderPage() }),
   }
   const task = {
@@ -32,6 +32,7 @@ function isBusy() {
 describe('PdfPreview', () => {
   beforeEach(() => {
     vi.mocked(getDocument).mockReset()
+    window.matchMedia = vi.fn(() => ({ matches: false }) as MediaQueryList)
   })
 
   it('рисует все страницы', async () => {
@@ -100,6 +101,50 @@ describe('PdfPreview', () => {
       setTimeout(resolve)
     })
     expect(getPages()).toHaveLength(2)
+  })
+
+  it.each([
+    ['на ПК рисует страницы по ширине экрана', false, 200],
+    ['на сенсорном экране рисует с запасом для увеличения', true, 300],
+  ])('%s', async (_, isTouch, width) => {
+    window.matchMedia = vi.fn(() => ({ matches: isTouch }) as MediaQueryList)
+    vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(100)
+    vi.spyOn(window, 'devicePixelRatio', 'get').mockReturnValue(2)
+    stubDocument(1)
+
+    render(<PdfPreview blob={new Blob(['1'])} isStale={false} />)
+
+    await waitFor(() => expect(getPages()).toHaveLength(1))
+    expect((getPages()[0] as HTMLCanvasElement).width).toBe(width)
+    vi.restoreAllMocks()
+  })
+
+  it('закрывает документ сразу после отрисовки', async () => {
+    const destroy = stubDocument(2)
+
+    render(<PdfPreview blob={new Blob(['1'])} isStale={false} />)
+
+    await waitFor(() => expect(getPages()).toHaveLength(2))
+    await waitFor(() => expect(destroy).toHaveBeenCalledOnce())
+  })
+
+  it('освобождает память заменённых и убранных страниц', async () => {
+    vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(100)
+    stubDocument(2)
+    const { rerender, unmount } = render(<PdfPreview blob={new Blob(['1'])} isStale={false} />)
+    await waitFor(() => expect(getPages()).toHaveLength(2))
+    const oldPages = [...getPages()] as HTMLCanvasElement[]
+
+    stubDocument(1)
+    rerender(<PdfPreview blob={new Blob(['2'])} isStale={false} />)
+    await waitFor(() => expect(getPages()).toHaveLength(1))
+    const [newPage] = getPages() as NodeListOf<HTMLCanvasElement>
+
+    expect(oldPages.map((page) => page.width)).toEqual([0, 0])
+    expect(newPage?.width).toBeGreaterThan(0)
+    unmount()
+    expect(newPage?.width).toBe(0)
+    vi.restoreAllMocks()
   })
 
   it('сообщает об ошибке', async () => {

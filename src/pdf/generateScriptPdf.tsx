@@ -6,7 +6,7 @@ import { ScriptDocument } from './ScriptDocument'
 
 registerPdfFonts()
 
-/** Создаёт PDF сценария. Это точка входа отдельного файла сборки, см. `loadScriptPdf`. */
+/** Создаёт PDF сценария. Вызывается в потоке PDF, см. `worker/scriptPdf.worker.ts`. */
 export function generateScriptPdf(data: ScriptPdfData): Promise<Blob> {
   return pdf(<ScriptDocument {...data} />).toBlob()
 }

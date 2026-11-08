@@ -16,7 +16,7 @@ export function RoleCard({ role, jinxPartners = [], isLink, onRemove, onDropRole
   const className = `role-card ${getTeamClass(role.team)}`
   const content = (
     <>
-      <img className="role-card__icon" src={role.image} alt="" />
+      <img className="role-card__icon" src={role.image} alt="" decoding="async" />
       <span className="role-card__text">
         <span className="role-card__title">
           <span className="role-card__name">{role.name}</span>
@@ -25,6 +25,7 @@ export function RoleCard({ role, jinxPartners = [], isLink, onRemove, onDropRole
               key={partner.id}
               className="role-card__jinx"
               src={partner.image}
+              decoding="async"
               alt={`Джинкс: ${partner.name}`}
               title={partner.name}
             />

@@ -49,7 +49,7 @@ describe('useScriptPdf', () => {
       script: DEFAULT_SCRIPT,
       roles: TEST_ROLES,
       settings: DEFAULT_PRINT_SETTINGS,
-    })
+    }, expect.any(AbortSignal))
   })
 
   it.each<[string, Props]>([
@@ -139,6 +139,16 @@ describe('useScriptPdf', () => {
     })
 
     expect(result.current.blob).toBe(SECOND)
+  })
+
+  it('отменяет запрос, который устарел', async () => {
+    const { rerender } = renderPdf()
+    await waitFor(() => expect(loadScriptPdf).toHaveBeenCalledOnce())
+    const signal = vi.mocked(loadScriptPdf).mock.calls[0]?.[1]
+
+    rerender({ settings: { ...DEFAULT_PRINT_SETTINGS, logo: false } })
+
+    expect(signal?.aborted).toBe(true)
   })
 
   it('при ошибке сообщает о ней и сохраняет прошлый результат', async () => {
