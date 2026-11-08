@@ -15,14 +15,17 @@ const styles = StyleSheet.create({
   },
 })
 
-/** Основной текст PDF: способности, джинксы и подсказки порядка ночи. */
+/**
+ * Основной текст PDF: способности, джинксы и подсказки порядка ночи.
+ * Добавка к составу (`modifications`) выводится жирным в квадратных скобках после текста.
+ */
 export function PdfText({ modifications, style = {}, children }: PdfTextProps) {
   const fontSize = useFontSize()
 
   return (
     <Text style={[styles.text, { fontSize: fontSize(3.5) }, style]}>
       {children}
-      {modifications && <Text style={styles.modifications}> [{modifications}]</Text>}
+      {modifications && <Text style={styles.modifications}>{` [${modifications}]`}</Text>}
     </Text>
   )
 }
