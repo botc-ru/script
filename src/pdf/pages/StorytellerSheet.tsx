@@ -73,7 +73,7 @@ export function StorytellerSheet({
   return (
     <SheetPage style={styles.page}>
       <View style={styles.columns}>
-        {nightOrderColumns && <NightColumn title="Первая ночь" entries={firstNight} />}
+        <NightColumn title="Первая ночь" entries={firstNight} isHidden={!nightOrderColumns} />
 
         <View style={styles.center}>
           <View style={styles.title}>
@@ -112,7 +112,12 @@ export function StorytellerSheet({
           {playersTable && <PlayersTable />}
         </View>
 
-        {nightOrderColumns && <NightColumn title="Другие ночи" entries={otherNight} isRotated />}
+        <NightColumn
+          title="Другие ночи"
+          entries={otherNight}
+          isRotated
+          isHidden={!nightOrderColumns}
+        />
       </View>
     </SheetPage>
   )

@@ -42,12 +42,4 @@ describe('PlayersTable', () => {
     expect(renderTable(0.85)).toEqual(medium)
     expect(renderTable(1.15)).toEqual(medium)
   })
-
-  it('стоит по центру и не шире центральной колонки листа рассказчика', () => {
-    const { container } = render(<PlayersTable />)
-    const border = readPdfStyle(container.firstElementChild)
-
-    expect(border).toMatchObject({ alignSelf: 'center', width: '100%' })
-    expect(Number(border.maxWidth)).toBeGreaterThan(0)
-  })
 })

@@ -5,4 +5,6 @@ export interface NightColumnProps {
   entries: NightOrderEntry[]
   /** Повернуть заголовок и строки на 180°. */
   isRotated?: boolean
+  /** Оставить пустое место той же ширины вместо колонки. */
+  isHidden?: boolean
 }
