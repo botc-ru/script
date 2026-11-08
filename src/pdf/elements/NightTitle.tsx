@@ -19,5 +19,5 @@ const styles = StyleSheet.create({
  */
 export function NightTitle({ title }: NightTitleProps) {
   const fontSize = useFontSize()
-  return <Bold style={[styles.title, { fontSize: fontSize(3.2) }]}>{title}</Bold>
+  return <Bold style={[styles.title, { fontSize: fontSize(3.35) }]}>{title}</Bold>
 }
