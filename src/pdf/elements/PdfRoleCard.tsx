@@ -15,8 +15,10 @@ const styles = StyleSheet.create({
     flexShrink: 0,
   },
   icon: {
-    width: mm(12.4),
-    height: mm(12.4),
+    width: mm(14.4),
+    height: mm(14.4),
+    // Иконка занимает на 2 мм меньше своего размера: текст стоит ближе, как в старой версии
+    marginHorizontal: mm(-1),
     objectFit: 'contain',
   },
   iconCompact: {
@@ -52,6 +54,8 @@ const styles = StyleSheet.create({
  * Роль в PDF: иконка, имя в цвете команды, иконки джинксов и способность с модификациями.
  *
  * Обычная карточка показывает способность под именем. При `isCompact` всё идёт в одну строку.
+ * Иконка обычной карточки выступает на 1 мм влево и вправо за своё место: так она не отодвигает
+ * текст.
  */
 export function PdfRoleCard({
   role,
