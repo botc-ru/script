@@ -4,6 +4,7 @@ import { use } from 'react'
 import type { Team } from '../../types/Team'
 import { TEAM_LABELS } from '../../types/TeamLabels'
 import { NightColumn } from '../elements/NightColumn'
+import { PdfCardGrid } from '../elements/PdfCardGrid'
 import { PdfJinxRow } from '../elements/PdfJinxRow'
 import { PdfRoleCard } from '../elements/PdfRoleCard'
 import { PdfRoleList } from '../elements/PdfRoleList'
@@ -42,15 +43,20 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: mm(4),
   },
-  list: {
-    flexDirection: 'column',
-    gap: mm(2),
-  },
 })
+
+/**
+ * Во сколько раз центр листа шире без колонок ночи: 198 мм против 114 мм.
+ * Во столько же раз растёт таблица игроков.
+ */
+const WIDE_TABLE_SCALE = 198 / 114
 
 /**
  * Лист рассказчика. По бокам порядок ночи, вторая колонка перевёрнута. В центре название,
  * Летописцы, Джинн с джинксами, Сказочники, Странники и таблица игроков.
+ *
+ * Без колонок ночи центр занимает всю ширину листа, а таблица игроков растёт пропорционально.
+ * Роли и джинксы идут в одну или две колонки (настройка `storytellerColumns`).
  */
 export function StorytellerSheet({
   title,
@@ -61,7 +67,8 @@ export function StorytellerSheet({
   firstNight,
   otherNight,
 }: StorytellerSheetProps) {
-  const { travellers, playersTable, nightOrderColumns } = use(PdfSettingsContext)
+  const { travellers, playersTable, nightOrderColumns, storytellerColumns } =
+    use(PdfSettingsContext)
   const fontSize = useFontSize()
 
   function getSection(team: Team) {
@@ -88,17 +95,20 @@ export function StorytellerSheet({
               jinxes={jinxes}
             />
             {fabled && (
-              <View style={styles.list}>
-                {fabled.pinnedRoles.map((role) => (
-                  <PdfRoleCard key={role.id} role={role} isColored={false} />
-                ))}
-                {jinxes.map((jinx) => (
-                  <PdfJinxRow key={`${jinx.roleA.id}-${jinx.roleB.id}`} jinx={jinx} />
-                ))}
-                {fabled.roles.map((role) => (
-                  <PdfRoleCard key={role.id} role={role} isColored={false} />
-                ))}
-              </View>
+              <PdfCardGrid
+                columns={storytellerColumns}
+                cards={[
+                  ...fabled.pinnedRoles.map((role) => (
+                    <PdfRoleCard key={role.id} role={role} isColored={false} />
+                  )),
+                  ...jinxes.map((jinx) => (
+                    <PdfJinxRow key={`${jinx.roleA.id}-${jinx.roleB.id}`} jinx={jinx} />
+                  )),
+                  ...fabled.roles.map((role) => (
+                    <PdfRoleCard key={role.id} role={role} isColored={false} />
+                  )),
+                ]}
+              />
             )}
             {travellers && (
               <PdfRoleList
@@ -109,7 +119,7 @@ export function StorytellerSheet({
             )}
           </View>
 
-          {playersTable && <PlayersTable />}
+          {playersTable && <PlayersTable scale={nightOrderColumns ? 1 : WIDE_TABLE_SCALE} />}
         </View>
 
         {nightOrderColumns && <NightColumn title="Другие ночи" entries={otherNight} isRotated />}

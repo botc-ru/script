@@ -13,6 +13,7 @@ export interface PrintSettings {
   travellers: boolean
   playersTable: boolean
   nightOrderColumns: boolean
+  storytellerColumns: 1 | 2
   nightOrder: boolean
   nightHints: boolean
 }

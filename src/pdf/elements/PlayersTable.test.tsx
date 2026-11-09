@@ -43,11 +43,16 @@ describe('PlayersTable', () => {
     expect(renderTable(1.15)).toEqual(medium)
   })
 
-  it('стоит по центру и не шире центральной колонки листа рассказчика', () => {
-    const { container } = render(<PlayersTable />)
-    const border = readPdfStyle(container.firstElementChild)
+  it('при scale растут шрифт и вертикальные отступы', () => {
+    const readSizes = () => {
+      const label = screen.getByText('ИГРОКИ')
+      const cell = label.parentElement?.nextElementSibling ?? null
+      return [readPdfStyle(label).fontSize, readPdfStyle(cell).paddingVertical].map(Number)
+    }
+    const { rerender } = render(<PlayersTable />)
+    const sizes = readSizes()
+    rerender(<PlayersTable scale={2} />)
 
-    expect(border).toMatchObject({ alignSelf: 'center', width: '100%' })
-    expect(Number(border.maxWidth)).toBeGreaterThan(0)
+    expect(readSizes()).toEqual(sizes.map((size) => size * 2))
   })
 })

@@ -7,6 +7,7 @@ const SETTING_OPTIONS: Record<string, unknown[] | undefined> = {
   fontScale: [0.85, 1, 1.15],
   playersCount: ['5-6', '7+'],
   columns: [1, 2],
+  storytellerColumns: [1, 2],
 }
 
 function isValidSetting([key, value]: [string, unknown]) {

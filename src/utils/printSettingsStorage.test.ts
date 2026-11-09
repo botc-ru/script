@@ -17,6 +17,7 @@ describe('printSettingsStorage', () => {
       ...DEFAULT_PRINT_SETTINGS,
       fontScale: 1.15,
       columns: 1,
+      storytellerColumns: 2,
       playersCount: '5-6',
       logo: false,
     } as const
@@ -30,6 +31,7 @@ describe('printSettingsStorage', () => {
     localStorage.setItem('botc-print-settings', JSON.stringify({
       fontScale: 7,
       columns: 3,
+      storytellerColumns: 0,
       playersCount: 'много',
       logo: 'нет',
       background: false,

@@ -117,6 +117,12 @@ export function LayoutSettings({ settings, onChange, onDownloadPdf }: LayoutSett
             value={settings.nightOrderColumns}
             onChange={(nightOrderColumns) => set({ nightOrderColumns })}
           />
+          <SettingOptions
+            label="Колонки"
+            options={COLUMNS}
+            value={settings.storytellerColumns}
+            onChange={(storytellerColumns) => set({ storytellerColumns })}
+          />
         </SheetSettings>
 
         <SheetSettings

@@ -42,17 +42,18 @@ describe('LayoutSettings', () => {
     expect(onChange).toHaveBeenCalledWith({ ...DEFAULT_PRINT_SETTINGS, ...patch })
   })
 
-  it.each<[string, string, Partial<PrintSettings>]>([
-    ['Шрифт', 'L', { fontScale: 1.15 }],
-    ['Игроков', '5-6', { playersCount: '5-6' }],
-    ['Колонки', '1', { columns: 1 }],
-  ])('%s: вариант %s меняет настройку', async (group, name, patch) => {
+  // Номер нужен, когда группы с одним названием есть у нескольких листов
+  it.each<[string, number, string, Partial<PrintSettings>]>([
+    ['Шрифт', 0, 'L', { fontScale: 1.15 }],
+    ['Игроков', 0, '5-6', { playersCount: '5-6' }],
+    ['Колонки', 0, '1', { columns: 1 }],
+    ['Колонки', 1, '2', { storytellerColumns: 2 }],
+  ])('%s №%i: вариант %s меняет настройку', async (group, index, name, patch) => {
     const onChange = renderSettings()
+    const groupElement = screen.getAllByRole('group', { name: group })[index]
+    if (!groupElement) throw new Error(`нет группы ${group} №${index}`)
 
-    await userEvent.click(within(screen.getByRole('group', { name: group })).getByRole('button', {
-      name,
-      pressed: false,
-    }))
+    await userEvent.click(within(groupElement).getByRole('button', { name, pressed: false }))
 
     expect(onChange).toHaveBeenCalledWith({ ...DEFAULT_PRINT_SETTINGS, ...patch })
   })
@@ -61,7 +62,9 @@ describe('LayoutSettings', () => {
     renderSettings({ playerSheet: false, nightOrder: false })
 
     expect(isFolded(screen.getByRole('button', { name: 'Растянуть' }))).toBe(true)
-    expect(isFolded(screen.getByRole('group', { name: 'Колонки' }))).toBe(true)
+    const [playerColumns, storytellerColumns] = screen.getAllByRole('group', { name: 'Колонки' })
+    expect(isFolded(playerColumns ?? document.body)).toBe(true)
+    expect(isFolded(storytellerColumns ?? document.body)).toBe(false)
     expect(isFolded(screen.getByRole('button', { name: 'Подсказки' }))).toBe(true)
     expect(isFolded(screen.getByRole('button', { name: 'Таблица' }))).toBe(false)
     expect(isFolded(screen.getByRole('button', { name: 'Список ролей', pressed: false })))

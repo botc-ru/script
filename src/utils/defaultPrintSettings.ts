@@ -12,6 +12,7 @@ export const DEFAULT_PRINT_SETTINGS: PrintSettings = {
   travellers: true,
   playersTable: true,
   nightOrderColumns: true,
+  storytellerColumns: 1,
   nightOrder: true,
   nightHints: true,
 }
