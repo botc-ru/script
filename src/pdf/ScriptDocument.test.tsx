@@ -163,13 +163,13 @@ describe('ScriptDocument', () => {
       expect(page.queryByText('Правила Джинна')).toBeNull()
     })
 
-    it('Сказочники с Джинном и правила Джинна идут отдельными подписанными секциями', () => {
+    it('Сказочники с Джинном последним и правила Джинна идут отдельными секциями', () => {
       const text = getPage(renderPdf(), 1).getByText('Правила Джинна').closest('section')
         ?.textContent ?? ''
 
       expect(text.indexOf('Сказочники')).toBeGreaterThanOrEqual(0)
+      expect(text.indexOf('Лодочник')).toBeLessThan(text.indexOf('Джинн'))
       expect(text.indexOf('Джинн')).toBeLessThan(text.indexOf('Правила Джинна'))
-      expect(text.indexOf('Лодочник')).toBeLessThan(text.indexOf('Правила Джинна'))
       expect(text.indexOf('Правила Джинна')).toBeLessThan(text.indexOf('Правило Умника'))
     })
 

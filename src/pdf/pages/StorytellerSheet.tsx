@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
 
 /**
  * Лист рассказчика. По бокам порядок ночи, вторая колонка перевёрнута. В центре название,
- * Летописцы, Сказочники с Джинном, «Правила Джинна», Странники и таблица игроков.
+ * Летописцы, Сказочники с Джинном последним, «Правила Джинна», Странники и таблица игроков.
  *
  * С колонками ночи боковые поля уже, чем у листа игрока. Без них поля как у листа игрока,
  * центр занимает всю ширину, а таблица игроков растёт пропорционально
@@ -131,10 +131,11 @@ export function StorytellerSheet({
               columns={storytellerColumns}
               titleStyle={styles.sectionTitle}
             />
+            {/* Джинн последним: сразу за ним идут его правила */}
             {fabled && (
               <PdfRoleSection
                 title={TEAM_LABELS.fabled}
-                roles={[...fabled.pinnedRoles, ...fabled.roles]}
+                roles={[...fabled.roles, ...fabled.pinnedRoles]}
                 jinxes={jinxes}
                 columns={storytellerColumns}
                 isColored={false}
