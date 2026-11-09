@@ -19,14 +19,17 @@ import type { StorytellerSheetProps } from './StorytellerSheetProps'
 /** Поля листа, мм. */
 const PAGE_PADDING = 6
 
-/** Отступ таблицы игроков от краёв листа без колонок ночи, мм. */
-const WIDE_TABLE_INSET = 10
+/** Отступ таблицы игроков от боковых и нижнего краёв листа без колонок ночи, мм. */
+const WIDE_TABLE_INSET = 20
 
 /**
  * Во сколько раз таблица игроков без колонок ночи шире, чем в центре между ними (114 мм).
- * Во столько же раз растут её шрифт и отступы.
+ * Во столько же раз растут её отступы и рамка.
  */
 const WIDE_TABLE_SCALE = (210 - 2 * WIDE_TABLE_INSET) / 114
+
+/** Шрифт широкой таблицы растёт чуть меньше: при полном росте цифры выглядят тесно. */
+const WIDE_TABLE_TEXT_SCALE = WIDE_TABLE_SCALE * 0.9
 
 const styles = StyleSheet.create({
   page: {
@@ -57,6 +60,7 @@ const styles = StyleSheet.create({
   },
   wideTable: {
     marginHorizontal: mm(WIDE_TABLE_INSET - PAGE_PADDING),
+    marginBottom: mm(WIDE_TABLE_INSET - PAGE_PADDING),
   },
 })
 
@@ -65,7 +69,7 @@ const styles = StyleSheet.create({
  * Летописцы, Джинн с джинксами, Сказочники, Странники и таблица игроков.
  *
  * Без колонок ночи центр занимает всю ширину листа, а таблица игроков растёт пропорционально
- * и стоит в 10 мм от краёв листа.
+ * и стоит в 20 мм от боковых и нижнего краёв листа.
  * Роли и джинксы идут в одну или две колонки (настройка `storytellerColumns`).
  */
 export function StorytellerSheet({
@@ -132,7 +136,7 @@ export function StorytellerSheet({
           {playersTable && nightOrderColumns && <PlayersTable />}
           {playersTable && !nightOrderColumns && (
             <View style={styles.wideTable}>
-              <PlayersTable scale={WIDE_TABLE_SCALE} />
+              <PlayersTable scale={WIDE_TABLE_SCALE} textScale={WIDE_TABLE_TEXT_SCALE} />
             </View>
           )}
         </View>

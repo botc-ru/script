@@ -43,16 +43,34 @@ describe('PlayersTable', () => {
     expect(renderTable(1.15)).toEqual(medium)
   })
 
-  it('при scale растут шрифт и вертикальные отступы', () => {
+  it('scale увеличивает отступы и рамку, textScale шрифт', () => {
     const readSizes = () => {
       const label = screen.getByText('ИГРОКИ')
       const cell = label.parentElement?.nextElementSibling ?? null
-      return [readPdfStyle(label).fontSize, readPdfStyle(cell).paddingVertical].map(Number)
+      const border = label.closest('[data-style*="borderWidth"]')
+      return [
+        readPdfStyle(label).fontSize,
+        readPdfStyle(cell).paddingVertical,
+        readPdfStyle(border).borderWidth,
+      ].map(Number)
     }
     const { rerender } = render(<PlayersTable />)
-    const sizes = readSizes()
+    const [font = 0, padding = 0, border = 0] = readSizes()
+    rerender(<PlayersTable scale={2} textScale={1.5} />)
+
+    const [scaledFont, scaledPadding, scaledBorder] = readSizes()
+
+    expect(scaledFont).toBeCloseTo(font * 1.5)
+    expect(scaledPadding).toBeCloseTo(padding * 2)
+    expect(scaledBorder).toBeCloseTo(border * 2)
+  })
+
+  it('без textScale шрифт растёт как scale', () => {
+    const readFont = () => Number(readPdfStyle(screen.getByText('ИГРОКИ')).fontSize)
+    const { rerender } = render(<PlayersTable />)
+    const font = readFont()
     rerender(<PlayersTable scale={2} />)
 
-    expect(readSizes()).toEqual(sizes.map((size) => size * 2))
+    expect(readFont()).toBeCloseTo(font * 2)
   })
 })

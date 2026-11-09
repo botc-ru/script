@@ -26,7 +26,7 @@ vi.mock('@react-pdf/renderer', () => ({
   Image: () => null,
 }))
 
-/** Сумма левых отступов от края листа до рамки таблицы игроков. */
+/** Отступы от бокового и нижнего краёв листа до рамки таблицы игроков. */
 function readTableInset() {
   let element = screen.getByText('ИГРОКИ').parentElement
   const ancestors: Element[] = []
@@ -37,14 +37,19 @@ function readTableInset() {
   const border = ancestors.findLast((ancestor) => {
     return ancestor instanceof HTMLElement && readPdfStyle(ancestor).borderColor !== undefined
   })
-
-  return ancestors
+  const styles = ancestors
     .slice(ancestors.indexOf(border ?? document.body) + 1)
     .filter((ancestor) => ancestor instanceof HTMLElement && 'style' in ancestor.dataset)
     .map(readPdfStyle)
-    .reduce((sum, { padding = 0, marginHorizontal = 0 }) => {
+
+  return {
+    side: styles.reduce((sum, { padding = 0, marginHorizontal = 0 }) => {
       return sum + Number(padding) + Number(marginHorizontal)
-    }, 0)
+    }, 0),
+    bottom: styles.reduce((sum, { padding = 0, paddingBottom = padding, marginBottom = 0 }) => {
+      return sum + Number(paddingBottom) + Number(marginBottom)
+    }, 0),
+  }
 }
 
 function renderSheet(nightOrderColumns: boolean) {
@@ -64,15 +69,19 @@ function renderSheet(nightOrderColumns: boolean) {
 }
 
 describe('StorytellerSheet', () => {
-  it('без колонок ночи таблица игроков стоит в 10 мм от края листа', () => {
+  it('без колонок ночи таблица игроков стоит в 20 мм от боковых и нижнего краёв листа', () => {
     renderSheet(false)
+    const { side, bottom } = readTableInset()
 
-    expect(readTableInset()).toBeCloseTo(mm(10))
+    expect(side).toBeCloseTo(mm(20))
+    expect(bottom).toBeCloseTo(mm(20))
   })
 
-  it('с колонками ночи у таблицы нет дополнительного отступа', () => {
+  it('с колонками ночи у таблицы только поля листа', () => {
     renderSheet(true)
+    const { side, bottom } = readTableInset()
 
-    expect(readTableInset()).toBeCloseTo(mm(6))
+    expect(side).toBeCloseTo(mm(6))
+    expect(bottom).toBeCloseTo(mm(6))
   })
 })

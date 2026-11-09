@@ -16,20 +16,21 @@ const ROWS = [
   { team: 'demon', counts: demon },
 ] as const
 
-/** Стили таблицы: все размеры умножены на `scale`. */
-function createStyles(scale: number) {
+/** Стили таблицы: отступы и рамка умножены на `scale`, шрифт на `textScale`. */
+function createStyles(scale: number, textScale: number) {
   const size = (value: number) => mm(value * scale)
+  const borderWidth = 0.75 * scale
 
   return StyleSheet.create({
     border: {
       padding: size(0.15),
-      borderWidth: 0.75,
+      borderWidth,
       borderColor: PDF_ACCENT_COLOR,
     },
     table: {
       paddingVertical: size(0.75),
       paddingRight: size(2),
-      borderWidth: 0.75,
+      borderWidth,
       borderColor: PDF_ACCENT_COLOR,
     },
     row: {
@@ -50,10 +51,10 @@ function createStyles(scale: number) {
       paddingHorizontal: size(0.3),
     },
     labelText: {
-      fontSize: size(3.2),
+      fontSize: mm(3.2 * textScale),
     },
     cellText: {
-      fontSize: size(5),
+      fontSize: mm(5 * textScale),
       transform: 'scaleY(0.8)',
     },
   })
@@ -63,11 +64,11 @@ function createStyles(scale: number) {
  * Таблица состава команд по числу игроков. Занимает всю ширину родителя.
  *
  * Размер шрифта не зависит от настройки масштаба: при крупном таблица не помещается в центральную
- * колонку листа рассказчика. `scale` увеличивает шрифт и отступы, чтобы в широком месте таблица
- * выросла пропорционально, а не только в ширину.
+ * колонку листа рассказчика. `scale` увеличивает отступы и двойную рамку, а `textScale` шрифт,
+ * чтобы в широком месте таблица выросла пропорционально, а не только в ширину.
  */
-export function PlayersTable({ scale = 1 }: PlayersTableProps) {
-  const styles = createStyles(scale)
+export function PlayersTable({ scale = 1, textScale = scale }: PlayersTableProps) {
+  const styles = createStyles(scale, textScale)
 
   return (
     <View style={styles.border}>
