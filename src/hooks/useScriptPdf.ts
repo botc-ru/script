@@ -18,7 +18,8 @@ const GENERATE_DELAY = 200
  * Первый раз создаётся сразу после загрузки ролей, чтобы Макет открывался без ожидания.
  * Дальше обновляется, только пока `isActive`: правки вне Макета подхватываются при его открытии.
  *
- * Новый запуск отменяет предыдущий, а до его завершения остаётся прошлый результат:
+ * Новый запуск отменяет предыдущий: ещё не начатый запрос поток PDF пропускает, а результат
+ * начатого отбрасывается. До завершения нового запуска остаётся прошлый результат:
  * превью не пропадает при правках.
  *
  * `download` скачивает готовый файл, если он соответствует текущим данным, иначе создаёт новый.
@@ -47,9 +48,10 @@ export function useScriptPdf(
     if (isFresh || (hasBlob && !isActive)) return
 
     let isCurrent = true
+    const controller = new AbortController()
     const data = { script, roles: roles.roles, settings }
     const timer = setTimeout(() => {
-      loadScriptPdf(data)
+      loadScriptPdf(data, controller.signal)
         .then((nextBlob) => {
           if (!isCurrent) return
           setBlob(nextBlob)
@@ -64,6 +66,7 @@ export function useScriptPdf(
     return () => {
       isCurrent = false
       clearTimeout(timer)
+      controller.abort()
     }
   }, [script, roles, settings, isActive, isFresh, hasBlob])
 

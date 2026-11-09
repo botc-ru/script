@@ -13,8 +13,8 @@ export function JinxSection({ jinxes }: JinxSectionProps) {
       <ul className="jinx-section__list">
         {jinxes.map(({ roleA, roleB, reason }) => (
           <li key={`${roleA.id}-${roleB.id}`} className="jinx-section__item">
-            <img className="jinx-section__icon" src={roleA.image} alt={roleA.name} />
-            <img className="jinx-section__icon" src={roleB.image} alt={roleB.name} />
+            <img className="jinx-section__icon" src={roleA.image} alt={roleA.name} decoding="async" />
+            <img className="jinx-section__icon" src={roleB.image} alt={roleB.name} decoding="async" />
             <span className="jinx-section__reason">{reason}</span>
           </li>
         ))}
