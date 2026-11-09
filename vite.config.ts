@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
+import { largePdfImageCache } from './vite-plugins/largePdfImageCache.ts'
 import { syncPngInflate } from './vite-plugins/syncPngInflate.ts'
 
 export default defineConfig({
@@ -10,10 +11,10 @@ export default defineConfig({
   // Поток PDF — модуль: react-pdf внутри него подгружает части кода динамически
   worker: {
     format: 'es',
-    plugins: () => [syncPngInflate()],
+    plugins: () => [syncPngInflate(), largePdfImageCache()],
   },
   optimizeDeps: {
-    rolldownOptions: { plugins: [syncPngInflate()] },
+    rolldownOptions: { plugins: [syncPngInflate(), largePdfImageCache()] },
   },
   test: {
     environment: 'jsdom',
