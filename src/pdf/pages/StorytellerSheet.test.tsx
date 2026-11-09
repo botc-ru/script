@@ -6,6 +6,7 @@ import { readPdfStyle } from '../../test/readPdfStyle'
 import { DEFAULT_PRINT_SETTINGS } from '../../utils/defaultPrintSettings'
 import { PdfSettingsContext } from '../PdfSettingsContext'
 import { mm } from '../units'
+import { SHEET_PADDING } from './sheetPadding'
 import { StorytellerSheet } from './StorytellerSheet'
 
 interface MockProps {
@@ -43,8 +44,9 @@ function readTableInset() {
     .map(readPdfStyle)
 
   return {
-    side: styles.reduce((sum, { padding = 0, marginHorizontal = 0 }) => {
-      return sum + Number(padding) + Number(marginHorizontal)
+    side: styles.reduce((sum, style) => {
+      const { padding = 0, paddingHorizontal = padding, marginHorizontal = 0 } = style
+      return sum + Number(paddingHorizontal) + Number(marginHorizontal)
     }, 0),
     bottom: styles.reduce((sum, { padding = 0, paddingBottom = padding, marginBottom = 0 }) => {
       return sum + Number(paddingBottom) + Number(marginBottom)
@@ -77,11 +79,11 @@ describe('StorytellerSheet', () => {
     expect(bottom).toBeCloseTo(mm(20))
   })
 
-  it('с колонками ночи у таблицы только поля листа', () => {
+  it('с колонками ночи у таблицы только поля листа, боковые как у листа игрока', () => {
     renderSheet(true)
     const { side, bottom } = readTableInset()
 
-    expect(side).toBeCloseTo(mm(6))
-    expect(bottom).toBeCloseTo(mm(6))
+    expect(side).toBeCloseTo(mm(SHEET_PADDING.x))
+    expect(bottom).toBeCloseTo(mm(SHEET_PADDING.bottom))
   })
 })

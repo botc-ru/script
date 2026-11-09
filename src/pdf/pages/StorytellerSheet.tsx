@@ -15,17 +15,18 @@ import { ScriptTitle } from '../elements/ScriptTitle'
 import { PdfSettingsContext } from '../PdfSettingsContext'
 import { mm } from '../units'
 import { useFontSize } from '../useFontSize'
+import { SHEET_PADDING } from './sheetPadding'
 import { SheetPage } from './SheetPage'
 import type { StorytellerSheetProps } from './StorytellerSheetProps'
 
-/** Поля листа, мм. */
-const PAGE_PADDING = 6
+/** Верхнее поле листа, мм. Боковые и нижнее как у листа игрока: `SHEET_PADDING`. */
+const PAGE_PADDING_TOP = 6
 
 /** Расстояние между колонками ночи и центром, мм. */
 const COLUMN_GAP = 4
 
 /** Ширина центра между колонками ночи, мм. */
-const CENTER_WIDTH = A4_SIZE.width - 2 * (PAGE_PADDING + NIGHT_COLUMN_WIDTH + COLUMN_GAP)
+const CENTER_WIDTH = A4_SIZE.width - 2 * (SHEET_PADDING.x + NIGHT_COLUMN_WIDTH + COLUMN_GAP)
 
 /** Отступ таблицы игроков от боковых и нижнего краёв листа без колонок ночи, мм. */
 const WIDE_TABLE_INSET = 20
@@ -41,7 +42,7 @@ const WIDE_TABLE_TEXT_SCALE = WIDE_TABLE_SCALE * 0.9
 
 const styles = StyleSheet.create({
   page: {
-    padding: mm(PAGE_PADDING),
+    paddingTop: mm(PAGE_PADDING_TOP),
   },
   columns: {
     flex: 1,
@@ -71,8 +72,8 @@ const styles = StyleSheet.create({
     marginBottom: mm(5),
   },
   wideTable: {
-    marginHorizontal: mm(WIDE_TABLE_INSET - PAGE_PADDING),
-    marginBottom: mm(WIDE_TABLE_INSET - PAGE_PADDING),
+    marginHorizontal: mm(WIDE_TABLE_INSET - SHEET_PADDING.x),
+    marginBottom: mm(WIDE_TABLE_INSET - SHEET_PADDING.bottom),
   },
 })
 

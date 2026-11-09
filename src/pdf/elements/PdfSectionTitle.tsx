@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginHorizontal: mm(-1),
     marginBottom: mm(2),
   },
   title: {
@@ -22,7 +23,10 @@ const styles = StyleSheet.create({
   },
 })
 
-/** Заголовок секции в PDF: название и горизонтальная линия справа. */
+/**
+ * Заголовок секции в PDF: название и горизонтальная линия справа.
+ * Выступает на 1 мм за поля листа с обеих сторон: иконки ролей под ним стоят чуть правее.
+ */
 export function PdfSectionTitle({ title, style = {} }: PdfSectionTitleProps) {
   const fontSize = useFontSize()
 

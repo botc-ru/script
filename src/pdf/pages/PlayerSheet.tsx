@@ -20,7 +20,10 @@ const styles = StyleSheet.create({
     width: mm(250),
     opacity: 0.1,
   },
+  // Шапка на 1 мм выше и шире полей листа, как в старой версии
   header: {
+    marginTop: mm(-1),
+    marginHorizontal: mm(-1),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
@@ -36,6 +39,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   notFirstNight: {
+    marginRight: mm(-1),
     marginBottom: mm(-1),
     fontFamily: 'Roboto-Condensed',
     fontWeight: 300,

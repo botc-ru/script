@@ -5,6 +5,7 @@ import paperImage from '../../assets/images/paper.jpg'
 import { A4_SIZE } from '../a4Size'
 import { PdfSettingsContext } from '../PdfSettingsContext'
 import { mm } from '../units'
+import { SHEET_PADDING } from './sheetPadding'
 import type { SheetPageProps } from './SheetPageProps'
 
 const styles = StyleSheet.create({
@@ -23,8 +24,9 @@ const styles = StyleSheet.create({
   content: {
     position: 'relative',
     flex: 1,
-    padding: mm(8),
-    paddingBottom: mm(6),
+    paddingTop: mm(SHEET_PADDING.top),
+    paddingHorizontal: mm(SHEET_PADDING.x),
+    paddingBottom: mm(SHEET_PADDING.bottom),
   },
 })
 
