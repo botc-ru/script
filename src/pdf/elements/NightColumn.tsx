@@ -16,10 +16,6 @@ const styles = StyleSheet.create({
     borderRightWidth: 0.75,
     borderRightColor: '#ccc',
   },
-  placeholder: {
-    flexShrink: 0,
-    width: mm(38),
-  },
   columnRotated: {
     justifyContent: 'flex-end',
     paddingRight: 0,
@@ -62,17 +58,9 @@ const styles = StyleSheet.create({
  * Узкая колонка порядка ночи на листе рассказчика: заголовок и список с иконками.
  *
  * Перевёрнутая колонка стоит справа, а её заголовок и строки повёрнуты на 180°.
- * Скрытая колонка (`isHidden`) оставляет пустое место той же ширины, чтобы центр листа не менялся.
  */
-export function NightColumn({
-  title,
-  entries,
-  isRotated = false,
-  isHidden = false,
-}: NightColumnProps) {
+export function NightColumn({ title, entries, isRotated = false }: NightColumnProps) {
   const fontSize = useFontSize()
-  if (isHidden) return <View style={styles.placeholder} />
-
   const rotation = isRotated ? styles.rotated : {}
 
   const titleElement = (

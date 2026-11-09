@@ -17,6 +17,9 @@ const ROWS = [
 
 const styles = StyleSheet.create({
   border: {
+    alignSelf: 'center',
+    width: '100%',
+    maxWidth: mm(114),
     padding: mm(0.15),
     borderWidth: 0.75,
     borderColor: PDF_ACCENT_COLOR,
@@ -53,7 +56,7 @@ const cellStyle = { fontSize: mm(5), transform: 'scaleY(0.8)' }
  * Таблица состава команд по числу игроков.
  *
  * Размер шрифта не зависит от настройки масштаба: при крупном таблица не помещается в центральную
- * колонку листа рассказчика.
+ * колонку листа рассказчика. Ширина не больше этой колонки, без колонок ночи таблица по центру.
  */
 export function PlayersTable() {
   return (
