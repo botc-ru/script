@@ -29,7 +29,6 @@ function createStyles(scale: number, textScale: number) {
     },
     table: {
       paddingVertical: size(0.75),
-      paddingRight: size(1),
       borderWidth,
       borderColor: PDF_ACCENT_COLOR,
     },
