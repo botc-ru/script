@@ -15,8 +15,8 @@ const styles = StyleSheet.create({
     flexShrink: 0,
   },
   icon: {
-    width: mm(14.4),
-    height: mm(14.4),
+    width: mm(12.4),
+    height: mm(12.4),
     objectFit: 'contain',
   },
   iconCompact: {
