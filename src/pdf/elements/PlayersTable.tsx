@@ -56,6 +56,7 @@ function createStyles(scale: number, textScale: number) {
     },
     cellText: {
       fontSize: mm(5 * textScale),
+      letterSpacing: mm(-0.3 * textScale),
       transform: 'scaleY(0.8)',
     },
   })
