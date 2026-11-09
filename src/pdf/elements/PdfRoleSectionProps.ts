@@ -14,5 +14,7 @@ export interface PdfRoleSectionProps {
   isStretched?: boolean
   /** Карточки в одну строку, см. `PdfRoleCard`. */
   isCompact?: boolean
+  /** Окрасить имена в цвет команды. По умолчанию да. */
+  isColored?: boolean
   titleStyle?: Style
 }

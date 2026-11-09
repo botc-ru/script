@@ -6,9 +6,7 @@ import { TEAM_LABELS } from '../../types/TeamLabels'
 import { A4_SIZE } from '../a4Size'
 import { NightColumn } from '../elements/NightColumn'
 import { NIGHT_COLUMN_WIDTH } from '../elements/nightColumnWidth'
-import { PdfCardGrid } from '../elements/PdfCardGrid'
-import { PdfJinxRow } from '../elements/PdfJinxRow'
-import { PdfRoleCard } from '../elements/PdfRoleCard'
+import { PdfJinxSection } from '../elements/PdfJinxSection'
 import { PdfRoleSection } from '../elements/PdfRoleSection'
 import { PlayersTable } from '../elements/PlayersTable'
 import { ScriptTitle } from '../elements/ScriptTitle'
@@ -88,7 +86,7 @@ const styles = StyleSheet.create({
 
 /**
  * Лист рассказчика. По бокам порядок ночи, вторая колонка перевёрнута. В центре название,
- * Летописцы, Джинн с джинксами, Сказочники, Странники и таблица игроков.
+ * Летописцы, Сказочники с Джинном, «Правила Джинна», Странники и таблица игроков.
  *
  * С колонками ночи боковые поля уже, чем у листа игрока. Без них поля как у листа игрока,
  * центр занимает всю ширину, а таблица игроков растёт пропорционально
@@ -134,21 +132,20 @@ export function StorytellerSheet({
               titleStyle={styles.sectionTitle}
             />
             {fabled && (
-              <PdfCardGrid
+              <PdfRoleSection
+                title={TEAM_LABELS.fabled}
+                roles={[...fabled.pinnedRoles, ...fabled.roles]}
+                jinxes={jinxes}
                 columns={storytellerColumns}
-                cards={[
-                  ...fabled.pinnedRoles.map((role) => (
-                    <PdfRoleCard key={role.id} role={role} isColored={false} />
-                  )),
-                  ...jinxes.map((jinx) => (
-                    <PdfJinxRow key={`${jinx.roleA.id}-${jinx.roleB.id}`} jinx={jinx} />
-                  )),
-                  ...fabled.roles.map((role) => (
-                    <PdfRoleCard key={role.id} role={role} isColored={false} />
-                  )),
-                ]}
+                isColored={false}
+                titleStyle={styles.sectionTitle}
               />
             )}
+            <PdfJinxSection
+              jinxes={jinxes}
+              columns={storytellerColumns}
+              titleStyle={styles.sectionTitle}
+            />
             {travellers && (
               <PdfRoleSection
                 title={TEAM_LABELS.traveller}

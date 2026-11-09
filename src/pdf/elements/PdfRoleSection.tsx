@@ -27,6 +27,7 @@ export function PdfRoleSection({
   gap,
   isStretched = false,
   isCompact = false,
+  isColored = true,
   titleStyle,
 }: PdfRoleSectionProps) {
   if (roles.length === 0) return null
@@ -47,6 +48,7 @@ export function PdfRoleSection({
             role={role}
             jinxPartners={getJinxPartners(role, jinxes)}
             isCompact={isCompact}
+            isColored={isColored}
           />
         ))}
       />
