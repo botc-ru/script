@@ -39,8 +39,9 @@ function createStyles(scale: number, textScale: number) {
     label: {
       alignItems: 'flex-end',
       justifyContent: 'center',
-      // Ширина по шрифту подписи: «ПРИСПЕШНИКИ» помещается, остальное место у цифр
-      width: mm(28 * textScale),
+      // Ширина по шрифту подписи: «ПРИСПЕШНИКИ» помещается с отступом от левой грани,
+      // остальное место у цифр
+      width: mm(29.5 * textScale),
       paddingVertical: size(1),
       paddingHorizontal: size(0.5),
     },
@@ -56,7 +57,7 @@ function createStyles(scale: number, textScale: number) {
     },
     cellText: {
       fontSize: mm(5 * textScale),
-      letterSpacing: mm(-0.5 * textScale),
+      letterSpacing: mm(-0.3 * textScale),
       transform: 'scaleY(0.8)',
     },
   })
