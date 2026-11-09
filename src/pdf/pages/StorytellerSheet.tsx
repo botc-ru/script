@@ -16,9 +16,21 @@ import { useFontSize } from '../useFontSize'
 import { SheetPage } from './SheetPage'
 import type { StorytellerSheetProps } from './StorytellerSheetProps'
 
+/** Поля листа, мм. */
+const PAGE_PADDING = 6
+
+/** Отступ таблицы игроков от краёв листа без колонок ночи, мм. */
+const WIDE_TABLE_INSET = 10
+
+/**
+ * Во сколько раз таблица игроков без колонок ночи шире, чем в центре между ними (114 мм).
+ * Во столько же раз растут её шрифт и отступы.
+ */
+const WIDE_TABLE_SCALE = (210 - 2 * WIDE_TABLE_INSET) / 114
+
 const styles = StyleSheet.create({
   page: {
-    padding: mm(6),
+    padding: mm(PAGE_PADDING),
   },
   columns: {
     flex: 1,
@@ -43,19 +55,17 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: mm(4),
   },
+  wideTable: {
+    marginHorizontal: mm(WIDE_TABLE_INSET - PAGE_PADDING),
+  },
 })
-
-/**
- * Во сколько раз центр листа шире без колонок ночи: 198 мм против 114 мм.
- * Во столько же раз растёт таблица игроков.
- */
-const WIDE_TABLE_SCALE = 198 / 114
 
 /**
  * Лист рассказчика. По бокам порядок ночи, вторая колонка перевёрнута. В центре название,
  * Летописцы, Джинн с джинксами, Сказочники, Странники и таблица игроков.
  *
- * Без колонок ночи центр занимает всю ширину листа, а таблица игроков растёт пропорционально.
+ * Без колонок ночи центр занимает всю ширину листа, а таблица игроков растёт пропорционально
+ * и стоит в 10 мм от краёв листа.
  * Роли и джинксы идут в одну или две колонки (настройка `storytellerColumns`).
  */
 export function StorytellerSheet({
@@ -119,7 +129,12 @@ export function StorytellerSheet({
             )}
           </View>
 
-          {playersTable && <PlayersTable scale={nightOrderColumns ? 1 : WIDE_TABLE_SCALE} />}
+          {playersTable && nightOrderColumns && <PlayersTable />}
+          {playersTable && !nightOrderColumns && (
+            <View style={styles.wideTable}>
+              <PlayersTable scale={WIDE_TABLE_SCALE} />
+            </View>
+          )}
         </View>
 
         {nightOrderColumns && <NightColumn title="Другие ночи" entries={otherNight} isRotated />}
