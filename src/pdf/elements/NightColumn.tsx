@@ -4,6 +4,7 @@ import { PDF_TEXT_COLOR } from '../pdfColors'
 import { mm } from '../units'
 import { useFontSize } from '../useFontSize'
 import type { NightColumnProps } from './NightColumnProps'
+import { NIGHT_COLUMN_WIDTH } from './nightColumnWidth'
 import { NightTitle } from './NightTitle'
 
 const styles = StyleSheet.create({
@@ -11,7 +12,7 @@ const styles = StyleSheet.create({
     flexShrink: 0,
     flexDirection: 'column',
     gap: mm(3.5),
-    width: mm(38),
+    width: mm(NIGHT_COLUMN_WIDTH),
     paddingRight: mm(6),
     borderRightWidth: 0.75,
     borderRightColor: '#ccc',

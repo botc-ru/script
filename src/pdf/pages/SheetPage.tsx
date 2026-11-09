@@ -2,6 +2,7 @@ import { Image, Page, StyleSheet, View } from '@react-pdf/renderer'
 import { use } from 'react'
 
 import paperImage from '../../assets/images/paper.jpg'
+import { A4_SIZE } from '../a4Size'
 import { PdfSettingsContext } from '../PdfSettingsContext'
 import { mm } from '../units'
 import type { SheetPageProps } from './SheetPageProps'
@@ -15,8 +16,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    width: mm(210),
-    height: mm(297),
+    width: mm(A4_SIZE.width),
+    height: mm(A4_SIZE.height),
     objectFit: 'cover',
   },
   content: {

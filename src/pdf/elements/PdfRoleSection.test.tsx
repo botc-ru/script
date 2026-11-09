@@ -4,8 +4,6 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { readPdfStyle } from '../../test/readPdfStyle'
 import { TEST_ROLES } from '../../test/testRoles'
-import { DEFAULT_PRINT_SETTINGS } from '../../utils/defaultPrintSettings'
-import { PdfSettingsContext } from '../PdfSettingsContext'
 import { PdfRoleSection } from './PdfRoleSection'
 
 interface MockProps {
@@ -30,9 +28,7 @@ const ROLES = ['librarian', 'chef', 'drunk'].flatMap((id) => TEST_ROLES[id] ?? [
 describe('PdfRoleSection', () => {
   it('при «Растянуть» делит высоту между строками поровну, а роли ставит по центру', () => {
     const { container } = render(
-      <PdfSettingsContext value={{ ...DEFAULT_PRINT_SETTINGS, stretch: true, columns: 2 }}>
-        <PdfRoleSection title="Горожане" roles={ROLES} jinxes={[]} />
-      </PdfSettingsContext>,
+      <PdfRoleSection title="Горожане" roles={ROLES} jinxes={[]} columns={2} isStretched />,
     )
 
     const views = [...container.querySelectorAll('[data-style]')]
@@ -46,5 +42,23 @@ describe('PdfRoleSection', () => {
     expect(rows).toHaveLength(2)
     expect(cells).toHaveLength(4)
     expect(rows.every((row) => row.children.length === 2)).toBe(true)
+    // Секция забирает долю свободной высоты листа по числу строк
+    expect(readPdfStyle(container.firstElementChild).flexGrow).toBe(2)
+  })
+
+  it('одну роль не растягивает', () => {
+    const { container } = render(
+      <PdfRoleSection title="Демоны" roles={ROLES.slice(0, 1)} jinxes={[]} columns={2} isStretched />,
+    )
+
+    expect(readPdfStyle(container.firstElementChild).flexGrow).toBeUndefined()
+  })
+
+  it('без ролей ничего не показывает', () => {
+    const { container } = render(
+      <PdfRoleSection title="Демоны" roles={[]} jinxes={[]} columns={1} />,
+    )
+
+    expect(container.childElementCount).toBe(0)
   })
 })

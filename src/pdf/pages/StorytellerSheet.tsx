@@ -3,11 +3,13 @@ import { use } from 'react'
 
 import type { Team } from '../../types/Team'
 import { TEAM_LABELS } from '../../types/TeamLabels'
+import { A4_SIZE } from '../a4Size'
 import { NightColumn } from '../elements/NightColumn'
+import { NIGHT_COLUMN_WIDTH } from '../elements/nightColumnWidth'
 import { PdfCardGrid } from '../elements/PdfCardGrid'
 import { PdfJinxRow } from '../elements/PdfJinxRow'
 import { PdfRoleCard } from '../elements/PdfRoleCard'
-import { PdfRoleList } from '../elements/PdfRoleList'
+import { PdfRoleSection } from '../elements/PdfRoleSection'
 import { PlayersTable } from '../elements/PlayersTable'
 import { ScriptTitle } from '../elements/ScriptTitle'
 import { PdfSettingsContext } from '../PdfSettingsContext'
@@ -19,14 +21,20 @@ import type { StorytellerSheetProps } from './StorytellerSheetProps'
 /** Поля листа, мм. */
 const PAGE_PADDING = 6
 
+/** Расстояние между колонками ночи и центром, мм. */
+const COLUMN_GAP = 4
+
+/** Ширина центра между колонками ночи, мм. */
+const CENTER_WIDTH = A4_SIZE.width - 2 * (PAGE_PADDING + NIGHT_COLUMN_WIDTH + COLUMN_GAP)
+
 /** Отступ таблицы игроков от боковых и нижнего краёв листа без колонок ночи, мм. */
 const WIDE_TABLE_INSET = 20
 
 /**
- * Во сколько раз таблица игроков без колонок ночи шире, чем в центре между ними (114 мм).
+ * Во сколько раз таблица игроков без колонок ночи шире, чем в центре между ними.
  * Во столько же раз растут её отступы и рамка.
  */
-const WIDE_TABLE_SCALE = (210 - 2 * WIDE_TABLE_INSET) / 114
+const WIDE_TABLE_SCALE = (A4_SIZE.width - 2 * WIDE_TABLE_INSET) / CENTER_WIDTH
 
 /** Шрифт широкой таблицы растёт чуть меньше: при полном росте цифры выглядят тесно. */
 const WIDE_TABLE_TEXT_SCALE = WIDE_TABLE_SCALE * 0.9
@@ -38,7 +46,7 @@ const styles = StyleSheet.create({
   columns: {
     flex: 1,
     flexDirection: 'row',
-    gap: mm(4),
+    gap: mm(COLUMN_GAP),
   },
   center: {
     flex: 1,
@@ -57,6 +65,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     gap: mm(4),
+  },
+  sectionTitle: {
+    marginTop: mm(2),
+    marginBottom: mm(5),
   },
   wideTable: {
     marginHorizontal: mm(WIDE_TABLE_INSET - PAGE_PADDING),
@@ -103,10 +115,12 @@ export function StorytellerSheet({
           {author && <Text style={[styles.author, { fontSize: fontSize(4.5) }]}>{author}</Text>}
 
           <View style={styles.body}>
-            <PdfRoleList
+            <PdfRoleSection
               title={TEAM_LABELS.loric}
               roles={getSection('loric')?.roles ?? []}
               jinxes={jinxes}
+              columns={storytellerColumns}
+              titleStyle={styles.sectionTitle}
             />
             {fabled && (
               <PdfCardGrid
@@ -125,10 +139,12 @@ export function StorytellerSheet({
               />
             )}
             {travellers && (
-              <PdfRoleList
+              <PdfRoleSection
                 title={TEAM_LABELS.traveller}
                 roles={getSection('traveller')?.roles ?? []}
                 jinxes={jinxes}
+                columns={storytellerColumns}
+                titleStyle={styles.sectionTitle}
               />
             )}
           </View>

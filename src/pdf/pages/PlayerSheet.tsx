@@ -48,10 +48,14 @@ const styles = StyleSheet.create({
   },
 })
 
-/** Лист игрока: название, автор и основные команды. */
+/**
+ * Лист игрока: название, автор и основные команды.
+ * В одну колонку роли идут компактно, в строку; секции растягиваются при настройке `stretch`.
+ */
 export function PlayerSheet({ title, script, sections, jinxes }: PlayerSheetProps) {
-  const { logo } = use(PdfSettingsContext)
+  const { logo, columns, stretch } = use(PdfSettingsContext)
   const fontSize = useFontSize()
+  const isCompact = columns === 1
 
   return (
     <SheetPage>
@@ -75,6 +79,10 @@ export function PlayerSheet({ title, script, sections, jinxes }: PlayerSheetProp
               title={TEAM_LABELS[section.team]}
               roles={section.roles}
               jinxes={jinxes}
+              columns={columns}
+              gap={isCompact ? 0.8 : 1.5}
+              isStretched={stretch}
+              isCompact={isCompact}
             />
           ))}
       </View>
