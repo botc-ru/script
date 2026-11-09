@@ -51,7 +51,7 @@ function createStyles(scale: number, textScale: number) {
       paddingHorizontal: size(0.3),
     },
     labelText: {
-      fontSize: mm(3.2 * textScale),
+      fontSize: mm(3 * textScale),
     },
     cellText: {
       fontSize: mm(5 * textScale),
