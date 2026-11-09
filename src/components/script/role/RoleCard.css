@@ -1,9 +1,11 @@
 .role-card {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   box-sizing: border-box;
-  width: 100%;
+  /* Карточка выступает за колонку на свой отступ: иконка стоит вровень с заголовком секции */
+  width: calc(100% + 12px);
+  margin-inline: -6px;
   padding: 6px;
   border: none;
   border-radius: 6px;
