@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   text: {
     flex: 1,
     flexDirection: 'column',
-    marginLeft: mm(5),
+    marginLeft: mm(1.5),
   },
   hint: {
     marginTop: mm(0.6),
