@@ -37,7 +37,7 @@ export function SheetPage({ style = {}, children }: SheetPageProps) {
   return (
     <Page size="A4" style={styles.page}>
       {background && <Image src={paperImage} style={styles.background} />}
-      <View style={[styles.content, style]}>{children}</View>
+      <View style={[styles.content, ...[style].flat()]}>{children}</View>
     </Page>
   )
 }

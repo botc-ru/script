@@ -79,11 +79,11 @@ describe('StorytellerSheet', () => {
     expect(bottom).toBeCloseTo(mm(20))
   })
 
-  it('с колонками ночи у таблицы только поля листа, боковые как у листа игрока', () => {
+  it('с колонками ночи у таблицы только поля листа, боковые уже, чем у листа игрока', () => {
     renderSheet(true)
     const { side, bottom } = readTableInset()
 
-    expect(side).toBeCloseTo(mm(SHEET_PADDING.x))
+    expect(side).toBeCloseTo(mm(6))
     expect(bottom).toBeCloseTo(mm(SHEET_PADDING.bottom))
   })
 })

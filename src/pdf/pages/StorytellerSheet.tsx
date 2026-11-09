@@ -19,14 +19,20 @@ import { SHEET_PADDING } from './sheetPadding'
 import { SheetPage } from './SheetPage'
 import type { StorytellerSheetProps } from './StorytellerSheetProps'
 
-/** Верхнее поле листа, мм. Боковые и нижнее как у листа игрока: `SHEET_PADDING`. */
+/** Верхнее поле листа, мм. Нижнее как у листа игрока: `SHEET_PADDING`. */
 const PAGE_PADDING_TOP = 6
+
+/**
+ * Боковые поля с колонками ночи, мм: уже, чем у листа игрока, чтобы центру хватило места.
+ * Без колонок ночи боковые поля как у листа игрока.
+ */
+const NIGHT_COLUMNS_PADDING_X = 6
 
 /** Расстояние между колонками ночи и центром, мм. */
 const COLUMN_GAP = 4
 
 /** Ширина центра между колонками ночи, мм. */
-const CENTER_WIDTH = A4_SIZE.width - 2 * (SHEET_PADDING.x + NIGHT_COLUMN_WIDTH + COLUMN_GAP)
+const CENTER_WIDTH = A4_SIZE.width - 2 * (NIGHT_COLUMNS_PADDING_X + NIGHT_COLUMN_WIDTH + COLUMN_GAP)
 
 /** Отступ таблицы игроков от боковых и нижнего краёв листа без колонок ночи, мм. */
 const WIDE_TABLE_INSET = 20
@@ -43,6 +49,9 @@ const WIDE_TABLE_TEXT_SCALE = WIDE_TABLE_SCALE * 0.9
 const styles = StyleSheet.create({
   page: {
     paddingTop: mm(PAGE_PADDING_TOP),
+  },
+  pageWithNightColumns: {
+    paddingHorizontal: mm(NIGHT_COLUMNS_PADDING_X),
   },
   columns: {
     flex: 1,
@@ -81,7 +90,8 @@ const styles = StyleSheet.create({
  * Лист рассказчика. По бокам порядок ночи, вторая колонка перевёрнута. В центре название,
  * Летописцы, Джинн с джинксами, Сказочники, Странники и таблица игроков.
  *
- * Без колонок ночи центр занимает всю ширину листа, а таблица игроков растёт пропорционально
+ * С колонками ночи боковые поля уже, чем у листа игрока. Без них поля как у листа игрока,
+ * центр занимает всю ширину, а таблица игроков растёт пропорционально
  * и стоит в 20 мм от боковых и нижнего краёв листа.
  * Роли и джинксы идут в одну или две колонки (настройка `storytellerColumns`).
  */
@@ -105,7 +115,7 @@ export function StorytellerSheet({
   const fabled = getSection('fabled')
 
   return (
-    <SheetPage style={styles.page}>
+    <SheetPage style={[styles.page, nightOrderColumns ? styles.pageWithNightColumns : {}]}>
       <View style={styles.columns}>
         {nightOrderColumns && <NightColumn title="Первая ночь" entries={firstNight} />}
 
